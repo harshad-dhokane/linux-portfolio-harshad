@@ -1,11 +1,18 @@
+
 import { useState, useEffect, useRef } from "react";
 import Window from "./Window";
 import { useDesktop } from "@/context/DesktopContext";
 
+interface Tab {
+  id: string;
+  title: string;
+  url: string;
+}
+
 const BrowserWindow = () => {
   const { openWindow } = useDesktop();
-
-  const [activeTab, setActiveTab] = useState("New Tab");
+  const [tabs, setTabs] = useState<Tab[]>([{ id: '1', title: 'New Tab', url: '' }]);
+  const [activeTabId, setActiveTabId] = useState('1');
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
@@ -51,6 +58,11 @@ const BrowserWindow = () => {
     setUrl(processedUrl);
     setIsLoading(true);
 
+    // Update current tab
+    setTabs(prev => prev.map(tab => 
+      tab.id === activeTabId ? { ...tab, url: processedUrl } : tab
+    ));
+
     // Update history
     if (historyIndex < history.length - 1) {
       setHistory(prev => [...prev.slice(0, historyIndex + 1), processedUrl]);
@@ -62,18 +74,52 @@ const BrowserWindow = () => {
     // Update tab title
     try {
       const domain = new URL(processedUrl).hostname.replace('www.', '');
-      setActiveTab(domain);
+      setTabs(prev => prev.map(tab => 
+        tab.id === activeTabId ? { ...tab, title: domain } : tab
+      ));
     } catch (e) {
-      setActiveTab("New Tab");
+      setTabs(prev => prev.map(tab => 
+        tab.id === activeTabId ? { ...tab, title: 'New Tab' } : tab
+      ));
     }
 
     setTimeout(() => setIsLoading(false), 1000);
+  };
+
+  const addNewTab = () => {
+    const newTab = {
+      id: Date.now().toString(),
+      title: 'New Tab',
+      url: ''
+    };
+    setTabs(prev => [...prev, newTab]);
+    setActiveTabId(newTab.id);
+    setUrl('');
+  };
+
+  const closeTab = (tabId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (tabs.length === 1) return;
+    
+    setTabs(prev => prev.filter(tab => tab.id !== tabId));
+    if (activeTabId === tabId) {
+      const newActiveTab = tabs[tabs.findIndex(tab => tab.id === tabId) - 1] || tabs[1];
+      setActiveTabId(newActiveTab.id);
+      setUrl(newActiveTab.url);
+    }
+  };
+
+  const switchTab = (tabId: string) => {
+    setActiveTabId(tabId);
+    const tab = tabs.find(t => t.id === tabId);
+    if (tab) setUrl(tab.url);
   };
 
   const goBack = () => {
     if (historyIndex > 0) {
       setHistoryIndex(prev => prev - 1);
       setUrl(history[historyIndex - 1]);
+      navigateTo(history[historyIndex - 1]);
     }
   };
 
@@ -81,6 +127,7 @@ const BrowserWindow = () => {
     if (historyIndex < history.length - 1) {
       setHistoryIndex(prev => prev + 1);
       setUrl(history[historyIndex + 1]);
+      navigateTo(history[historyIndex + 1]);
     }
   };
 
@@ -91,6 +138,8 @@ const BrowserWindow = () => {
     }
     setTimeout(() => setIsLoading(false), 1000);
   };
+
+  const activeTab = tabs.find(tab => tab.id === activeTabId);
 
   return (
     <Window
@@ -103,12 +152,26 @@ const BrowserWindow = () => {
     >
       <div className="flex flex-col h-full">
         <div className="bg-[#38383D] p-2">
-          <div className="flex space-x-2 text-sm mb-2">
-            <div className="browser-tab active-tab px-3 py-1 rounded-t text-white flex items-center">
-              <span className="tab-title">{activeTab}</span>
-              <i className="fas fa-times ml-2 text-xs opacity-60 hover:opacity-100 cursor-pointer"></i>
-            </div>
-            <div className="w-6 h-6 rounded-full bg-[#4A4A4F] hover:bg-[#5C5C61] flex items-center justify-center cursor-pointer transition-colors">
+          <div className="flex space-x-2 text-sm mb-2 overflow-x-auto">
+            {tabs.map(tab => (
+              <div 
+                key={tab.id}
+                className={`browser-tab ${tab.id === activeTabId ? 'active-tab bg-[#42414D]' : 'bg-[#4A4A4F] hover:bg-[#52525E]'} px-3 py-1 rounded-t text-white flex items-center cursor-pointer min-w-[100px] max-w-[200px]`}
+                onClick={() => switchTab(tab.id)}
+              >
+                <span className="tab-title truncate flex-1">{tab.title}</span>
+                {tabs.length > 1 && (
+                  <i 
+                    className="fas fa-times ml-2 text-xs opacity-60 hover:opacity-100"
+                    onClick={(e) => closeTab(tab.id, e)}
+                  />
+                )}
+              </div>
+            ))}
+            <div 
+              className="w-6 h-6 rounded-full bg-[#4A4A4F] hover:bg-[#5C5C61] flex items-center justify-center cursor-pointer transition-colors flex-shrink-0"
+              onClick={addNewTab}
+            >
               <i className="fas fa-plus text-white text-xs"></i>
             </div>
           </div>
@@ -152,12 +215,12 @@ const BrowserWindow = () => {
             <div className="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center z-10">
               <div className="flex flex-col items-center">
                 <i className="fas fa-circle-notch fa-spin text-[hsl(var(--linux-blue))] text-4xl"></i>
-                <p className="mt-4 text-gray-600">Loading {activeTab}...</p>
+                <p className="mt-4 text-gray-600">Loading {activeTab?.title}...</p>
               </div>
             </div>
           )}
 
-          {!url && (
+          {!activeTab?.url && (
             <div className="flex flex-col items-center h-full pt-16 overflow-y-auto">
               <div className="w-32 h-32 mb-8">
                 <i className="fab fa-firefox text-8xl text-orange-500"></i>
@@ -180,12 +243,12 @@ const BrowserWindow = () => {
             </div>
           )}
 
-          {url && (
+          {activeTab?.url && (
             <iframe
               ref={iframeRef}
-              src={url}
+              src={activeTab.url}
               className="w-full h-full border-none"
-              sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"
               onLoad={() => setIsLoading(false)}
             />
           )}
