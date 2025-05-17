@@ -159,23 +159,30 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
       defaultX={250}
       defaultY={100}
     >
-      <div id="terminal-content" className="terminal p-3 overflow-y-auto h-full text-sm">
+      <div 
+        id="terminal-content" 
+        className="terminal p-3 overflow-y-auto h-full text-sm bg-black/60 backdrop-blur-md"
+        style={{
+          backgroundImage: 'linear-gradient(45deg, rgba(30, 30, 30, 0.6), rgba(15, 15, 15, 0.7))',
+          boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.2)'
+        }}
+      >
         <div ref={terminalOutputRef}>
           {commandHistory.map((entry, index) => (
-            <div key={index}>
+            <div key={index} className="mb-2">
               <div>
-                <span className="prompt">harshad@ubuntu:~$</span> {entry.command}
+                <span className="text-green-400 font-mono">harshad@ubuntu:~$</span> <span className="text-white">{entry.command}</span>
               </div>
               <div dangerouslySetInnerHTML={{ __html: entry.response }}></div>
             </div>
           ))}
         </div>
         <div className="flex items-center mt-2">
-          <span className="prompt">harshad@ubuntu:~$</span>
+          <span className="text-green-400 font-mono">harshad@ubuntu:~$</span>
           <input
             ref={inputRef}
             type="text"
-            className="bg-transparent text-white outline-none ml-2 w-full"
+            className="bg-transparent text-white outline-none ml-2 w-full font-mono"
             value={currentInput}
             onChange={(e) => setCurrentInput(e.target.value)}
             onKeyDown={handleKeyDown}
