@@ -54,8 +54,8 @@ const AppDock = () => {
         {dockIcons.map((icon) => (
           <div
             key={icon.id}
-            className={`dock-icon w-16 h-16 rounded-md ${icon.bgColor} flex items-center justify-center cursor-pointer shadow-md hover:shadow-lg hover:scale-110 transition-transform`}
-            style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}
+            className={`dock-icon w-12 h-12 rounded-md ${icon.bgColor} flex items-center justify-center cursor-pointer shadow-md hover:shadow-lg hover:scale-110 transition-transform`}
+            style={{ boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)' }}
             onClick={() => openWindow(icon.id)}
           >
             <i className={`${icon.icon} ${icon.color} text-2xl`}></i>
@@ -64,8 +64,8 @@ const AppDock = () => {
         
         {/* App Drawer Button in Dock */}
         <div
-          className="app-drawer-btn dock-icon w-16 h-16 rounded-md bg-gray-800 flex items-center justify-center cursor-pointer shadow-md hover:shadow-lg hover:scale-110 transition-transform"
-          style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}
+          className="app-drawer-btn dock-icon w-12 h-12 rounded-md bg-gray-800 flex items-center justify-center cursor-pointer shadow-md hover:shadow-lg hover:scale-110 transition-transform"
+          style={{ boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)' }}
           onClick={toggleAppDrawer}
         >
           <i className="fas fa-th text-white text-2xl"></i>
