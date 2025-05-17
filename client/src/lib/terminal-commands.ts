@@ -51,6 +51,7 @@ export const getTerminalResponse = (command: string): string => {
             <li>clear - Clear terminal</li>
             <li>neofetch - Display system info</li>
             <li>open - Open a window (e.g., open resume)</li>
+            <li>new-terminal - Open a new terminal instance</li>
             <li>help - Show this help</li>
             <li>exit - Close terminal</li>
           </ul>
@@ -61,7 +62,7 @@ export const getTerminalResponse = (command: string): string => {
         return "Error: Please specify what to open";
       }
       
-      const validWindows = ["resume", "projects", "certifications", "terminal", "browser", "github", "linkedin"];
+      const validWindows = ["resume", "projects", "certifications", "terminal", "browser", "github", "linkedin", "skills", "experience", "education", "about", "settings", "filemanager"];
       const windowToOpen = commands[1].toLowerCase();
       
       if (validWindows.includes(windowToOpen)) {
@@ -69,6 +70,9 @@ export const getTerminalResponse = (command: string): string => {
       } else {
         return `Error: Cannot open ${commands[1]}, not a valid application.`;
       }
+      
+    case "new-terminal":
+      return "__NEW_TERMINAL__";
     case "cat":
       if (commands[1] === "Projects.txt") {
         return `

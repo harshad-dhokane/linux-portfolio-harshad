@@ -116,6 +116,18 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
       return "No window specified";
     }
     
+    // Check for new terminal command
+    if (response === "__NEW_TERMINAL__") {
+      // Create a new terminal instance with slightly offset position
+      setTimeout(() => {
+        // Current window remains open and a new one is created
+        // The new terminal instance will be created by Desktop.tsx with a different ID
+        openWindow("terminal-new");
+        // We'll use a naming convention: terminal, terminal-new, terminal-new2, etc.
+      }, 100);
+      return "Opening new terminal...";
+    }
+    
     // Check for terminal close command
     if (response === "__CLOSE_TERMINAL__") {
       setTimeout(() => closeWindow("terminal"), 100);
@@ -163,8 +175,6 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
       title="harshad@ubuntu: ~/terminal"
       defaultWidth={700}
       defaultHeight={400}
-      defaultX={250}
-      defaultY={100}
     >
       <div 
         id="terminal-content" 

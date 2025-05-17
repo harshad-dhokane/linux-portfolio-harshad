@@ -21,19 +21,19 @@ const DesktopIcons = () => {
   const getDefaultPositions = () => {
     const defaultPositions: Record<string, { x: number; y: number }> = {};
     
-    // Calculate positions for first column
+    // Calculate positions for first column - grid layout with proper spacing
     iconsColumns[0].forEach((icon, index) => {
       defaultPositions[icon.id] = { 
-        x: 20, 
-        y: 20 + (index * 90) 
+        x: 25, 
+        y: 25 + (index * 100) 
       };
     });
     
     // Calculate positions for second column (further right)
     iconsColumns[1].forEach((icon, index) => {
       defaultPositions[icon.id] = { 
-        x: 120, 
-        y: 20 + (index * 90) 
+        x: 130, 
+        y: 25 + (index * 100) 
       };
     });
     
