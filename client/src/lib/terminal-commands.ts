@@ -4,8 +4,16 @@ import { fileSystem } from '../components/FileManager';
 export let currentDirectory = fileSystem;
 export let currentPath = ["Home"];
 
+const formatPermissions = (type: string) => {
+  return type === "folder" ? "drwxr-xr-x" : "-rw-r--r--";
+};
+
 const formatFileSize = (size: string | undefined) => {
   return size || "-";
+};
+
+const formatDate = (date: string | undefined) => {
+  return date || new Date().toLocaleString();
 };
 
 const formatDate = (date: string | undefined) => {
@@ -34,15 +42,26 @@ export const getTerminalResponse = (command: string): string => {
 
   switch (cmd) {
     case "ls":
-      if (!currentDirectory.children?.length) {
+      if (!currentDirectory.children) {
         return "Directory is empty";
       }
       
       const hasDetailFlag = commands.includes("-l") || commands.includes("-la") || commands.includes("-al");
-      return getFormattedListing(currentDirectory.children, hasDetailFlag);
+      if (hasDetailFlag) {
+        return currentDirectory.children.map(file => {
+          const perms = formatPermissions(file.type);
+          const size = formatFileSize(file.size);
+          const date = formatDate(file.modified);
+          return `${perms} harshad harshad ${size.padEnd(8)} ${date} ${file.name}${file.type === 'folder' ? '/' : ''}`;
+        }).join('\n');
+      }
+      
+      return currentDirectory.children.map(file => 
+        `${file.type === 'folder' ? '📁' : '📄'} ${file.name}${file.type === 'folder' ? '/' : ''}`
+      ).join('  ');
 
     case "cd":
-      if (!commands[1]) {
+      if (!commands[1] || commands[1] === "~") {
         currentDirectory = fileSystem;
         currentPath = ["Home"];
         return "Changed to home directory";
@@ -53,13 +72,48 @@ export const getTerminalResponse = (command: string): string => {
           currentPath.pop();
           let temp = fileSystem;
           for (const dir of currentPath.slice(1)) {
-            temp = temp.children?.find(item => item.name === dir && item.type === "folder") || temp;
+            const found = temp.children?.find(item => item.name === dir && item.type === "folder");
+            if (found) {
+              temp = found;
+            }
           }
           currentDirectory = temp;
           return `Changed directory to ${currentPath.join("/")}`;
         }
         return "Already at root directory";
       }
+
+      const targetPath = commands[1].split("/").filter(Boolean);
+      let newDir = currentDirectory;
+      let newPath = [...currentPath];
+      
+      for (const part of targetPath) {
+        if (part === "..") {
+          if (newPath.length > 1) {
+            newPath.pop();
+            newDir = fileSystem;
+            for (const dir of newPath.slice(1)) {
+              const found = newDir.children?.find(item => item.name === dir && item.type === "folder");
+              if (found) {
+                newDir = found;
+              }
+            }
+          }
+        } else {
+          const found = newDir.children?.find(item => 
+            item.name === part && item.type === "folder"
+          );
+          if (!found) {
+            return `bash: cd: ${commands[1]}: No such directory`;
+          }
+          newDir = found;
+          newPath.push(part);
+        }
+      }
+      
+      currentDirectory = newDir;
+      currentPath = newPath;
+      return `Changed directory to ${currentPath.join("/")}`;
 
       const targetDir = commands[1].replace(/^\.?\//, "");
       const newDir = currentDirectory.children?.find(item => 
