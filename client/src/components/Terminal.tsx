@@ -293,7 +293,14 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
               <div>
                 <span className="text-green-400 font-mono">harshad@ubuntu:~$</span> <span className="text-white">{entry.command}</span>
               </div>
-              <div dangerouslySetInnerHTML={{ __html: entry.response }}></div>
+              <div 
+  className="terminal-response" 
+  dangerouslySetInnerHTML={{ 
+    __html: entry.response.startsWith('<h2') || entry.response.startsWith('<div') 
+      ? `<div class="bg-gray-800 rounded-lg p-4 mt-2">${entry.response}</div>`
+      : entry.response 
+  }}
+></div>
             </div>
           ))}
         </div>
