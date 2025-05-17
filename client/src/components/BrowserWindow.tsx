@@ -162,20 +162,6 @@ const BrowserWindow = () => {
               <div className="w-32 h-32 mb-8">
                 <i className="fab fa-firefox text-8xl text-orange-500"></i>
               </div>
-              <div className="flex space-x-6 mb-8">
-                <div 
-                  className="w-16 h-16 bg-gray-800 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-700 transition-colors"
-                  onClick={() => navigateTo("https://github.com/harshad-dhokane/")}
-                >
-                  <i className="fab fa-github text-white text-3xl"></i>
-                </div>
-                <div 
-                  className="w-16 h-16 bg-blue-700 rounded-lg flex items-center justify-center cursor-pointer hover:bg-blue-600 transition-colors"
-                  onClick={() => navigateTo("https://www.linkedin.com/in/harshad-dhokane/")}
-                >
-                  <i className="fab fa-linkedin-in text-white text-3xl"></i>
-                </div>
-              </div>
               <div className="search-bar w-2/3 flex rounded-full overflow-hidden shadow-lg border border-gray-300 focus-within:border-[hsl(var(--linux-blue))]">
                 <input
                   type="text"

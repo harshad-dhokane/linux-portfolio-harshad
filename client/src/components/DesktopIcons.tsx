@@ -236,14 +236,7 @@ const DesktopIcons = () => {
               className={`desktop-icon absolute flex flex-col items-center p-2 cursor-pointer select-none ${
                 isSelected ? 'bg-blue-500/30 rounded-md' : ''
               }`}
-              onClick={(e) => {
-  if (icon.externalLink) {
-    openWindow("browser");
-    sessionStorage.setItem("browserUrl", icon.externalLink);
-  } else {
-    handleIconClick(icon, e);
-  }
-}}
+              onClick={(e) => handleIconClick(icon, e)}
               onContextMenu={(e) => {
                 e.preventDefault();
                 setSelectedIcon(icon.id);
