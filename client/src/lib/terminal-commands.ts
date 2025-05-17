@@ -46,12 +46,30 @@ export const getTerminalResponse = (command: string): string => {
         "about": "about",
       };
 
-      const targetDir = commands[1].replace("/", "").toLowerCase();
-      if (windowMappings[targetDir]) {
-        return `__OPEN_WINDOW__${windowMappings[targetDir]}`;
+      if (commands[1] === "..") {
+        if (currentPath.length > 1) {
+          currentPath.pop();
+          currentDirectory = fileSystem;
+          for (const dir of currentPath.slice(1)) {
+            currentDirectory = currentDirectory.children?.find(item => item.name === dir) || currentDirectory;
+          }
+          return `Changed directory to ${currentPath.join("/")}`;
+        }
+        return "Already at root directory";
       }
 
-      return `Changed directory to ${commands[1]}`;
+      const targetDir = commands[1].replace("/", "");
+      const newDir = currentDirectory.children?.find(item => 
+        item.name.toLowerCase() === targetDir.toLowerCase() && item.type === "folder"
+      );
+
+      if (newDir) {
+        currentDirectory = newDir;
+        currentPath.push(newDir.name);
+        return `Changed directory to ${currentPath.join("/")}`;
+      }
+
+      return `Error: Directory ${commands[1]} not found`;
     case "clear":
       return ""; // The terminal component will handle this specially
     case "help":
@@ -76,14 +94,15 @@ export const getTerminalResponse = (command: string): string => {
         return "Error: Please specify what to open";
       }
 
-      const validWindows = ["resume", "projects", "certifications", "terminal", "browser", "github", "linkedin", "skills", "experience", "education", "about", "settings", "filemanager"];
-      const windowToOpen = commands[1].toLowerCase();
+      const targetFile = currentDirectory.children?.find(item =>
+        item.name.toLowerCase() === commands[1].toLowerCase() && item.type === "file"
+      );
 
-      if (validWindows.includes(windowToOpen)) {
-        return `__OPEN_WINDOW__${windowToOpen}`;
-      } else {
-        return `Error: Cannot open ${commands[1]}, not a valid application.`;
+      if (targetFile) {
+        return `File contents of ${targetFile.name}:\n${targetFile.content || "No content available"}`;
       }
+
+      return `Error: File ${commands[1]} not found in current directory`;
 
     case "new-terminal":
       return "__NEW_TERMINAL__";
