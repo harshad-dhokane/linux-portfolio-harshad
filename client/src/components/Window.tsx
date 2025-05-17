@@ -41,9 +41,10 @@ const Window = ({
   
   const rndRef = useRef<Rnd>(null);
   
-  // Calculate default center position if not provided
+  // Calculate default center position if not provided, ensure windows stay within viewport
   const centerX = typeof defaultX === 'number' ? defaultX : Math.max(0, Math.floor((window.innerWidth - defaultWidth) / 2));
-  const centerY = typeof defaultY === 'number' ? defaultY : Math.max(0, Math.floor((window.innerHeight - defaultHeight) / 2));
+  // Ensure windows stay above the dock (40px from bottom) when positioned
+  const centerY = typeof defaultY === 'number' ? defaultY : Math.max(0, Math.min(window.innerHeight - defaultHeight - 60, Math.floor((window.innerHeight - defaultHeight) / 2)));
   
   const [position, setPosition] = useState({ x: centerX, y: centerY });
   const [size, setSize] = useState({ width: defaultWidth, height: defaultHeight });
@@ -100,6 +101,7 @@ const Window = ({
       className="window"
       style={{ 
         zIndex: windowZIndexes[id] || 10,
+        backdropFilter: title.includes('terminal') ? 'blur(8px)' : 'none',
       }}
       size={isMaximized ? { width: "100%", height: "calc(100% - 40px)" } : size}
       position={isMaximized ? { x: 0, y: 0 } : position}

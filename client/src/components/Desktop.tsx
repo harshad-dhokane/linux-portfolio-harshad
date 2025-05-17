@@ -18,7 +18,7 @@ import AboutWindow from "./AboutWindow";
 import { wallpapers } from "@/lib/wallpapers";
 
 const Desktop = () => {
-  const { selectedWallpaper } = useDesktop();
+  const { selectedWallpaper, isWindowOpen, closeWindow } = useDesktop();
   const [contextMenu, setContextMenu] = useState<{
     visible: boolean;
     x: number;
@@ -51,7 +51,6 @@ const Desktop = () => {
 
   // Track terminal instances
   const [terminalInstances, setTerminalInstances] = useState<string[]>(['terminal']);
-  const { isWindowOpen } = useDesktop();
   
   // Effect to handle terminal creation requests
   useEffect(() => {
@@ -62,8 +61,13 @@ const Desktop = () => {
       
       // Add the new terminal to our instances list
       setTerminalInstances(prev => [...prev, newTerminalId]);
+      
+      // Close the temporary request window since we've created a real terminal instance
+      setTimeout(() => {
+        closeWindow('terminal-new');
+      }, 100);
     }
-  }, [isWindowOpen]);
+  }, [isWindowOpen, closeWindow, terminalInstances.length]);
   
   return (
     <div
