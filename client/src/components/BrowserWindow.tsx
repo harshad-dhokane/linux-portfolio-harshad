@@ -415,15 +415,15 @@ const BrowserWindow = () => {
                 <div className="text-white">GitHub</div>
               </div>
               <div className="flex-1 bg-white overflow-y-auto">
-                <iframe 
-                  src="https://github.com/harshad-dhokane"
-                  className="w-full h-full border-none"
-                  title="GitHub Profile"
-                />
-              </div>
-                        <h2 className="text-2xl font-bold">Harshad Dhokane</h2>
-                        <p className="text-gray-600 mt-1">@harshad-dhokane</p>
-                        <a 
+                <div>
+                  <iframe 
+                    src="https://github.com/harshad-dhokane"
+                    className="w-full h-full border-none"
+                    title="GitHub Profile"
+                  />
+                  <h2 className="text-2xl font-bold">Harshad Dhokane</h2>
+                  <p className="text-gray-600 mt-1">@harshad-dhokane</p>
+                  <a 
                           href="https://github.com/harshad-dhokane"
                           target="_blank"
                           rel="noopener noreferrer"
