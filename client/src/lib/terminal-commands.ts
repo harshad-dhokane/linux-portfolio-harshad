@@ -132,6 +132,14 @@ export const getTerminalResponse = (command: string): string => {
   const cmd = commands[0].toLowerCase();
 
   switch (cmd) {
+    case "open":
+      if (!commands[1]) {
+        return "Usage: open <window_name>";
+      }
+      const windowName = commands[1].toLowerCase();
+      window.dispatchEvent(new CustomEvent('openWindow', { detail: windowName }));
+      return `Opening ${windowName}...`;
+
     case "ls":
       const children = currentDirectory.children || [];
       const hasDetailFlag = commands.includes("-l") || commands.includes("-la") || commands.includes("-al");
