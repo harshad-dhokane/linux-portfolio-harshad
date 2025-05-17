@@ -84,19 +84,42 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
   // Focus input when terminal is clicked
   useEffect(() => {
     const handleTerminalClick = () => {
-      if (isWindowOpen("terminal") && inputRef.current) {
+      if (isWindowOpen(id) && inputRef.current) {
         inputRef.current.focus();
       }
     };
 
-    const terminalElement = document.getElementById("terminal-content");
+    // Use the dynamic id to find the correct terminal element
+    const terminalElement = document.querySelector(`#${id} .terminal`);
     if (terminalElement) {
       terminalElement.addEventListener("click", handleTerminalClick);
       return () => {
         terminalElement.removeEventListener("click", handleTerminalClick);
       };
     }
-  }, [isWindowOpen]);
+  }, [isWindowOpen, id]);
+  
+  // Check if this is a new terminal instance that should use stored position
+  useEffect(() => {
+    if (id !== 'terminal' && !defaultPosition) {
+      try {
+        const positionData = sessionStorage.getItem('newTerminalPosition');
+        if (positionData) {
+          const position = JSON.parse(positionData);
+          // We're applying the position directly to the terminal window
+          const terminalWindow = document.getElementById(id);
+          if (terminalWindow && position && position.x && position.y) {
+            // Apply position with a transform to ensure it's visible
+            terminalWindow.style.transform = `translate(${position.x}px, ${position.y}px)`;
+            // Since we've used the position data, clear it from sessionStorage
+            sessionStorage.removeItem('newTerminalPosition');
+          }
+        }
+      } catch (err) {
+        console.error('Error reading terminal position data', err);
+      }
+    }
+  }, [id, defaultPosition]);
 
   // Helper function to handle special commands
   const handleSpecialCommands = (response: string): string => {
@@ -126,13 +149,31 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
     
     // Check for new terminal command
     if (response === "__NEW_TERMINAL__") {
-      // Create a new terminal instance with slightly offset position
+      // Create a new terminal instance at an offset position from the current one
+      const randomId = Math.floor(Math.random() * 1000);
+      const newTerminalId = `terminal-${randomId}`;
+      
+      // Get current terminal position to offset the new one
+      const currentPos = document.getElementById(id)?.getBoundingClientRect();
+      
       setTimeout(() => {
-        // Current window remains open and a new one is created
-        // The new terminal instance will be created by Desktop.tsx with a different ID
-        openWindow("terminal-new");
-        // We'll use a naming convention: terminal, terminal-new, terminal-new2, etc.
+        // Open a new terminal with a unique ID and slightly offset position
+        const newX = (currentPos?.left || 50) + 50;
+        const newY = (currentPos?.top || 50) + 50;
+        
+        // Use sessionStorage to pass position data to the new terminal
+        sessionStorage.setItem('newTerminalPosition', JSON.stringify({x: newX, y: newY}));
+        
+        // Dispatch custom event to notify Desktop component about the new terminal
+        const newTerminalEvent = new CustomEvent('new-terminal-created', {
+          detail: { id: newTerminalId }
+        });
+        window.dispatchEvent(newTerminalEvent);
+        
+        // Open the new terminal window
+        openWindow(newTerminalId);
       }, 100);
+      
       return "Opening new terminal...";
     }
     

@@ -49,25 +49,28 @@ const Desktop = () => {
     }
   };
 
-  // Track terminal instances
-  const [terminalInstances, setTerminalInstances] = useState<string[]>(['terminal']);
+  // Track terminal instances for multi-terminal support
+  const [terminalInstances, setTerminalInstances] = useState<string[]>([]);
   
-  // Effect to handle terminal creation requests
+  // Effect to check for new terminal windows
   useEffect(() => {
-    // Check if terminal-new has been requested to open
-    if (isWindowOpen('terminal-new')) {
-      // Create a new unique terminal ID
-      const newTerminalId = `terminal-${terminalInstances.length}`;
+    const checkForNewTerminals = () => {
+      // Listen for a custom event that will be triggered when a new terminal is created
+      const handleNewTerminal = (e: CustomEvent) => {
+        const terminalId = e.detail?.id;
+        if (terminalId && !terminalInstances.includes(terminalId)) {
+          setTerminalInstances(prev => [...prev, terminalId]);
+        }
+      };
       
-      // Add the new terminal to our instances list
-      setTerminalInstances(prev => [...prev, newTerminalId]);
-      
-      // Close the temporary request window since we've created a real terminal instance
-      setTimeout(() => {
-        closeWindow('terminal-new');
-      }, 100);
-    }
-  }, [isWindowOpen, closeWindow, terminalInstances.length]);
+      window.addEventListener('new-terminal-created', handleNewTerminal as EventListener);
+      return () => {
+        window.removeEventListener('new-terminal-created', handleNewTerminal as EventListener);
+      };
+    };
+    
+    return checkForNewTerminals();
+  }, [terminalInstances]);
   
   return (
     <div
@@ -83,19 +86,12 @@ const Desktop = () => {
       {/* Desktop Icons */}
       <DesktopIcons />
 
-      {/* Terminal Windows - Main terminal and additional instances */}
+      {/* Terminal Windows - Main terminal */}
       <Terminal id="terminal" />
       
-      {/* Render additional terminal instances with different positioning */}
-      {terminalInstances.slice(1).map((id, index) => (
-        <Terminal 
-          key={id} 
-          id={id} 
-          defaultPosition={{
-            x: 50 + (index * 30), // Offset each terminal to create a stacked effect
-            y: 50 + (index * 30)
-          }}
-        />
+      {/* Dynamic Terminal Windows - these will be created when users run "new-terminal" command */}
+      {terminalInstances.map((termId) => (
+        <Terminal key={termId} id={termId} />
       ))}
 
       {/* Browser Window */}
