@@ -88,9 +88,9 @@ const AppDrawer = ({ onClose }: AppDrawerProps) => {
   };
 
   return (
-    <div className="app-drawer fixed inset-0 bg-black bg-opacity-70 z-30 flex flex-col justify-start animate-in fade-in duration-300">
-      <div className="drawer bg-[#2D2D2D] border-b border-gray-700 w-full p-6 overflow-y-auto shadow-xl animate-in slide-in-from-top duration-300">
-        <div className="flex justify-between items-center mb-6 max-w-7xl mx-auto">
+    <div className="app-drawer fixed inset-0 bg-black bg-opacity-70 z-30 flex items-center justify-center animate-in fade-in duration-300">
+      <div className="drawer bg-[#2D2D2D] border border-gray-600 rounded-lg w-4/5 max-w-4xl max-h-[80vh] p-6 overflow-y-auto shadow-2xl animate-in zoom-in duration-300">
+        <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-ubuntu font-bold text-white">Applications</h2>
           <div
             className="w-10 h-10 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center cursor-pointer transition-colors"
@@ -100,15 +100,15 @@ const AppDrawer = ({ onClose }: AppDrawerProps) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-6">
           {drawerIcons.map((icon) => (
             <div
               key={icon.id}
-              className="drawer-icon flex flex-col items-center cursor-pointer transition-transform hover:scale-110"
+              className="drawer-icon flex flex-col items-center cursor-pointer transition-all hover:scale-110"
               onClick={() => handleIconClick(icon.id, icon.link)}
             >
               <div
-                className={`w-16 h-16 rounded-lg ${icon.bgColor} flex items-center justify-center mb-2 shadow-lg`}
+                className={`w-16 h-16 rounded-lg ${icon.bgColor} flex items-center justify-center mb-2 shadow-lg hover:shadow-xl`}
               >
                 <i className={`${icon.icon} text-3xl ${icon.color}`}></i>
               </div>

@@ -9,7 +9,7 @@ export const getTerminalResponse = (command: string): string => {
 
   switch (cmd) {
     case "ls":
-      return '<div class="text-blue-300">Projects/  Resume/  Certificates/  Skills.txt  Experience.txt  GitHub/  LinkedIn/</div>';
+      return '<div class="text-blue-300">Projects/  Resume/  Certificates/  Skills/  Experience/  Education/  GitHub/  LinkedIn/</div>';
     case "cd":
       if (!commands[1]) {
         return "Error: Please specify a directory";
@@ -20,6 +20,9 @@ export const getTerminalResponse = (command: string): string => {
         "resume": "resume",
         "projects": "projects",
         "certificates": "certifications",
+        "skills": "skills",
+        "experience": "experience",
+        "education": "education",
         "github": "github",
         "linkedin": "linkedin",
         "browser": "browser",
