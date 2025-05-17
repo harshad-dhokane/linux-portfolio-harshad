@@ -415,9 +415,16 @@ const BrowserWindow = () => {
                         </div>
                         <h2 className="text-2xl font-bold">Harshad Dhokane</h2>
                         <p className="text-gray-600 mt-1">@harshad-dhokane</p>
-                        <button className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white py-1 px-4 rounded-md transition-colors">
-                          Follow
-                        </button>
+                        <a 
+                          href="https://github.com/harshad-dhokane"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block mt-4"
+                        >
+                          <button className="w-full bg-green-600 hover:bg-green-700 text-white py-1 px-4 rounded-md transition-colors">
+                            Follow
+                          </button>
+                        </a>
                       </div>
 
                       <div className="bg-gray-100 rounded-lg p-4 mt-4">
