@@ -10,7 +10,7 @@ function App() {
   const [openWindows, setOpenWindows] = useState<string[]>([]);
   const [maximizedWindows, setMaximizedWindows] = useState<string[]>([]);
   const [minimizedWindows, setMinimizedWindows] = useState<string[]>([]);
-  const [selectedWallpaper, setSelectedWallpaper] = useState<number>(0);
+  const [selectedWallpaper, setSelectedWallpaper] = useState<number>(0); // Index 0 is our custom portfolio wallpaper
 
   const bringWindowToFront = (windowId: string) => {
     if (!windowId) return;
