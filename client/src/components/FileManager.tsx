@@ -15,7 +15,7 @@ interface FileData {
   modified?: string;
 }
 
-export const fileSystem: FileData = {
+export const typedFileSystem: FileData = {
   name: "Home",
   type: "folder",
   icon: "fas fa-home",
@@ -748,7 +748,7 @@ const FileManager = () => {
   const [sortBy, setSortBy] = useState<"name" | "type" | "size" | "date">("name");
   const [showFileInfo, setShowFileInfo] = useState(false);
   const [localCurrentPath, setLocalCurrentPath] = useState<string[]>(fsState.getCurrentPath());
-  const [currentDir, setCurrentDir] = useState<FileData>(fileSystem);
+  const [currentDir, setCurrentDir] = useState<FileData>(typedFileSystem);
 
   useEffect(() => {
     setLocalCurrentPath(fsState.getCurrentPath());
