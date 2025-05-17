@@ -1,7 +1,21 @@
-import { FileData } from "@/components/FileManager";
+// File system state
+const currentPath: string[] = ["Home"];
 
-// Import the file system structure from FileManager
-const fileSystem: FileData = {
+export const fsState = {
+  getCurrentPath: () => currentPath,
+  getCurrentDirectory: () => {
+    let current = fileSystem;
+    for (let i = 1; i < currentPath.length; i++) {
+      const dir = current.children?.find(d => d.name === currentPath[i]);
+      if (dir && dir.type === "folder") {
+        current = dir;
+      }
+    }
+    return current;
+  }
+};
+
+export const fileSystem = {
   name: "Home",
   type: "folder",
   icon: "fas fa-home",
@@ -9,7 +23,7 @@ const fileSystem: FileData = {
   children: [
     {
       name: "Projects",
-      type: "folder",
+      type: "folder", 
       icon: "fas fa-folder",
       color: "text-yellow-500",
       children: [
@@ -20,7 +34,7 @@ const fileSystem: FileData = {
           color: "text-green-500",
           size: "1.2 MB",
           modified: "April 2025",
-          content: `<h2 class="text-xl font-bold mb-4">Internly - Internship Tracking Application</h2>...`
+          content: `Your existing Internly content`
         },
         {
           name: "College Suggestion Bot",
@@ -29,166 +43,173 @@ const fileSystem: FileData = {
           color: "text-green-500",
           size: "850 KB",
           modified: "October 2024",
-          content: `<h2 class="text-xl font-bold mb-4">College Suggestion Bot</h2>...`
+          content: `Your existing College Bot content`
+        }
+      ]
+    },
+    {
+      name: "Skills",
+      type: "folder",
+      icon: "fas fa-folder",
+      color: "text-yellow-500",
+      children: [
+        {
+          name: "Programming",
+          type: "file",
+          icon: "fas fa-code",
+          color: "text-purple-500",
+          size: "145 KB",
+          modified: "May 2025",
+          content: `Your existing Programming skills content`
         },
         {
-          name: "AI Image Recognition",
+          name: "Web Development",
           type: "file",
-          icon: "fas fa-file-code",
-          color: "text-green-500",
-          size: "1.5 MB",
-          modified: "September 2024",
-          content: `<h2 class="text-xl font-bold mb-4">AI Image Recognition System</h2>...`
+          icon: "fas fa-globe",
+          color: "text-blue-500",
+          size: "135 KB",
+          modified: "May 2025",
+          content: `Your existing Web Dev content`
+        }
+      ]
+    },
+    {
+      name: "Certificates",
+      type: "folder",
+      icon: "fas fa-folder",
+      color: "text-yellow-500",
+      children: [
+        {
+          name: "AI Fundamentals",
+          type: "file",
+          icon: "fas fa-certificate",
+          color: "text-yellow-500",
+          size: "115 KB",
+          modified: "January 2024",
+          content: `Your existing AI cert content`
         },
         {
-          name: "NLP-Based Chatbot",
+          name: "Full Stack Development",
           type: "file",
-          icon: "fas fa-file-code",
-          color: "text-green-500",
-          size: "980 KB",
-          modified: "August 2024",
-          content: `<h2 class="text-xl font-bold mb-4">NLP-Based Chatbot</h2>...`
+          icon: "fas fa-certificate", 
+          color: "text-yellow-500",
+          size: "125 KB",
+          modified: "October 2023",
+          content: `Your existing Full Stack cert content`
         }
       ]
     }
   ]
 };
 
-let currentDirectory = fileSystem;
-let currentPath = ["Home"];
-
-const findDirectory = (path: string[]): FileData | null => {
-  let current = fileSystem;
-  for (const dir of path.slice(1)) {
-    const next = current.children?.find(c => c.name === dir);
-    if (!next || next.type !== "folder") return null;
-    current = next;
-  }
-  return current;
+const formatDate = (date: string | undefined) => {
+  return date || new Date().toLocaleString();
 };
 
 export const getTerminalResponse = (command: string): string => {
-  const commands = command.split(" ");
-  const cmd = commands[0];
+  const commands = command.trim().split(/\s+/);
+  const cmd = commands[0].toLowerCase();
 
   switch (cmd) {
-    case "ls":
-      const files = currentDirectory.children || [];
-      const hasFlag = commands.includes("-la") || commands.includes("-a") || commands.includes("-l");
+    case "open":
+      if (!commands[1]) {
+        return "Usage: open <window_name>";
+      }
+      const windowName = commands[1].toLowerCase();
+      window.dispatchEvent(new CustomEvent('openWindow', { detail: windowName }));
+      return `Opening ${windowName}...`;
 
-      if (hasFlag) {
-        return `<div class="font-mono">
-          ${files.map(file => `${file.type === 'folder' ? 'd' : '-'}rwxr-xr-x 1 harshad users ${file.size || '4.0K'} ${file.modified || 'Jan 1'} ${file.name}`).join('\n')}
-        </div>`;
+    case "ls":
+      const children = fsState.getCurrentDirectory().children || [];
+      const hasDetailFlag = commands.includes("-l") || commands.includes("-la") || commands.includes("-al");
+      
+      if (!children.length) {
+        return "Directory is empty";
       }
 
-      return `<div class="font-mono text-blue-300 grid grid-cols-3 gap-x-6">
-        ${files.map(file => `<div class="truncate ${file.color}"><i class="${file.icon} mr-2"></i>${file.name}</div>`).join('')}
-      </div>`;
+      if (hasDetailFlag) {
+        return `<div class="font-mono">${children.map(file => {
+          const perms = file.type === "folder" ? "drwxr-xr-x" : "-rw-r--r--";
+          const size = file.size || "-";
+          const date = formatDate(file.modified);
+          return `<div>${perms} user user ${size.padEnd(8)} ${date} <span class="text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.name}</span></div>`;
+        }).join('\n')}</div>`;
+      }
+      
+      return `<div class="flex flex-wrap gap-4">${children.map(file => 
+        `<span class="text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.type === 'folder' ? '📁' : '📄'} ${file.name}</span>`
+      ).join(' ')}</div>`;
 
     case "cd":
-      if (!commands[1] || commands[1] === "..") {
+      if (!commands[1] || commands[1] === "~") {
+        const currentPath: string[] = ["Home"];
+        return "Changed to home directory";
+      }
+
+      if (commands[1] === "..") {
+        const currentPath = fsState.getCurrentPath();
         if (currentPath.length > 1) {
           currentPath.pop();
-          const newDir = findDirectory(currentPath);
-          if (newDir) {
-            currentDirectory = newDir;
-            return `Changed directory to ${currentPath.join('/')}`;
-          }
+          return `Changed directory to ${currentPath.join("/")}`;
         }
-        return "Already at root";
+        return "Already at root directory";
       }
 
-      const targetDir = currentDirectory.children?.find(
-        c => c.name.toLowerCase() === commands[1].toLowerCase() && c.type === "folder"
+      const targetDir = fsState.getCurrentDirectory().children?.find(
+        item => item.name === commands[1] && item.type === "folder"
       );
 
-      if (targetDir) {
-        currentDirectory = targetDir;
-        currentPath.push(targetDir.name);
-        return `Changed directory to ${currentPath.join('/')}`;
+      if (!targetDir) {
+        return `bash: cd: ${commands[1]}: No such directory`;
       }
-      return `Directory ${commands[1]} not found`;
 
-    case "cat": {
-      const file = currentDirectory.children?.find(
-        f => f.name.toLowerCase() === commands[1].toLowerCase() && f.type === "file"
-      );
-
-      if (file?.content) {
-        return file.content;
-      }
-      return `File ${commands[1]} not found`;
-}
+      currentPath.push(commands[1]);
+      return `Changed directory to ${currentPath.join("/")}`;
 
     case "pwd":
-      return currentPath.join('/');
+      return currentPath.join("/");
 
-    case "open-window":
-      return `__OPEN_WINDOW__${commands[1] || ""}`;
+    case "cat":
+      if (!commands[1]) {
+        return "Usage: cat <filename>";
+      }
+
+      const file = fsState.getCurrentDirectory().children?.find(
+        item => item.name === commands[1] && item.type === "file"
+      );
+
+      if (!file) {
+        return `cat: ${commands[1]}: No such file`;
+      }
+
+      return file.content || "File is empty";
+
     case "clear":
-      return ""; // The terminal component will handle this specially
+      return "";
+
     case "help":
       return `
         <div class="mt-2">
           Available commands:
           <ul class="text-gray-300 ml-4">
-            <li>ls - List files</li>
-            <li>cd - Change directory (cd directory_name opens the corresponding window)</li>
-            <li>cat - Display file contents</li>
+            <li>pwd - Print working directory</li>
+            <li>ls - List directory contents</li>
+            <li>ls -l - List detailed directory contents</li>
+            <li>cd [directory] - Change directory</li>
+            <li>cd .. - Go up one directory</li>
+            <li>cat [file] - Display file contents</li>
             <li>clear - Clear terminal</li>
             <li>neofetch - Display system info</li>
-            <li>open - Open a window (e.g., open resume)</li>
-            <li>new-terminal - Open a new terminal instance</li>
             <li>help - Show this help</li>
             <li>exit - Close terminal</li>
           </ul>
         </div>
       `;
-    case "open":
-      if (!commands[1]) {
-        return "Error: Please specify what to open";
-      }
 
-      const validWindows = ["resume", "projects", "certifications", "terminal", "browser", "github", "linkedin", "skills", "experience", "education", "about", "settings", "filemanager"];
-      const windowToOpen = commands[1].toLowerCase();
-
-      if (validWindows.includes(windowToOpen)) {
-        return `__OPEN_WINDOW__${windowToOpen}`;
-      } else {
-        return `Error: Cannot open ${commands[1]}, not a valid application.`;
-      }
-
-    case "new-terminal":
-      return "__NEW_TERMINAL__";
     case "exit":
-      return "__CLOSE_TERMINAL__"; // Special command to close the terminal
-    case "neofetch":
-      return `
-      <pre class="text-[hsl(var(--linux-green))] mt-2">
-          .-/+oossssoo+/-.               harshad@ubuntu
-       \`:+ssssssssssssssssss+:\`           ----------------
-     -+ssssssssssssssssssyyssss+-         OS: Ubuntu 22.04 LTS
-   .ossssssssssssssssss dMMMNysssso.      Host: Developer Machine
-  /ssssssssssshdmmNNmmyNMMMMhssssss/      Kernel: 5.15.0-58-generic
- +ssssssssshmydMMMMMMMNddddyssssssss+     Uptime: 3 hours, 42 mins
-/sssssssshNMMMyhhyyyyhmNMMMNhssssssss/    Packages: 1843
-:.ssssssssdMMMNhsssssssssshNMMMdssssssss.   Shell: bash 5.1.16
-:+sssshhhyNMMNyssssssssssssyNMMMysssssss+   Resolution: 1920x1080
-ossyNMMMNyMMhsssssssssssssshmmmhssssssso   DE: GNOME 42.0
-ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
-:+sssshhhyNMMNyssssssssssssyNMMMysssssss+   WM Theme: Adwaita
-:.ssssssssdMMMNhsssssssssshNMMMdssssssss.   Theme: Yaru [GTK2/3]
-/sssssssshNMMMyhhyyyyhdNMMMNhssssssss/    Icons: Yaru [GTK2/3]
- +sssssssssdmydMMMMMMMMddddyssssssss+     Terminal: gnome-terminal
-  /ssssssssssshdmNNNNmyNMMMMhssssss/      CPU: Intel i7-10700K @ 3.80GHz
-   .ossssssssssssssssss dMMMNysssso.      GPU: NVIDIA GeForce RTX 3070
-     -+sssssssssssssssssyyyssss+-         Memory: 5012MiB / 16000MiB
-       \`:+ssssssssssssssssss+:\`
-          .-/+oossssoo+/-.
-      </pre>
-      `;
+      return "__CLOSE_TERMINAL__";
+
     default:
-      return `Error: ${cmd}: command not found`;
+      return `bash: ${cmd}: command not found`;
   }
 };
