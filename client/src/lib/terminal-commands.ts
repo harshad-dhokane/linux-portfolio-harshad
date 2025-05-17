@@ -44,17 +44,17 @@ export const getTerminalResponse = (command: string): string => {
       
       const hasDetailFlag = commands.includes("-l") || commands.includes("-la") || commands.includes("-al");
       if (hasDetailFlag) {
-        return currentDirectory.children.map(file => {
+        return `<div class="font-mono">${currentDirectory.children.map(file => {
           const perms = formatPermissions(file.type);
           const size = formatFileSize(file.size);
           const date = formatDate(file.modified);
-          return `${perms} harshad harshad ${size.padEnd(8)} ${date} ${file.name}${file.type === 'folder' ? '/' : ''}`;
-        }).join('\n');
+          return `<div>${perms} harshad harshad ${size.padEnd(8)} ${date} <span class="text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.name}${file.type === 'folder' ? '/' : ''}</span></div>`;
+        }).join('')}</div>`;
       }
       
-      return currentDirectory.children.map(file => 
-        `${file.type === 'folder' ? '📁' : '📄'} ${file.name}${file.type === 'folder' ? '/' : ''}`
-      ).join('  ');
+      return `<div class="flex flex-wrap gap-4">${currentDirectory.children.map(file => 
+        `<span class="text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.type === 'folder' ? '📁' : '📄'} ${file.name}${file.type === 'folder' ? '/' : ''}</span>`
+      ).join('')}</div>`;
 
     case "cd":
       if (!commands[1] || commands[1] === "~") {
