@@ -20,7 +20,10 @@ const Terminal = ({ id = "terminal", defaultPosition, initialContent, title }: T
   useEffect(() => {
     const handleNewTerminal = (event: CustomEvent) => {
       const { id, initialContent, title } = event.detail;
-      openWindow(id);
+      openWindow(id, {
+        component: Terminal,
+        props: { id, initialContent, title }
+      });
     };
 
     window.addEventListener('new-terminal-created', handleNewTerminal as EventListener);

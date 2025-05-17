@@ -118,14 +118,14 @@ export const getTerminalResponse = (command: string): string => {
 
       if (file?.content) {
         const terminalId = `file-viewer-${Date.now()}`;
-        const newTerminalEvent = new CustomEvent('new-terminal-created', {
+        // Create and dispatch event
+        window.dispatchEvent(new CustomEvent('new-terminal-created', {
           detail: { 
             id: terminalId,
             initialContent: file.content,
             title: `File: ${file.name}`
           }
-        });
-        window.dispatchEvent(newTerminalEvent);
+        }));
         return `Opening ${file.name} in new terminal...`;
       }
       return `File ${commands[1]} not found`;
