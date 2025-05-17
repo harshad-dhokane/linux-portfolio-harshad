@@ -21,8 +21,8 @@ const Window = ({
   children,
   defaultWidth = 800,
   defaultHeight = 600,
-  defaultX = 100,
-  defaultY = 100,
+  defaultX,
+  defaultY,
   minWidth = 400,
   minHeight = 300,
   resizable = true,
@@ -40,10 +40,15 @@ const Window = ({
   } = useDesktop();
   
   const rndRef = useRef<Rnd>(null);
-  const [position, setPosition] = useState({ x: defaultX, y: defaultY });
+  
+  // Calculate default center position if not provided
+  const centerX = typeof defaultX === 'number' ? defaultX : Math.max(0, Math.floor((window.innerWidth - defaultWidth) / 2));
+  const centerY = typeof defaultY === 'number' ? defaultY : Math.max(0, Math.floor((window.innerHeight - defaultHeight) / 2));
+  
+  const [position, setPosition] = useState({ x: centerX, y: centerY });
   const [size, setSize] = useState({ width: defaultWidth, height: defaultHeight });
   const [prevSize, setPrevSize] = useState({ width: defaultWidth, height: defaultHeight });
-  const [prevPosition, setPrevPosition] = useState({ x: defaultX, y: defaultY });
+  const [prevPosition, setPrevPosition] = useState({ x: centerX, y: centerY });
 
   const isActive = activeWindowId === id;
   const isOpen = isWindowOpen(id);

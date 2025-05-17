@@ -63,6 +63,13 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
   useEffect(() => {
     if (terminalOutputRef.current) {
       terminalOutputRef.current.scrollTop = terminalOutputRef.current.scrollHeight;
+      
+      // Ensure the user sees the latest command by adding a small delay
+      setTimeout(() => {
+        if (terminalOutputRef.current) {
+          terminalOutputRef.current.scrollTop = terminalOutputRef.current.scrollHeight;
+        }
+      }, 100);
     }
   }, [commandHistory]);
 
