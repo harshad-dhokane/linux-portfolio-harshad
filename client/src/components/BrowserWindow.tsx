@@ -72,7 +72,7 @@ const BrowserWindow = () => {
     
     // Check if it's a search query (contains spaces or no dots)
     if (!inputUrl.includes('.') || inputUrl.includes(' ')) {
-      return `https://www.google.com/search?igu=1&iframename=portfolio&q=${encodeURIComponent(inputUrl)}`;
+      return `https://www.google.com/search?igu=1&q=${encodeURIComponent(inputUrl)}`;
     }
     
     // Handle URLs without protocol
@@ -266,7 +266,7 @@ const BrowserWindow = () => {
               ref={iframeRef}
               src={activeTab.url}
               className="w-full h-full border-none"
-              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation allow-top-navigation-by-user-activation"
               onLoad={() => {
                 setIsLoading(false);
                 const iframe = iframeRef.current;
