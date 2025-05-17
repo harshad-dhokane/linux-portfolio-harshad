@@ -22,7 +22,15 @@ const Terminal = ({ id = "terminal", defaultPosition, initialContent, title }: T
       const { id, initialContent, title } = event.detail;
       openWindow(id, {
         component: Terminal,
-        props: { id, initialContent, title }
+        props: { 
+          id, 
+          initialContent: initialContent || '', 
+          title: title || `File Viewer - ${id}`,
+          defaultPosition: {
+            x: window.innerWidth / 4,
+            y: window.innerHeight / 4
+          }
+        }
       });
     };
 
