@@ -15,6 +15,19 @@ interface TerminalProps {
 
 const Terminal = ({ id = "terminal", defaultPosition, initialContent, title }: TerminalProps) => {
   const { isWindowOpen, openWindow, closeWindow } = useDesktop();
+
+  // Listen for new terminal window events
+  useEffect(() => {
+    const handleNewTerminal = (event: CustomEvent) => {
+      const { id, initialContent, title } = event.detail;
+      openWindow(id);
+    };
+
+    window.addEventListener('new-terminal-created', handleNewTerminal as EventListener);
+    return () => {
+      window.removeEventListener('new-terminal-created', handleNewTerminal as EventListener);
+    };
+  }, [openWindow]);
   const [commandHistory, setCommandHistory] = useState<{ command: string; response: string }[]>(initialContent ? [
     { command: "", response: initialContent }
   ] : [
