@@ -62,10 +62,11 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
       `,
     },
   ]);
-  
+
   const [currentInput, setCurrentInput] = useState("");
   const terminalOutputRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [currentPath, setCurrentPath] = useState([""]);
 
   // Completely overhauled terminal scrolling to guarantee the latest commands and output are visible
   useEffect(() => {
@@ -77,14 +78,14 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
         if (container) {
           // Force scroll to absolute bottom
           container.scrollTop = container.scrollHeight;
-          
+
           // Double-check immediate scroll
           setTimeout(() => {
             if (container) {
               container.scrollTop = container.scrollHeight;
             }
           }, 10);
-          
+
           // Final check after all rendering is complete
           setTimeout(() => {
             if (container) {
@@ -94,10 +95,10 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
         }
       }
     };
-    
+
     // Run scroll whenever command history changes
     forceScrollToBottom();
-    
+
     // Track any changes to the DOM inside the terminal
     const observer = new MutationObserver((mutations) => {
       // If there are changes to the DOM, force scroll
@@ -105,7 +106,7 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
         forceScrollToBottom();
       }
     });
-    
+
     // Observe the terminal output for any changes
     if (terminalOutputRef.current) {
       observer.observe(terminalOutputRef.current, {
@@ -115,18 +116,18 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
         attributes: true      // Watch attributes too
       });
     }
-    
+
     // Also track any resizing of the terminal window
     const resizeObserver = new ResizeObserver(() => {
       forceScrollToBottom();
     });
-    
+
     // Find the parent window element and observe it
     const terminalWindow = document.getElementById(id)?.parentElement;
     if (terminalWindow) {
       resizeObserver.observe(terminalWindow);
     }
-    
+
     // Cleanup all observers on unmount
     return () => {
       observer.disconnect();
@@ -151,7 +152,7 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
       };
     }
   }, [isWindowOpen, id]);
-  
+
   // Check if this is a new terminal instance that should use stored position
   useEffect(() => {
     if (id !== 'terminal' && !defaultPosition) {
@@ -179,7 +180,7 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
     // Check for window opening command
     if (response.startsWith("__OPEN_WINDOW__")) {
       const windowId = response.replace("__OPEN_WINDOW__", "").trim();
-      
+
       // External links
       if (windowId === "github") {
         openWindow("browser");
@@ -191,7 +192,7 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
         sessionStorage.setItem("browserUrl", "https://www.linkedin.com/in/harshad-dhokane/");
         return "Opening LinkedIn in browser...";
       }
-      
+
       // Internal windows
       if (windowId) {
         setTimeout(() => openWindow(windowId), 100);
@@ -199,43 +200,43 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
       }
       return "No window specified";
     }
-    
+
     // Check for new terminal command
     if (response === "__NEW_TERMINAL__") {
       // Create a new terminal instance at an offset position from the current one
       const randomId = Math.floor(Math.random() * 1000);
       const newTerminalId = `terminal-${randomId}`;
-      
+
       // Get current terminal position to offset the new one
       const currentPos = document.getElementById(id)?.getBoundingClientRect();
-      
+
       setTimeout(() => {
         // Open a new terminal with a unique ID and slightly offset position
         const newX = (currentPos?.left || 50) + 50;
         const newY = (currentPos?.top || 50) + 50;
-        
+
         // Use sessionStorage to pass position data to the new terminal
         sessionStorage.setItem('newTerminalPosition', JSON.stringify({x: newX, y: newY}));
-        
+
         // Dispatch custom event to notify Desktop component about the new terminal
         const newTerminalEvent = new CustomEvent('new-terminal-created', {
           detail: { id: newTerminalId }
         });
         window.dispatchEvent(newTerminalEvent);
-        
+
         // Open the new terminal window
         openWindow(newTerminalId);
       }, 100);
-      
+
       return "Opening new terminal...";
     }
-    
+
     // Check for terminal close command
     if (response === "__CLOSE_TERMINAL__") {
       setTimeout(() => closeWindow(id), 100);
       return "Closing terminal...";
     }
-    
+
     // If no special command, return the original response
     return response;
   };
@@ -243,29 +244,48 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      
+
       const command = currentInput.trim();
       if (!command) return;
-      
+
       // Special handling for 'clear' command
       if (command.toLowerCase() === "clear") {
         setCommandHistory([]);
         setCurrentInput("");
         return;
       }
-      
+
+      // Handle 'cd' command
+      if (command.startsWith("cd ")) {
+        const dir = command.substring(3).trim();
+        if (dir === "..") {
+          if (currentPath.length > 1) {
+            setCurrentPath(prev => prev.slice(0, -1));
+          }
+        } else if (dir) {
+          setCurrentPath(prev => [...prev, dir]);
+        }
+        setCurrentInput("");
+        return;
+      }
+
       // Get response to command
       let response = getTerminalResponse(command);
-      
+
+        // Handle 'ls' command
+        if (command.toLowerCase() === "ls") {
+          response = `<div class="text-blue-300">Projects/  Resume/  Certificates/  Skills.txt  Experience.txt  GitHub/  LinkedIn/</div>`;
+        }
+
       // Process special commands
       response = handleSpecialCommands(response);
-      
+
       // Add command to history
       setCommandHistory((prev) => [
         ...prev,
         { command, response },
       ]);
-      
+
       // Clear input
       setCurrentInput("");
     }
@@ -291,14 +311,14 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
           {commandHistory.map((entry, index) => (
             <div key={index} className="mb-2">
               <div>
-                <span className="text-green-400 font-mono">harshad@ubuntu:~$</span> <span className="text-white">{entry.command}</span>
+                <span className="text-green-400 font-mono">harshad@ubuntu:~/{currentPath.slice(1).join("/")}$</span> <span className="text-white">{entry.command}</span>
               </div>
               <div dangerouslySetInnerHTML={{ __html: entry.response }}></div>
             </div>
           ))}
         </div>
         <div className="flex items-center mt-2">
-          <span className="text-green-400 font-mono">harshad@ubuntu:~$</span>
+          <span className="text-green-400 font-mono">harshad@ubuntu:~/{currentPath.slice(1).join("/")}$</span>
           <input
             ref={inputRef}
             type="text"

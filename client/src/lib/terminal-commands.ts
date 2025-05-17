@@ -60,10 +60,11 @@ const getFormattedListing = (files: any[], detailed: boolean) => {
 export const getTerminalResponse = (command: string): string => {
   const commands = command.trim().split(/\s+/);
   const cmd = commands[0].toLowerCase();
+  const currentDirString = currentPath.join("/");
 
   switch (cmd) {
     case "ls":
-      if (!currentDirectory.children) {
+      if (!currentDirectory.children || currentDirectory.children.length === 0) {
         return "Directory is empty";
       }
       
@@ -73,13 +74,13 @@ export const getTerminalResponse = (command: string): string => {
           const perms = formatPermissions(file.type);
           const size = formatFileSize(file.size);
           const date = formatDate(file.modified);
-          return `<div>${perms} harshad harshad ${size.padEnd(8)} ${date} <span class="text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.name}${file.type === 'folder' ? '/' : ''}</span></div>`;
-        }).join('')}</div>`;
+          return `<div>${perms} harshad harshad ${size.padEnd(8)} ${date} <span class="text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.name}</span></div>`;
+        }).join('\n')}</div>`;
       }
       
       return `<div class="flex flex-wrap gap-4">${currentDirectory.children.map(file => 
-        `<span class="text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.type === 'folder' ? '📁' : '📄'} ${file.name}${file.type === 'folder' ? '/' : ''}</span>`
-      ).join('')}</div>`;
+        `<span class="text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.type === 'folder' ? '📁' : '📄'} ${file.name}</span>`
+      ).join(' ')}</div>`;
 
     case "cd":
       if (!commands[1] || commands[1] === "~") {
