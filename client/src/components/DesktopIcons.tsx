@@ -243,16 +243,16 @@ const DesktopIcons = () => {
               }}
             >
               <div
-                className={`w-16 h-16 flex items-center justify-center rounded-md shadow-md hover:shadow-lg transition-transform ${icon.bgColor} ${
+                className={`w-12 h-12 flex items-center justify-center rounded-md shadow-md hover:shadow-lg transition-transform ${icon.bgColor} ${
                   !isDragging ? 'hover:scale-105' : ''
                 }`}
                 style={{ 
-                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
                 }}
               >
                 <i className={`${icon.icon} text-2xl ${icon.color}`}></i>
               </div>
-              <span className="text-white text-xs mt-1 text-center font-medium bg-black/40 px-2 py-0.5 rounded backdrop-blur-sm">
+              <span className="text-white text-[11px] mt-1 text-center font-medium bg-black/40 px-1.5 py-0.5 rounded-sm backdrop-blur-sm">
                 {icon.name}
               </span>
             </div>
