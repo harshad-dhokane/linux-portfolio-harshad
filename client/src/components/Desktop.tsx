@@ -49,6 +49,22 @@ const Desktop = () => {
     }
   };
 
+  // Track terminal instances
+  const [terminalInstances, setTerminalInstances] = useState<string[]>(['terminal']);
+  const { isWindowOpen } = useDesktop();
+  
+  // Effect to handle terminal creation requests
+  useEffect(() => {
+    // Check if terminal-new has been requested to open
+    if (isWindowOpen('terminal-new')) {
+      // Create a new unique terminal ID
+      const newTerminalId = `terminal-${terminalInstances.length}`;
+      
+      // Add the new terminal to our instances list
+      setTerminalInstances(prev => [...prev, newTerminalId]);
+    }
+  }, [isWindowOpen]);
+  
   return (
     <div
       className="desktop h-screen w-screen bg-ubuntu-gray relative"
@@ -63,8 +79,20 @@ const Desktop = () => {
       {/* Desktop Icons */}
       <DesktopIcons />
 
-      {/* Terminal Window */}
-      <Terminal />
+      {/* Terminal Windows - Main terminal and additional instances */}
+      <Terminal id="terminal" />
+      
+      {/* Render additional terminal instances with different positioning */}
+      {terminalInstances.slice(1).map((id, index) => (
+        <Terminal 
+          key={id} 
+          id={id} 
+          defaultPosition={{
+            x: 50 + (index * 30), // Offset each terminal to create a stacked effect
+            y: 50 + (index * 30)
+          }}
+        />
+      ))}
 
       {/* Browser Window */}
       <BrowserWindow />

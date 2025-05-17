@@ -3,7 +3,15 @@ import { useDesktop } from "@/context/DesktopContext";
 import Window from "./Window";
 import { getTerminalResponse } from "@/lib/terminal-commands";
 
-const Terminal = () => {
+interface TerminalProps {
+  id?: string;
+  defaultPosition?: {
+    x: number;
+    y: number;
+  };
+}
+
+const Terminal = ({ id = "terminal", defaultPosition }: TerminalProps) => {
   const { isWindowOpen, openWindow, closeWindow } = useDesktop();
   const [commandHistory, setCommandHistory] = useState<{ command: string; response: string }[]>([
     {
@@ -130,7 +138,7 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
     
     // Check for terminal close command
     if (response === "__CLOSE_TERMINAL__") {
-      setTimeout(() => closeWindow("terminal"), 100);
+      setTimeout(() => closeWindow(id), 100);
       return "Closing terminal...";
     }
     
@@ -171,13 +179,14 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
 
   return (
     <Window
-      id="terminal"
-      title="harshad@ubuntu: ~/terminal"
+      id={id}
+      title={`harshad@ubuntu: ~/${id}`}
       defaultWidth={700}
       defaultHeight={400}
+      defaultX={defaultPosition?.x}
+      defaultY={defaultPosition?.y}
     >
       <div 
-        id="terminal-content" 
         className="terminal p-3 overflow-y-auto h-full text-sm bg-black/60 backdrop-blur-md"
         style={{
           backgroundImage: 'linear-gradient(45deg, rgba(30, 30, 30, 0.6), rgba(15, 15, 15, 0.7))',
