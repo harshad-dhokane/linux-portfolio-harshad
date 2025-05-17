@@ -17,6 +17,29 @@ const DesktopIcons = () => {
   const [iconPositions, setIconPositions] = useState<Record<string, { x: number; y: number }>>({});
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   
+  // Set default positions for icons in a grid layout
+  const getDefaultPositions = () => {
+    const defaultPositions: Record<string, { x: number; y: number }> = {};
+    
+    // Calculate positions for first column
+    iconsColumns[0].forEach((icon, index) => {
+      defaultPositions[icon.id] = { 
+        x: 20, 
+        y: 20 + (index * 90) 
+      };
+    });
+    
+    // Calculate positions for second column (further right)
+    iconsColumns[1].forEach((icon, index) => {
+      defaultPositions[icon.id] = { 
+        x: 120, 
+        y: 20 + (index * 90) 
+      };
+    });
+    
+    return defaultPositions;
+  };
+
   // Load saved positions from localStorage on component mount
   useEffect(() => {
     const savedPositions = localStorage.getItem('desktopIconPositions');
@@ -25,7 +48,11 @@ const DesktopIcons = () => {
         setIconPositions(JSON.parse(savedPositions));
       } catch (e) {
         console.error("Failed to parse saved icon positions", e);
+        setIconPositions(getDefaultPositions());
       }
+    } else {
+      // No saved positions, use defaults
+      setIconPositions(getDefaultPositions());
     }
   }, []);
 

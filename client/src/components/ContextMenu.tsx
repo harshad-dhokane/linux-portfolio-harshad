@@ -44,7 +44,7 @@ const ContextMenu = ({ x, y, onClose, selectedIconId }: ContextMenuProps) => {
   // Position the menu ensuring it doesn't go off screen
   const calculatePosition = () => {
     const menuWidth = 200;
-    const menuHeight = menuItems.length * 36; // rough height calculation
+    const menuHeight = items.length * 36 + 60; // rough height calculation with divider and extra item
     
     const right = x + menuWidth > window.innerWidth ? window.innerWidth - menuWidth : x;
     const bottom = y + menuHeight > window.innerHeight ? window.innerHeight - menuHeight : y;
