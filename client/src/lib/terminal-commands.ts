@@ -1,5 +1,30 @@
 
-import { fileSystem } from '../components/FileManager';
+export const fileSystem = {
+  name: "Home",
+  type: "folder",
+  children: [
+    {
+      name: "Projects",
+      type: "folder",
+      children: []
+    },
+    {
+      name: "Resume",
+      type: "folder",
+      children: []
+    },
+    {
+      name: "Skills.txt",
+      type: "file",
+      content: "Programming Languages:\n- JavaScript/TypeScript\n- Python\n- Java\n\nWeb Technologies:\n- React\n- Node.js\n- Express"
+    },
+    {
+      name: "Experience.txt",
+      type: "file",
+      content: "See experience window for detailed work history"
+    }
+  ]
+};
 
 export let currentDirectory = fileSystem;
 export let currentPath = ["Home"];
