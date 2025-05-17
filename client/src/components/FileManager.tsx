@@ -14,13 +14,28 @@ interface FileData {
   modified?: string;
 }
 
+export const fileSystem: FileData = {
+  name: "Home",
+  type: "folder",
+  icon: "fas fa-home",
+  color: "text-blue-500",
+  children: [
+    // Keep existing children structure
+  ]
+};
+
+export let currentDirectory = fileSystem;
+export let currentPath = ["Home"];
+
 const FileManager = () => {
   const { openWindow } = useDesktop();
-  const [currentPath, setCurrentPath] = useState<string[]>(["Home"]);
   const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
   const [viewMode, setViewMode] = useState<"icons" | "list">("icons");
   const [sortBy, setSortBy] = useState<"name" | "type" | "size" | "date">("name");
   const [showFileInfo, setShowFileInfo] = useState(false);
+  
+  // Use these to update the shared state
+  const [localCurrentPath, setLocalCurrentPath] = useState<string[]>(currentPath);
 
   // File system structure
   const fileSystem: FileData = {
@@ -767,7 +782,9 @@ const FileManager = () => {
   // Navigate to a directory
   const navigateToDirectory = (folder: FileData) => {
     if (folder.type === "folder") {
-      setCurrentPath([...currentPath, folder.name]);
+      currentPath = [...currentPath, folder.name];
+      setLocalCurrentPath(currentPath);
+      currentDirectory = folder;
       setSelectedFile(null);
     }
   };
@@ -775,7 +792,13 @@ const FileManager = () => {
   // Navigate up one level
   const navigateUp = () => {
     if (currentPath.length > 1) {
-      setCurrentPath(currentPath.slice(0, -1));
+      currentPath = currentPath.slice(0, -1);
+      setLocalCurrentPath(currentPath);
+      // Update current directory
+      currentDirectory = fileSystem;
+      for (const dir of currentPath.slice(1)) {
+        currentDirectory = currentDirectory.children?.find(item => item.name === dir) || currentDirectory;
+      }
       setSelectedFile(null);
     }
   };

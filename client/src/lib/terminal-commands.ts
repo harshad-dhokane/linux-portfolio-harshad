@@ -1,3 +1,5 @@
+import { fileSystem, currentDirectory, currentPath } from '../components/FileManager';
+
 export const getTerminalResponse = (command: string): string => {
   const commands = command.split(" ");
   const cmd = commands[0];
@@ -9,8 +11,9 @@ export const getTerminalResponse = (command: string): string => {
 
   switch (cmd) {
     case "ls":
-      // Simulate Linux-style terminal output with fixed width, monospace formatting
-      const files = ["Projects/", "Resume/", "Certificates/", "Skills.txt", "Experience.txt", "Education/", "GitHub/", "LinkedIn/", "file-manager/"];
+      const files = currentDirectory.children?.map(item => 
+        item.type === "folder" ? `${item.name}/` : item.name
+      ) || [];
       const hasFlag = commands.includes("-la") || commands.includes("-a") || commands.includes("-l");
 
       if (hasFlag) {
