@@ -472,6 +472,8 @@ const BrowserWindow = () => {
               </div>
             </div>
           )}
+        </div>
+      </div>
 
           {content === "external" && (
             <div className="h-full w-full">
