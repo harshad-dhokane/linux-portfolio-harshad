@@ -6,22 +6,116 @@ export const fileSystem = {
     {
       name: "Projects",
       type: "folder",
-      children: []
+      children: [
+        {
+          name: "Internly",
+          type: "file",
+          icon: "fas fa-file-code",
+          content: "Internship tracking platform..."
+        },
+        {
+          name: "College Suggestion Bot",
+          type: "file",
+          icon: "fas fa-file-code",
+          content: "AI-powered chatbot..."
+        },
+        {
+          name: "AI Image Recognition",
+          type: "file",
+          icon: "fas fa-file-code",
+          content: "Image recognition system..."
+        },
+        {
+          name: "NLP-Based Chatbot",
+          type: "file",
+          icon: "fas fa-file-code",
+          content: "Natural language processing chatbot..."
+        }
+      ]
     },
     {
-      name: "Resume",
+      name: "Education",
       type: "folder",
-      children: []
+      children: [
+        {
+          name: "MSc Computer Science",
+          type: "file",
+          content: "Master's degree details..."
+        },
+        {
+          name: "BSc Computer Science",
+          type: "file",
+          content: "Bachelor's degree details..."
+        },
+        {
+          name: "HSC Science",
+          type: "file",
+          content: "Higher secondary education..."
+        }
+      ]
     },
     {
-      name: "Skills.txt",
-      type: "file",
-      content: "Programming Languages:\n- JavaScript/TypeScript\n- Python\n- Java\n\nWeb Technologies:\n- React\n- Node.js\n- Express"
+      name: "Experience",
+      type: "folder",
+      children: [
+        {
+          name: "Canspirit.ai",
+          type: "file",
+          content: "Software Development Intern..."
+        },
+        {
+          name: "CodeSoft",
+          type: "file",
+          content: "AI & Software Development Intern..."
+        }
+      ]
     },
     {
-      name: "Experience.txt",
-      type: "file",
-      content: "See experience window for detailed work history"
+      name: "Skills",
+      type: "folder",
+      children: [
+        {
+          name: "Programming",
+          type: "file",
+          content: "Programming skills..."
+        },
+        {
+          name: "Web Development",
+          type: "file",
+          content: "Web development skills..."
+        },
+        {
+          name: "AI & ML",
+          type: "file",
+          content: "AI and ML skills..."
+        },
+        {
+          name: "DevOps & Databases",
+          type: "file",
+          content: "DevOps and Database skills..."
+        }
+      ]
+    },
+    {
+      name: "Certificates",
+      type: "folder",
+      children: [
+        {
+          name: "AI Fundamentals",
+          type: "file",
+          content: "AI certification..."
+        },
+        {
+          name: "Full Stack Web Development",
+          type: "file",
+          content: "Web development certification..."
+        },
+        {
+          name: "Database Management & SQL",
+          type: "file",
+          content: "Database certification..."
+        }
+      ]
     }
   ]
 };
@@ -29,85 +123,33 @@ export const fileSystem = {
 export let currentDirectory = fileSystem;
 export let currentPath = ["Home"];
 
-const formatPermissions = (type: string) => {
-  return type === "folder" ? "drwxr-xr-x" : "-rw-r--r--";
-};
-
-const formatFileSize = (size: string | undefined) => {
-  return size || "-";
-};
-
 const formatDate = (date: string | undefined) => {
   return date || new Date().toLocaleString();
-};
-
-const getFormattedListing = (files: any[], detailed: boolean) => {
-  if (detailed) {
-    return files.map(file => {
-      const type = file.type === "folder" ? "d" : "-";
-      const perms = "rwxr-xr-x";
-      const size = formatFileSize(file.size);
-      const date = formatDate(file.modified);
-      return `<div class="mb-1">${type}${perms} harshad harshad ${size.padEnd(8)} ${date.padEnd(12)} <span class="text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.name}</span></div>`;
-    }).join('\n');
-  }
-  
-  return files.map(file => (
-    `<span class="mr-4 text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.type === 'folder' ? '📁' : '📄'} ${file.name}</span>`
-  )).join(' ');
 };
 
 export const getTerminalResponse = (command: string): string => {
   const commands = command.trim().split(/\s+/);
   const cmd = commands[0].toLowerCase();
-  const currentDirString = currentPath.join("/");
 
   switch (cmd) {
     case "ls":
-      // Get the current directory path
-      const dirPath = currentPath.join("/");
+      const currentChildren = currentDirectory.children || [];
+      const hasDetailFlag = commands.includes("-l") || commands.includes("-la") || commands.includes("-al");
       
-      // Filter files based on current directory
-      let filteredFiles = [];
-      if (dirPath.includes("Projects")) {
-        filteredFiles = currentDirectory.children?.filter(file => 
-          ["Internly", "College Suggestion Bot", "AI Image Recognition", "NLP-Based Chatbot"].includes(file.name)
-        ) || [];
-      } else if (dirPath.includes("Education")) {
-        filteredFiles = currentDirectory.children?.filter(file => 
-          ["MSc Computer Science", "BSc Computer Science", "HSC Science"].includes(file.name)
-        ) || [];
-      } else if (dirPath.includes("Experience")) {
-        filteredFiles = currentDirectory.children?.filter(file => 
-          ["Canspirit.ai", "CodeSoft"].includes(file.name)
-        ) || [];
-      } else if (dirPath.includes("Skills")) {
-        filteredFiles = currentDirectory.children?.filter(file => 
-          ["Programming", "Web Development", "AI & ML", "DevOps & Databases"].includes(file.name)
-        ) || [];
-      } else if (dirPath.includes("Certificates")) {
-        filteredFiles = currentDirectory.children?.filter(file => 
-          ["AI Fundamentals", "Full Stack Web Development", "Database Management & SQL"].includes(file.name)
-        ) || [];
-      } else {
-        filteredFiles = currentDirectory.children || [];
-      }
-
-      if (!filteredFiles.length) {
+      if (!currentChildren.length) {
         return "Directory is empty";
       }
-      
-      const hasDetailFlag = commands.includes("-l") || commands.includes("-la") || commands.includes("-al");
+
       if (hasDetailFlag) {
-        return `<div class="font-mono">${filteredFiles.map(file => {
-          const perms = formatPermissions(file.type);
-          const size = formatFileSize(file.size);
+        return `<div class="font-mono">${currentChildren.map(file => {
+          const perms = file.type === "folder" ? "drwxr-xr-x" : "-rw-r--r--";
+          const size = file.size || "-";
           const date = formatDate(file.modified);
           return `<div>${perms} harshad harshad ${size.padEnd(8)} ${date} <span class="text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.name}</span></div>`;
         }).join('\n')}</div>`;
       }
       
-      return `<div class="flex flex-wrap gap-4">${filteredFiles.map(file => 
+      return `<div class="flex flex-wrap gap-4">${currentChildren.map(file => 
         `<span class="text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.type === 'folder' ? '📁' : '📄'} ${file.name}</span>`
       ).join(' ')}</div>`;
 
@@ -134,36 +176,16 @@ export const getTerminalResponse = (command: string): string => {
         return "Already at root directory";
       }
 
-      const targetPath = commands[1].split("/").filter(Boolean);
-      let newDirectory = currentDirectory;
-      let newPath = [...currentPath];
-      
-      for (const part of targetPath) {
-        if (part === "..") {
-          if (newPath.length > 1) {
-            newPath.pop();
-            newDirectory = fileSystem;
-            for (const dir of newPath.slice(1)) {
-              const found = newDirectory.children?.find(item => item.name === dir && item.type === "folder");
-              if (found) {
-                newDirectory = found;
-              }
-            }
-          }
-        } else {
-          const found = newDirectory.children?.find(item => 
-            item.name === part && item.type === "folder"
-          );
-          if (!found) {
-            return `bash: cd: ${commands[1]}: No such directory`;
-          }
-          newDirectory = found;
-          newPath.push(part);
-        }
+      const targetDir = currentDirectory.children?.find(
+        item => item.name === commands[1] && item.type === "folder"
+      );
+
+      if (!targetDir) {
+        return `bash: cd: ${commands[1]}: No such directory`;
       }
-      
-      currentDirectory = newDirectory;
-      currentPath = newPath;
+
+      currentDirectory = targetDir;
+      currentPath.push(targetDir.name);
       return `Changed directory to ${currentPath.join("/")}`;
 
     case "pwd":
@@ -174,15 +196,15 @@ export const getTerminalResponse = (command: string): string => {
         return "Usage: cat <filename>";
       }
 
-      const file = currentDirectory.children?.find(item =>
-        item.name.toLowerCase() === commands[1].toLowerCase() && item.type === "file"
+      const file = currentDirectory.children?.find(
+        item => item.name === commands[1] && item.type === "file"
       );
 
-      if (file) {
-        return file.content || "File is empty";
+      if (!file) {
+        return `cat: ${commands[1]}: No such file`;
       }
 
-      return `cat: ${commands[1]}: No such file`;
+      return file.content || "File is empty";
 
     case "clear":
       return "";
@@ -204,32 +226,6 @@ export const getTerminalResponse = (command: string): string => {
             <li>exit - Close terminal</li>
           </ul>
         </div>
-      `;
-
-    case "neofetch":
-      return `
-      <pre class="text-[hsl(var(--linux-green))] mt-2">
-          .-/+oossssoo+/-.               harshad@ubuntu
-       \`:+ssssssssssssssssss+:\`           ----------------
-     -+ssssssssssssssssssyyssss+-         OS: Ubuntu 22.04 LTS
-   .ossssssssssssssssss dMMMNysssso.      Host: Developer Machine
-  /ssssssssssshdmmNNmmyNMMMMhssssss/      Kernel: 5.15.0-58-generic
- +ssssssssshmydMMMMMMMNddddyssssssss+     Uptime: 3 hours, 42 mins
-/sssssssshNMMMyhhyyyyhmNMMMNhssssssss/    PWD: ${currentPath.join("/")}
-.ssssssssdMMMNhsssssssssshNMMMdssssssss.   Shell: bash 5.1.16
-+sssshhhyNMMNyssssssssssssyNMMMysssssss+   Resolution: 1920x1080
-ossyNMMMNyMMhsssssssssssssshmmmhssssssso   DE: GNOME 42.0
-ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
-+sssshhhyNMMNyssssssssssssyNMMMysssssss+   WM Theme: Adwaita
-.ssssssssdMMMNhsssssssssshNMMMdssssssss.   Theme: Yaru [GTK2/3]
-/sssssssshNMMMyhhyyyyhdNMMMNhssssssss/    Icons: Yaru [GTK2/3]
- +sssssssssdmydMMMMMMMMddddyssssssss+     Terminal: gnome-terminal
-  /ssssssssssshdmNNNNmyNMMMMhssssss/      CPU: Intel i7-10700K @ 3.80GHz
-   .ossssssssssssssssss dMMMNysssso.      GPU: NVIDIA GeForce RTX 3070
-     -+sssssssssssssssssyyyssss+-         Memory: 5012MiB / 16000MiB
-       \`:+ssssssssssssssssss+:\`
-          .-/+oossssoo+/-.
-      </pre>
       `;
 
     case "exit":
