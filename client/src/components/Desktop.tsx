@@ -46,23 +46,28 @@ const Desktop = () => {
   });
 
   useEffect(() => {
-    const duration = 5000; // 5 seconds
-    const interval = 50; // Update every 50ms for smooth animation
-    const step = (100 * interval) / duration;
+    const animateProgress = () => {
+      const startTime = Date.now();
+      const duration = 5000; // 5 seconds
 
-    const timer = setInterval(() => {
-      setProgress((oldProgress) => {
-        const newProgress = oldProgress + step;
-        if (newProgress >= 100) {
-          clearInterval(timer);
+      const updateProgress = () => {
+        const currentTime = Date.now();
+        const elapsed = currentTime - startTime;
+        const newProgress = Math.min((elapsed / duration) * 100, 100);
+
+        setProgress(newProgress);
+
+        if (newProgress < 100) {
+          requestAnimationFrame(updateProgress);
+        } else {
           setTimeout(() => setLoading(false), 200);
-          return 100;
         }
-        return newProgress;
-      });
-    }, interval);
+      };
 
-    return () => clearInterval(timer);
+      requestAnimationFrame(updateProgress);
+    };
+
+    animateProgress();
   }, []);
 
   // Handle context menu
