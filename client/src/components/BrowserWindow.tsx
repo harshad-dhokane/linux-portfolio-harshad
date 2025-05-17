@@ -33,20 +33,18 @@ const BrowserWindow = () => {
     const storedUrl = sessionStorage.getItem("browserUrl");
     const storedContent = sessionStorage.getItem("browserContent");
     if (storedUrl) {
-      if (storedContent === "github" || storedContent === "linkedin") {
-        const newTab = {
-          id: tabs.length,
-          title: storedContent === "github" ? "GitHub" : "LinkedIn",
-          url: storedUrl,
-          content: storedContent,
-          history: [storedUrl],
-          historyIndex: 0,
-          isLoading: false,
-          iframeRef: { current: null }
-        };
-        setTabs([newTab]);
-        setActiveTabId(newTab.id);
-      } else {
+      const newTab = {
+        id: tabs.length,
+        title: storedContent === "github" ? "GitHub" : storedContent === "linkedin" ? "LinkedIn" : "New Tab",
+        url: storedUrl,
+        content: storedContent || "external",
+        history: [storedUrl],
+        historyIndex: 0,
+        isLoading: false,
+        iframeRef: { current: null }
+      };
+      setTabs(prevTabs => [...prevTabs, newTab]);
+      setActiveTabId(newTab.id);
         navigateTo(storedUrl);
       }
       sessionStorage.removeItem("browserUrl");
