@@ -9,11 +9,15 @@ interface TerminalProps {
     x: number;
     y: number;
   };
+  initialContent?: string;
+  title?: string;
 }
 
-const Terminal = ({ id = "terminal", defaultPosition }: TerminalProps) => {
+const Terminal = ({ id = "terminal", defaultPosition, initialContent, title }: TerminalProps) => {
   const { isWindowOpen, openWindow, closeWindow } = useDesktop();
-  const [commandHistory, setCommandHistory] = useState<{ command: string; response: string }[]>([
+  const [commandHistory, setCommandHistory] = useState<{ command: string; response: string }[]>(initialContent ? [
+    { command: "", response: initialContent }
+  ] : [
     {
       command: "neofetch",
       response: `
