@@ -44,14 +44,9 @@ const BrowserWindow = () => {
     }
   };
 
-  const navigateToSocialProfile = (url: string) => {
-    const newTab = {
-      id: String(tabs.length + 1),
-      title: url.includes('github') ? 'GitHub' : 'LinkedIn',
-      url
-    };
-    setTabs([...tabs, newTab]);
-    setActiveTabId(newTab.id);
+  const navigateToSocialProfile = (type: 'github' | 'linkedin') => {
+    const { openWindow } = useDesktop();
+    openWindow(type === 'github' ? 'GithubProfile' : 'LinkedinProfile');
   };
 
   const processUrl = (inputUrl: string) => {
@@ -170,7 +165,7 @@ const BrowserWindow = () => {
               <div className="mt-12 grid grid-cols-2 gap-8">
                 <div
                   className="flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity"
-                  onClick={() => navigateToSocialProfile('https://github.com/harshad-dhokane')}
+                  onClick={() => navigateToSocialProfile('github')}
                 >
                   <div className="w-16 h-16 bg-gray-800 rounded-lg flex items-center justify-center mb-2">
                     <i className="fab fa-github text-white text-3xl"></i>
@@ -179,7 +174,7 @@ const BrowserWindow = () => {
                 </div>
                 <div
                   className="flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity"
-                  onClick={() => navigateToSocialProfile('https://www.linkedin.com/in/harshad-dhokane')}
+                  onClick={() => navigateToSocialProfile('linkedin')}
                 >
                   <div className="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center mb-2">
                     <i className="fab fa-linkedin-in text-white text-3xl"></i>
