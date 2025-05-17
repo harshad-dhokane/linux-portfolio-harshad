@@ -1,16 +1,16 @@
+
 import { useState, useEffect, useRef } from "react";
 import Window from "./Window";
 import { useDesktop } from "@/context/DesktopContext";
 
 const BrowserWindow = () => {
   const { openWindow } = useDesktop();
-
-  const [activeTab, setActiveTab] = useState("New Tab");
-  const [url, setUrl] = useState("");
+  const [tabs, setTabs] = useState([{ id: '1', title: 'New Tab', url: '' }]);
+  const [activeTabId, setActiveTabId] = useState('1');
   const [isLoading, setIsLoading] = useState(false);
-  const [history, setHistory] = useState<string[]>([]);
-  const [historyIndex, setHistoryIndex] = useState(-1);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  const activeTab = tabs.find(tab => tab.id === activeTabId) || tabs[0];
 
   useEffect(() => {
     const storedUrl = sessionStorage.getItem("browserUrl");
@@ -20,76 +20,72 @@ const BrowserWindow = () => {
     }
   }, []);
 
-  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUrl(e.target.value);
+  const addNewTab = () => {
+    const newTab = {
+      id: String(tabs.length + 1),
+      title: 'New Tab',
+      url: ''
+    };
+    setTabs([...tabs, newTab]);
+    setActiveTabId(newTab.id);
   };
 
-  const handleUrlKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      navigateTo(url);
+  const closeTab = (tabId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (tabs.length === 1) return;
+    
+    const newTabs = tabs.filter(tab => tab.id !== tabId);
+    setTabs(newTabs);
+    
+    if (tabId === activeTabId) {
+      const idx = tabs.findIndex(tab => tab.id === tabId);
+      const newActiveId = tabs[idx - 1]?.id || tabs[idx + 1]?.id;
+      setActiveTabId(newActiveId);
     }
+  };
+
+  const navigateToSocialProfile = (url: string) => {
+    const newTab = {
+      id: String(tabs.length + 1),
+      title: url.includes('github') ? 'GitHub' : 'LinkedIn',
+      url
+    };
+    setTabs([...tabs, newTab]);
+    setActiveTabId(newTab.id);
   };
 
   const processUrl = (inputUrl: string) => {
     if (!inputUrl) return '';
-
-    // Handle search queries
+    
+    // Check if it's a search query (contains spaces or no dots)
     if (!inputUrl.includes('.') || inputUrl.includes(' ')) {
-      return `https://www.google.com/search?igu=1&q=${encodeURIComponent(inputUrl)}`;
+      return `https://www.google.com/search?q=${encodeURIComponent(inputUrl)}`;
     }
-
-    // Add https if no protocol specified
+    
+    // Handle URLs without protocol
     if (!inputUrl.startsWith('http://') && !inputUrl.startsWith('https://')) {
       return `https://${inputUrl}`;
     }
-
+    
     return inputUrl;
   };
 
-  const navigateTo = (targetUrl: string) => {
-    const processedUrl = processUrl(targetUrl);
-    setUrl(processedUrl);
+  const navigateTo = (url: string) => {
+    const processedUrl = processUrl(url);
+    const updatedTabs = tabs.map(tab =>
+      tab.id === activeTabId
+        ? { ...tab, url: processedUrl, title: url }
+        : tab
+    );
+    setTabs(updatedTabs);
     setIsLoading(true);
-
-    // Update history
-    if (historyIndex < history.length - 1) {
-      setHistory(prev => [...prev.slice(0, historyIndex + 1), processedUrl]);
-    } else {
-      setHistory(prev => [...prev, processedUrl]);
-    }
-    setHistoryIndex(prev => prev + 1);
-
-    // Update tab title
-    try {
-      const domain = new URL(processedUrl).hostname.replace('www.', '');
-      setActiveTab(domain);
-    } catch (e) {
-      setActiveTab("New Tab");
-    }
-
-    setTimeout(() => setIsLoading(false), 1000);
   };
 
-  const goBack = () => {
-    if (historyIndex > 0) {
-      setHistoryIndex(prev => prev - 1);
-      setUrl(history[historyIndex - 1]);
-    }
-  };
-
-  const goForward = () => {
-    if (historyIndex < history.length - 1) {
-      setHistoryIndex(prev => prev + 1);
-      setUrl(history[historyIndex + 1]);
-    }
-  };
-
-  const refresh = () => {
-    setIsLoading(true);
-    if (iframeRef.current) {
-      iframeRef.current.src = iframeRef.current.src;
-    }
-    setTimeout(() => setIsLoading(false), 1000);
+  const handleUrlSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const input = form.elements.namedItem('url') as HTMLInputElement;
+    navigateTo(input.value);
   };
 
   return (
@@ -104,47 +100,40 @@ const BrowserWindow = () => {
       <div className="flex flex-col h-full">
         <div className="bg-[#38383D] p-2">
           <div className="flex space-x-2 text-sm mb-2">
-            <div className="browser-tab active-tab px-3 py-1 rounded-t text-white flex items-center">
-              <span className="tab-title">{activeTab}</span>
-              <i className="fas fa-times ml-2 text-xs opacity-60 hover:opacity-100 cursor-pointer"></i>
-            </div>
-            <div className="w-6 h-6 rounded-full bg-[#4A4A4F] hover:bg-[#5C5C61] flex items-center justify-center cursor-pointer transition-colors">
+            {tabs.map(tab => (
+              <div
+                key={tab.id}
+                className={`browser-tab px-3 py-1 rounded-t text-white flex items-center cursor-pointer ${
+                  tab.id === activeTabId ? 'active-tab' : 'bg-[#42414D]'
+                }`}
+                onClick={() => setActiveTabId(tab.id)}
+              >
+                <span className="tab-title">{tab.title || 'New Tab'}</span>
+                <i
+                  className="fas fa-times ml-2 text-xs opacity-60 hover:opacity-100"
+                  onClick={(e) => closeTab(tab.id, e)}
+                ></i>
+              </div>
+            ))}
+            <div
+              className="w-6 h-6 rounded-full bg-[#4A4A4F] hover:bg-[#5C5C61] flex items-center justify-center cursor-pointer transition-colors"
+              onClick={addNewTab}
+            >
               <i className="fas fa-plus text-white text-xs"></i>
             </div>
           </div>
-          <div className="flex bg-[#42414D] rounded-md p-1 mb-2 items-center">
-            <div className="flex items-center space-x-2 mr-2">
-              <div 
-                className={`w-8 h-8 rounded-full ${historyIndex > 0 ? 'bg-[#5C5C61] hover:bg-[#737373] cursor-pointer' : 'bg-[#4A4A4F] cursor-not-allowed opacity-50'} flex items-center justify-center transition-colors`}
-                onClick={goBack}
-              >
-                <i className="fas fa-arrow-left text-white text-sm"></i>
-              </div>
-              <div 
-                className={`w-8 h-8 rounded-full ${historyIndex < history.length - 1 ? 'bg-[#5C5C61] hover:bg-[#737373] cursor-pointer' : 'bg-[#4A4A4F] cursor-not-allowed opacity-50'} flex items-center justify-center transition-colors`}
-                onClick={goForward}
-              >
-                <i className="fas fa-arrow-right text-white text-sm"></i>
-              </div>
-              <div 
-                className="w-8 h-8 rounded-full bg-[#5C5C61] hover:bg-[#737373] flex items-center justify-center cursor-pointer transition-colors"
-                onClick={refresh}
-              >
-                <i className={`fas fa-${isLoading ? 'circle-notch fa-spin' : 'redo'} text-white text-sm`}></i>
-              </div>
-            </div>
+          <form onSubmit={handleUrlSubmit} className="flex bg-[#42414D] rounded-md p-1 mb-2 items-center">
             <div className="flex-1 bg-[#1C1B22] hover:bg-[#2A2A2E] rounded px-3 py-1 flex items-center transition-colors">
               <i className="fas fa-search text-gray-400 text-xs mr-2"></i>
               <input
                 type="text"
+                name="url"
                 className="bg-transparent text-white outline-none w-full"
-                value={url}
-                onChange={handleUrlChange}
-                onKeyDown={handleUrlKeyDown}
+                defaultValue={activeTab.url}
                 placeholder="Search or enter address"
               />
             </div>
-          </div>
+          </form>
         </div>
 
         <div className="bg-white h-full overflow-hidden relative">
@@ -152,12 +141,12 @@ const BrowserWindow = () => {
             <div className="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center z-10">
               <div className="flex flex-col items-center">
                 <i className="fas fa-circle-notch fa-spin text-[hsl(var(--linux-blue))] text-4xl"></i>
-                <p className="mt-4 text-gray-600">Loading {activeTab}...</p>
+                <p className="mt-4 text-gray-600">Loading {activeTab.title}...</p>
               </div>
             </div>
           )}
 
-          {!url && (
+          {!activeTab.url && (
             <div className="flex flex-col items-center h-full pt-16 overflow-y-auto">
               <div className="w-32 h-32 mb-8">
                 <i className="fab fa-firefox text-8xl text-orange-500"></i>
@@ -167,25 +156,46 @@ const BrowserWindow = () => {
                   type="text"
                   placeholder="Search or enter address"
                   className="flex-1 px-5 py-3 outline-none"
-                  onChange={handleUrlChange}
-                  onKeyDown={handleUrlKeyDown}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      navigateTo(e.currentTarget.value);
+                    }
+                  }}
                 />
-                <div 
-                  className="bg-[hsl(var(--linux-blue))] text-white px-6 flex items-center justify-center cursor-pointer hover:bg-blue-700 transition-colors"
-                  onClick={() => navigateTo(url)}
-                >
+                <div className="bg-[hsl(var(--linux-blue))] text-white px-6 flex items-center justify-center cursor-pointer hover:bg-blue-700 transition-colors">
                   <i className="fas fa-search"></i>
+                </div>
+              </div>
+
+              <div className="mt-12 grid grid-cols-2 gap-8">
+                <div
+                  className="flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => navigateToSocialProfile('https://github.com/harshad-dhokane')}
+                >
+                  <div className="w-16 h-16 bg-gray-800 rounded-lg flex items-center justify-center mb-2">
+                    <i className="fab fa-github text-white text-3xl"></i>
+                  </div>
+                  <span className="text-gray-600">GitHub</span>
+                </div>
+                <div
+                  className="flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => navigateToSocialProfile('https://www.linkedin.com/in/harshad-dhokane')}
+                >
+                  <div className="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center mb-2">
+                    <i className="fab fa-linkedin-in text-white text-3xl"></i>
+                  </div>
+                  <span className="text-gray-600">LinkedIn</span>
                 </div>
               </div>
             </div>
           )}
 
-          {url && (
+          {activeTab.url && (
             <iframe
               ref={iframeRef}
-              src={url}
+              src={activeTab.url}
               className="w-full h-full border-none"
-              sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"
               onLoad={() => setIsLoading(false)}
             />
           )}
