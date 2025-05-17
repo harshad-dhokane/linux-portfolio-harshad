@@ -69,12 +69,17 @@ const BrowserWindow = () => {
 
   const processUrl = (inputUrl: string) => {
     if (!inputUrl) return '';
+    
+    // Check if it's a search query (contains spaces or no dots)
     if (!inputUrl.includes('.') || inputUrl.includes(' ')) {
-      return `https://www.google.com/search?igu=1&q=${encodeURIComponent(inputUrl)}`;
+      return `https://www.google.com/search?igu=1&iframename=portfolio&q=${encodeURIComponent(inputUrl)}`;
     }
+    
+    // Handle URLs without protocol
     if (!inputUrl.startsWith('http://') && !inputUrl.startsWith('https://')) {
       return `https://${inputUrl}`;
     }
+    
     return inputUrl;
   };
 
@@ -261,8 +266,14 @@ const BrowserWindow = () => {
               ref={iframeRef}
               src={activeTab.url}
               className="w-full h-full border-none"
-              sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
-              onLoad={() => setIsLoading(false)}
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"
+              onLoad={() => {
+                setIsLoading(false);
+                const iframe = iframeRef.current;
+                if (iframe) {
+                  iframe.setAttribute('name', 'portfolio');
+                }
+              }}
             />
           )}
         </div>
