@@ -91,11 +91,13 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
       
       // External links
       if (windowId === "github") {
-        window.open("https://github.com/harshad-dhokane/", "_blank");
+        openWindow("browser");
+        sessionStorage.setItem("browserUrl", "https://github.com/harshad-dhokane/");
         return "Opening GitHub in browser...";
       }
       if (windowId === "linkedin") {
-        window.open("https://www.linkedin.com/in/harshad-dhokane/", "_blank");
+        openWindow("browser");
+        sessionStorage.setItem("browserUrl", "https://www.linkedin.com/in/harshad-dhokane/");
         return "Opening LinkedIn in browser...";
       }
       

@@ -4,7 +4,10 @@ const DesktopIcons = () => {
   const { openWindow } = useDesktop();
 
   const handleExternalLink = (url: string) => {
-    window.open(url, "_blank");
+    // Open the browser window and update it to show the specified URL
+    openWindow("browser");
+    // We'll use sessionStorage to pass the URL to the browser component
+    sessionStorage.setItem("browserUrl", url);
   };
 
   const icons = [

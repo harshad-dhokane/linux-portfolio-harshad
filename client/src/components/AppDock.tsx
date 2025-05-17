@@ -50,7 +50,7 @@ const AppDock = () => {
 
   return (
     <>
-      <div className="dock fixed bottom-4 left-1/2 transform -translate-x-1/2 flex items-center space-x-2 px-3 py-2 z-20">
+      <div className="dock fixed bottom-8 left-1/2 transform -translate-x-1/2 flex items-center space-x-2 px-3 py-2 z-20">
         {dockIcons.map((icon) => (
           <div
             key={icon.id}

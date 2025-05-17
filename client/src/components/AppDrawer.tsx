@@ -77,8 +77,9 @@ const AppDrawer = ({ onClose }: AppDrawerProps) => {
 
   const handleIconClick = (id: string, link?: string) => {
     if (link) {
-      // Handle external links
-      window.open(link, "_blank");
+      // Use internal browser for external links
+      openWindow("browser");
+      sessionStorage.setItem("browserUrl", link);
     } else {
       // Open application window
       openWindow(id);
@@ -87,31 +88,31 @@ const AppDrawer = ({ onClose }: AppDrawerProps) => {
   };
 
   return (
-    <div className="app-drawer fixed inset-0 bg-black bg-opacity-70 z-30 flex items-center justify-center">
-      <div className="drawer rounded-lg w-3/4 max-w-4xl h-3/4 p-6 overflow-y-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-white">Applications</h2>
+    <div className="app-drawer fixed inset-0 bg-black bg-opacity-70 z-30 flex flex-col justify-start animate-in fade-in duration-300">
+      <div className="drawer bg-[#2D2D2D] border-b border-gray-700 w-full p-6 overflow-y-auto shadow-xl animate-in slide-in-from-top duration-300">
+        <div className="flex justify-between items-center mb-6 max-w-7xl mx-auto">
+          <h2 className="text-2xl font-ubuntu font-bold text-white">Applications</h2>
           <div
-            className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center cursor-pointer"
+            className="w-10 h-10 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center cursor-pointer transition-colors"
             onClick={onClose}
           >
             <i className="fas fa-times text-white"></i>
           </div>
         </div>
 
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-6">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6 max-w-7xl mx-auto">
           {drawerIcons.map((icon) => (
             <div
               key={icon.id}
-              className="drawer-icon flex flex-col items-center cursor-pointer"
+              className="drawer-icon flex flex-col items-center cursor-pointer transition-transform hover:scale-110"
               onClick={() => handleIconClick(icon.id, icon.link)}
             >
               <div
-                className={`w-16 h-16 rounded-lg ${icon.bgColor} flex items-center justify-center mb-2`}
+                className={`w-16 h-16 rounded-lg ${icon.bgColor} flex items-center justify-center mb-2 shadow-lg`}
               >
                 <i className={`${icon.icon} text-3xl ${icon.color}`}></i>
               </div>
-              <span className="text-white text-center">{icon.name}</span>
+              <span className="text-white text-center font-ubuntu">{icon.name}</span>
             </div>
           ))}
         </div>
