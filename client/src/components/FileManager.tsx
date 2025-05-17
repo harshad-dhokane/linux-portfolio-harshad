@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Window from "./Window";
 import { useDesktop } from "@/context/DesktopContext";
+import { fsState } from "@/lib/terminal-commands";
 
 // Define file types and their data
 interface FileData {
@@ -20,54 +21,20 @@ export const fileSystem: FileData = {
   icon: "fas fa-home",
   color: "text-blue-500",
   children: [
-    // Keep existing children structure
-  ]
-};
-
-export let currentDirectory = fileSystem;
-export let currentPath = ["Home"];
-
-const FileManager = () => {
-  const { openWindow } = useDesktop();
-  const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
-  const [viewMode, setViewMode] = useState<"icons" | "list">("icons");
-  const [sortBy, setSortBy] = useState<"name" | "type" | "size" | "date">("name");
-  const [showFileInfo, setShowFileInfo] = useState(false);
-
-  // Use these to update the shared state
-  const [localCurrentPath, setLocalCurrentPath] = useState<string[]>(fsState.getCurrentPath());
-
-  useEffect(() => {
-    // Update path when file system state changes
-    setLocalCurrentPath(fsState.getCurrentPath());
-  }, [fsState.getCurrentPath()]);
-
-  // Get current directory contents
-  const getCurrentDirectory = (): FileData => {
-    return fsState.getCurrentDirectory();
-  };
-
-  // File system structure
-  const fileSystem: FileData = {
-    name: "Home",
-    type: "folder",
-    icon: "fas fa-home",
-    color: "text-blue-500",
-    children: [
-      {
-        name: "Projects",
-        type: "folder",
-        icon: "fas fa-folder",
-        color: "text-yellow-500",
-        children: [
-          {
-            name: "Internly",
-            type: "file",
-            icon: "fas fa-file-code",
-            color: "text-green-500",
-            size: "1.2 MB",
-            modified: "April 2025",
-            content: `
+    {
+      name: "Projects",
+      type: "folder",
+      icon: "fas fa-folder",
+      color: "text-yellow-500",
+      children: [
+        {
+          name: "Internly",
+          type: "file",
+          icon: "fas fa-file-code",
+          color: "text-green-500",
+          size: "1.2 MB",
+          modified: "April 2025",
+          content: `
               <h2 class="text-xl font-bold mb-4">Internly - Internship Tracking Application</h2>
               <p class="mb-4">A full-stack internship tracking platform for logging activities, tracking progress and documenting skills.</p>
 
@@ -116,15 +83,15 @@ const FileManager = () => {
                 </div>
               </div>
             `
-          },
-          {
-            name: "College Suggestion Bot",
-            type: "file",
-            icon: "fas fa-file-code",
-            color: "text-green-500",
-            size: "850 KB",
-            modified: "October 2024",
-            content: `
+        },
+        {
+          name: "College Suggestion Bot",
+          type: "file",
+          icon: "fas fa-file-code",
+          color: "text-green-500",
+          size: "850 KB",
+          modified: "October 2024",
+          content: `
               <h2 class="text-xl font-bold mb-4">College Suggestion Bot</h2>
               <p class="mb-4">An AI-powered chatbot that extracts user preferences via NLP to recommend suitable colleges.</p>
 
@@ -168,15 +135,15 @@ const FileManager = () => {
                 </div>
               </div>
             `
-          },
-          {
-            name: "AI Image Recognition",
-            type: "file",
-            icon: "fas fa-file-code",
-            color: "text-green-500",
-            size: "1.5 MB",
-            modified: "September 2024",
-            content: `
+        },
+        {
+          name: "AI Image Recognition",
+          type: "file",
+          icon: "fas fa-file-code",
+          color: "text-green-500",
+          size: "1.5 MB",
+          modified: "September 2024",
+          content: `
               <h2 class="text-xl font-bold mb-4">AI Image Recognition System</h2>
               <p class="mb-4">An image recognition system leveraging deep learning for accurate object detection.</p>
 
@@ -219,15 +186,15 @@ const FileManager = () => {
                 </div>
               </div>
             `
-          },
-          {
-            name: "NLP-Based Chatbot",
-            type: "file",
-            icon: "fas fa-file-code",
-            color: "text-green-500",
-            size: "980 KB",
-            modified: "August 2024",
-            content: `
+        },
+        {
+          name: "NLP-Based Chatbot",
+          type: "file",
+          icon: "fas fa-file-code",
+          color: "text-green-500",
+          size: "980 KB",
+          modified: "August 2024",
+          content: `
               <h2 class="text-xl font-bold mb-4">NLP-Based Chatbot</h2>
               <p class="mb-4">A natural language processing chatbot with advanced text understanding capabilities.</p>
 
@@ -270,32 +237,32 @@ const FileManager = () => {
                 </div>
               </div>
             `
-          }
-        ]
-      },
-      {
-        name: "Resume",
-        type: "file",
-        icon: "fas fa-file-alt",
-        color: "text-blue-500",
-        size: "254 KB",
-        modified: "May 2025",
-        content: ""  // This will open the Resume window
-      },
-      {
-        name: "Education",
-        type: "folder",
-        icon: "fas fa-folder",
-        color: "text-yellow-500",
-        children: [
-          {
-            name: "MSc Computer Science",
-            type: "file",
-            icon: "fas fa-file-alt",
-            color: "text-blue-500",
-            size: "128 KB",
-            modified: "2024",
-            content: `
+        }
+      ]
+    },
+    {
+      name: "Resume",
+      type: "file",
+      icon: "fas fa-file-alt",
+      color: "text-blue-500",
+      size: "254 KB",
+      modified: "May 2025",
+      content: ""  // This will open the Resume window
+    },
+    {
+      name: "Education",
+      type: "folder",
+      icon: "fas fa-folder",
+      color: "text-yellow-500",
+      children: [
+        {
+          name: "MSc Computer Science",
+          type: "file",
+          icon: "fas fa-file-alt",
+          color: "text-blue-500",
+          size: "128 KB",
+          modified: "2024",
+          content: `
               <h2 class="text-xl font-bold mb-4">Master of Science in Computer Science</h2>
               <div class="mb-4">
                 <p><span class="font-bold">Institution:</span> Nowrosjee Wadia College, Pune</p>
@@ -313,15 +280,15 @@ const FileManager = () => {
                 <div class="bg-gray-700 p-2 rounded text-sm">Cloud Computing</div>
               </div>
             `
-          },
-          {
-            name: "BSc Computer Science",
-            type: "file",
-            icon: "fas fa-file-alt",
-            color: "text-blue-500",
-            size: "145 KB",
-            modified: "2024",
-            content: `
+        },
+        {
+          name: "BSc Computer Science",
+          type: "file",
+          icon: "fas fa-file-alt",
+          color: "text-blue-500",
+          size: "145 KB",
+          modified: "2024",
+          content: `
               <h2 class="text-xl font-bold mb-4">Bachelor of Computer Science</h2>
               <div class="mb-4">
                 <p><span class="font-bold">Institution:</span> Nowrosjee Wadia College, Pune</p>
@@ -340,15 +307,15 @@ const FileManager = () => {
                 <div class="bg-gray-700 p-2 rounded text-sm">Computer Networks</div>
               </div>
             `
-          },
-          {
-            name: "HSC Science",
-            type: "file",
-            icon: "fas fa-file-alt",
-            color: "text-blue-500",
-            size: "98 KB",
-            modified: "2021",
-            content: `
+        },
+        {
+          name: "HSC Science",
+          type: "file",
+          icon: "fas fa-file-alt",
+          color: "text-blue-500",
+          size: "98 KB",
+          modified: "2021",
+          content: `
               <h2 class="text-xl font-bold mb-4">H.S.C (Science)</h2>
               <div class="mb-4">
                 <p><span class="font-bold">Institution:</span> Fergusson College, Pune</p>
@@ -366,23 +333,23 @@ const FileManager = () => {
                 <div class="bg-gray-700 p-2 rounded text-sm">Computer Science</div>
               </div>
             `
-          }
-        ]
-      },
-      {
-        name: "Experience",
-        type: "folder",
-        icon: "fas fa-folder",
-        color: "text-yellow-500",
-        children: [
-          {
-            name: "Canspirit.ai",
-            type: "file",
-            icon: "fas fa-file-alt",
-            color: "text-blue-500",
-            size: "210 KB",
-            modified: "June 2025",
-            content: `
+        }
+      ]
+    },
+    {
+      name: "Experience",
+      type: "folder",
+      icon: "fas fa-folder",
+      color: "text-yellow-500",
+      children: [
+        {
+          name: "Canspirit.ai",
+          type: "file",
+          icon: "fas fa-file-alt",
+          color: "text-blue-500",
+          size: "210 KB",
+          modified: "June 2025",
+          content: `
               <h2 class="text-xl font-bold mb-4">Software Development Intern – Canspirit.ai</h2>
               <p class="text-gray-400 mb-4">April 2025 – June 2025</p>
 
@@ -403,15 +370,15 @@ const FileManager = () => {
                 <span class="px-2 py-1 bg-blue-800 text-blue-100 rounded-md text-xs">PostgreSQL</span>
               </div>
             `
-          },
-          {
-            name: "CodeSoft",
-            type: "file",
-            icon: "fas fa-file-alt",
-            color: "text-blue-500",
-            size: "185 KB",
-            modified: "September 2024",
-            content: `
+        },
+        {
+          name: "CodeSoft",
+          type: "file",
+          icon: "fas fa-file-alt",
+          color: "text-blue-500",
+          size: "185 KB",
+          modified: "September 2024",
+          content: `
               <h2 class="text-xl font-bold mb-4">AI & Software Development Intern – CodeSoft</h2>
               <p class="text-gray-400 mb-4">Aug 2024 - Sept 2024</p>
 
@@ -432,23 +399,23 @@ const FileManager = () => {
                 <span class="px-2 py-1 bg-purple-800 text-purple-100 rounded-md text-xs">Deep Learning</span>
               </div>
             `
-          }
-        ]
-      },
-      {
-        name: "Skills",
-        type: "folder",
-        icon: "fas fa-folder",
-        color: "text-yellow-500",
-        children: [
-          {
-            name: "Programming",
-            type: "file",
-            icon: "fas fa-file-code",
-            color: "text-green-500",
-            size: "145 KB",
-            modified: "May 2025",
-            content: `
+        }
+      ]
+    },
+    {
+      name: "Skills",
+      type: "folder",
+      icon: "fas fa-folder",
+      color: "text-yellow-500",
+      children: [
+        {
+          name: "Programming",
+          type: "file",
+          icon: "fas fa-file-code",
+          color: "text-green-500",
+          size: "145 KB",
+          modified: "May 2025",
+          content: `
               <h2 class="text-xl font-bold mb-4">Programming Skills</h2>
 
               <div class="space-y-4">
@@ -490,15 +457,15 @@ const FileManager = () => {
                 </div>
               </div>
             `
-          },
-          {
-            name: "Web Development",
-            type: "file",
-            icon: "fas fa-file-code",
-            color: "text-green-500",
-            size: "135 KB",
-            modified: "May 2025",
-            content: `
+        },
+        {
+          name: "Web Development",
+          type: "file",
+          icon: "fas fa-file-code",
+          color: "text-green-500",
+          size: "135 KB",
+          modified: "May 2025",
+          content: `
               <h2 class="text-xl font-bold mb-4">Web Development Skills</h2>
 
               <h3 class="text-lg font-bold mt-2 mb-3">Frontend</h3>
@@ -545,15 +512,15 @@ const FileManager = () => {
                 </div>
               </div>
             `
-          },
-          {
-            name: "AI & ML",
-            type: "file",
-            icon: "fas fa-file-code",
-            color: "text-green-500",
-            size: "168 KB",
-            modified: "May 2025",
-            content: `
+        },
+        {
+          name: "AI & ML",
+          type: "file",
+          icon: "fas fa-file-code",
+          color: "text-green-500",
+          size: "168 KB",
+          modified: "May 2025",
+          content: `
               <h2 class="text-xl font-bold mb-4">AI & Machine Learning Skills</h2>
 
               <div class="grid grid-cols-2 gap-4 mb-6">
@@ -599,15 +566,15 @@ const FileManager = () => {
                 </div>
               </div>
             `
-          },
-          {
-            name: "DevOps & Databases",
-            type: "file",
-            icon: "fas fa-file-code",
-            color: "text-green-500",
-            size: "120 KB",
-            modified: "May 2025",
-            content: `
+        },
+        {
+          name: "DevOps & Databases",
+          type: "file",
+          icon: "fas fa-file-code",
+          color: "text-green-500",
+          size: "120 KB",
+          modified: "May 2025",
+          content: `
               <h2 class="text-xl font-bold mb-4">DevOps & Database Skills</h2>
 
               <div class="grid grid-cols-2 gap-4 mb-6">
@@ -661,22 +628,22 @@ const FileManager = () => {
                 </div>
               </div>
             `
-          }
-        ]
-      },
-      {
-        name: "Certificates",
-        type: "folder",
-        icon: "fas fa-folder",
-        color: "text-yellow-500",
-        children: [
-          {
-            name: "AI Fundamentals",
-            type: "file",
-            icon: "fas fa-file-certificate",
-            color: "text-purple-500",
-            size: "115 KB",modified: "January 2024",
-            content: `
+        }
+      ]
+    },
+    {
+      name: "Certificates",
+      type: "folder",
+      icon: "fas fa-folder",
+      color: "text-yellow-500",
+      children: [
+        {
+          name: "AI Fundamentals",
+          type: "file",
+          icon: "fas fa-file-certificate",
+          color: "text-purple-500",
+          size: "115 KB",modified: "January 2024",
+          content: `
               <h2 class="text-xl font-bold mb-4">Artificial Intelligence Fundamentals</h2>
               <p class="mb-2"><span class="font-bold">Issuer:</span> IBM</p>
               <p class="mb-4"><span class="font-bold">Date:</span> January 2024</p>
@@ -701,15 +668,15 @@ const FileManager = () => {
                 <span>IBM-AI-2024-HD-78391</span>
               </div>
             `
-          },
-          {
-            name: "Full Stack Web Development",
-            type: "file",
-            icon: "fas fa-file-certificate",
-            color: "text-purple-500",
-            size: "125 KB",
-            modified: "October 2023",
-            content: `
+        },
+        {
+          name: "Full Stack Web Development",
+          type: "file",
+          icon: "fas fa-file-certificate",
+          color: "text-purple-500",
+          size: "125 KB",
+          modified: "October 2023",
+          content: `
               <h2 class="text-xl font-bold mb-4">Full Stack Web Development</h2>
               <p class="mb-2"><span class="font-bold">Issuer:</span> Udemy</p>
               <p class="mb-4"><span class="font-bold">Date:</span> October 2023</p>
@@ -735,15 +702,15 @@ const FileManager = () => {
                 <span>UDEMY-FSWD-2023-HD-45672</span>
               </div>
             `
-          },
-          {
-            name: "Database Management & SQL",
-            type: "file",
-            icon: "fas fa-file-certificate",
-            color: "text-purple-500",
-            size: "108 KB",
-            modified: "May 2023",
-            content: `
+        },
+        {
+          name: "Database Management & SQL",
+          type: "file",
+          icon: "fas fa-file-certificate",
+          color: "text-purple-500",
+          size: "108 KB",
+          modified: "May 2023",
+          content: `
               <h2 class="text-xl font-bold mb-4">Database Management & SQL</h2>
               <p class="mb-2"><span class="font-bold">Issuer:</span> Coursera</p>
               <p class="mb-4"><span class="font-bold">Date:</span> May 2023</p>
@@ -768,33 +735,30 @@ const FileManager = () => {
                 <span>COURSERA-SQL-2023-HD-34521</span>
               </div>
             `
-          }
-        ]
-      }
-    ]
-  };
+        }
+      ]
+    }
+  ]
+};
 
+const FileManager = () => {
+  const { openWindow } = useDesktop();
+  const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
+  const [viewMode, setViewMode] = useState<"icons" | "list">("icons");
+  const [sortBy, setSortBy] = useState<"name" | "type" | "size" | "date">("name");
+  const [showFileInfo, setShowFileInfo] = useState(false);
+  const [localCurrentPath, setLocalCurrentPath] = useState<string[]>(fsState.getCurrentPath());
   const [currentDir, setCurrentDir] = useState<FileData>(fileSystem);
 
-  // Get current directory contents
-  const getCurrentDirectory = (): FileData => {
-    let current: FileData = fileSystem;
-    for (const pathPart of currentPath.slice(1)) {
-      const nextDir = current.children?.find(c => c.name === pathPart);
-      if (nextDir && nextDir.type === "folder") {
-        current = nextDir;
-      } else {
-        break;
-      }
-    }
-    return current;
-  };
+  useEffect(() => {
+    setLocalCurrentPath(fsState.getCurrentPath());
+  }, [fsState.getCurrentPath()]);
 
   // Navigate to a directory
   const navigateToDirectory = (folder: FileData) => {
     if (folder.type === "folder") {
-      currentPath.push(folder.name);
-      setLocalCurrentPath([...currentPath]);
+      fsState.getCurrentPath().push(folder.name);
+      setLocalCurrentPath([...fsState.getCurrentPath()]);
       setCurrentDir(folder);
       setSelectedFile(null);
     }
@@ -802,10 +766,10 @@ const FileManager = () => {
 
   // Navigate up one level
   const navigateUp = () => {
-    if (currentPath.length > 1) {
-      currentPath.pop();
-      setLocalCurrentPath([...currentPath]);
-      const newDir = getCurrentDirectory();
+    if (fsState.getCurrentPath().length > 1) {
+      fsState.getCurrentPath().pop();
+      setLocalCurrentPath([...fsState.getCurrentPath()]);
+      const newDir = fsState.getCurrentDirectory();
       setCurrentDir(newDir);
       setSelectedFile(null);
     }
@@ -822,8 +786,7 @@ const FileManager = () => {
   };
 
   // Get current directory files
-  const currentDirectory = getCurrentDirectory();
-  const currentFiles = currentDirectory.children || [];
+  const currentFiles = currentDir.children || [];
 
   // Sort files based on the selected criteria
   const sortedFiles = [...currentFiles].sort((a, b) => {
@@ -857,18 +820,15 @@ const FileManager = () => {
             <button 
               onClick={navigateUp}
               className="p-2 rounded hover:bg-gray-700 transition-colors"
-              disabled={currentPath.length <= 1}
+              disabled={localCurrentPath.length <= 1}
             >
               <i className="fas fa-arrow-up"></i>
             </button>
             <div className="flex items-center bg-gray-700 rounded px-3 py-1 space-x-1">
-              {currentPath.map((part, index) => (
+              {localCurrentPath.map((part, index) => (
                 <div key={part} className="flex items-center">
                   {index > 0 && <span className="mx-1 text-gray-500">/</span>}
-                  <span 
-                    className="text-gray-300 hover:text-white cursor-pointer"
-                    onClick={() => setCurrentPath(currentPath.slice(0, index + 1))}
-                  >
+                  <span className="text-gray-300 hover:text-white cursor-pointer">
                     {part}
                   </span>
                 </div>
@@ -973,16 +933,13 @@ const FileManager = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex space-x-2">
-                  {/* External links button removed as per request to keep all content in the side panel */}
-                  <button
-                    className="w-7 h-7 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center text-white text-sm"
-                    title="Close preview"
-                    onClick={() => setSelectedFile(null)}
-                  >
-                    <i className="fas fa-times"></i>
-                  </button>
-                </div>
+                <button
+                  className="w-7 h-7 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center text-white text-sm"
+                  title="Close preview"
+                  onClick={() => setSelectedFile(null)}
+                >
+                  <i className="fas fa-times"></i>
+                </button>
               </div>
 
               <div className="flex-1 p-4">
