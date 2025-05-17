@@ -133,7 +133,7 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
   return (
     <div className="app-drawer fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-30 flex items-center justify-center animate-in fade-in duration-300">
       <div 
-        className="terminal border border-gray-600 rounded-lg w-4/5 max-w-5xl max-h-[80vh] p-6 shadow-2xl animate-in zoom-in duration-300"
+        className="terminal border border-gray-600 rounded-lg w-auto max-w-3xl max-h-[80vh] p-6 shadow-2xl animate-in zoom-in duration-300"
         style={{
           background: 'rgba(20, 20, 20, 0.8)',
           backdropFilter: 'blur(12px)',
@@ -165,7 +165,7 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
             ))}
           </div>
           
-          <div className="flex flex-wrap gap-6 justify-center">
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 justify-center max-w-fit mx-auto">
             {drawerIcons
               .filter(icon => icon.category === activeCategory)
               .map((icon) => (
@@ -179,7 +179,7 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
                   >
                     <i className={`${icon.icon} text-3xl ${icon.color}`}></i>
                   </div>
-                  <span className="text-white text-center font-ubuntu">{icon.name}</span>
+                  <span className="text-white text-center font-ubuntu text-sm">{icon.name}</span>
                 </div>
               ))
             }

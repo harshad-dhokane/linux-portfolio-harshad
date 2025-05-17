@@ -787,19 +787,15 @@ const FileManager = () => {
     } else {
       setSelectedFile(file);
       
-      // If this is one of the special files that should open a window
-      if (file.name === "Resume") {
-        openWindow("resume");
-      } else if (file.name.includes("Project")) {
+      // For projects, open in a new terminal-style window
+      if (file.name === "Internly" || file.name === "College Suggestion Bot" || 
+          file.name === "AI Image Recognition" || file.name === "NLP-Based Chatbot") {
+        // Create a custom terminal window with project content
         openWindow("projects");
-      } else if (file.name.includes("Certificate")) {
-        openWindow("certifications");
-      } else if (file.name.includes("Education") || file.name.includes("MSc") || file.name.includes("BSc") || file.name.includes("HSC")) {
-        openWindow("education");
-      } else if (file.name.includes("Experience") || file.name === "Canspirit.ai" || file.name === "CodeSoft") {
-        openWindow("experience");
-      } else if (file.name.includes("Skill") || file.name === "Programming" || file.name === "Web Development" || file.name === "AI & ML" || file.name === "DevOps & Databases") {
-        openWindow("skills");
+        // We'll display specific project content in the file preview panel
+      } else {
+        // For all other files, just show them in the file manager preview panel
+        // No need to open specific windows - content will display in the right panel
       }
     }
   };
@@ -945,37 +941,55 @@ const FileManager = () => {
 
           {/* File preview */}
           {selectedFile && (
-            <div className="w-1/2 bg-gray-800 border-l border-gray-700 p-4 overflow-y-auto">
-              <div className="flex justify-between items-center mb-4">
+            <div className="w-1/2 bg-gray-800 border-l border-gray-700 overflow-y-auto flex flex-col">
+              <div className="flex justify-between items-center px-4 py-3 bg-gray-900 border-b border-gray-700">
                 <div className="flex items-center">
-                  <i className={`${selectedFile.icon} ${selectedFile.color} text-3xl mr-3`}></i>
+                  <i className={`${selectedFile.icon} ${selectedFile.color} text-2xl mr-3`}></i>
                   <div>
-                    <h3 className="text-lg font-bold">{selectedFile.name}</h3>
-                    <p className="text-sm text-gray-400">
+                    <h3 className="text-md font-bold">{selectedFile.name}</h3>
+                    <p className="text-xs text-gray-400">
                       {selectedFile.type === 'folder' ? 'Folder' : 'File'} • {selectedFile.size || '-'} • Modified {selectedFile.modified || '-'}
                     </p>
                   </div>
                 </div>
-                <button
-                  className="text-gray-400 hover:text-white"
-                  onClick={() => setSelectedFile(null)}
-                >
-                  <i className="fas fa-times"></i>
-                </button>
+                <div className="flex space-x-2">
+                  <button
+                    className="w-7 h-7 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center text-white text-sm"
+                    title="Open in new window"
+                    onClick={() => {
+                      if (selectedFile.name === "Internly" || selectedFile.name === "College Suggestion Bot" || 
+                          selectedFile.name === "AI Image Recognition" || selectedFile.name === "NLP-Based Chatbot") {
+                        // Only project files open in a separate window
+                        openWindow("projects");
+                      }
+                    }}
+                  >
+                    <i className="fas fa-external-link-alt"></i>
+                  </button>
+                  <button
+                    className="w-7 h-7 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center text-white text-sm"
+                    title="Close preview"
+                    onClick={() => setSelectedFile(null)}
+                  >
+                    <i className="fas fa-times"></i>
+                  </button>
+                </div>
               </div>
               
-              <div className="bg-gray-900 rounded-lg p-4 mt-2">
-                {selectedFile.content ? (
-                  <div 
-                    className="text-sm text-gray-300"
-                    dangerouslySetInnerHTML={{ __html: selectedFile.content }}
-                  ></div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center p-8 text-gray-500">
-                    <i className="fas fa-file-alt text-5xl mb-4"></i>
-                    <p>No preview available</p>
-                  </div>
-                )}
+              <div className="flex-1 p-4">
+                <div className="glass rounded-lg p-4 shadow-inner">
+                  {selectedFile.content ? (
+                    <div 
+                      className="text-sm text-gray-200 preview-content overflow-y-auto max-h-[70vh]"
+                      dangerouslySetInnerHTML={{ __html: selectedFile.content }}
+                    ></div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center p-8 text-gray-500">
+                      <i className="fas fa-file-alt text-5xl mb-4"></i>
+                      <p>No preview available</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           )}

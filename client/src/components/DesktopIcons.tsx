@@ -87,6 +87,13 @@ const DesktopIcons = () => {
         bgColor: "bg-black",
       },
       {
+        id: "filemanager",
+        name: "File Manager",
+        icon: "fas fa-folder",
+        color: "text-yellow-400",
+        bgColor: "bg-gray-800",
+      },
+      {
         id: "browser",
         name: "Browser",
         icon: "fas fa-globe",
