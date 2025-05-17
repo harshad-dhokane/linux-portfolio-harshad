@@ -1,39 +1,51 @@
+
 import { fileSystem } from '../components/FileManager';
 
 export let currentDirectory = fileSystem;
 export let currentPath = ["Home"];
 
+const formatFileSize = (size: string | undefined) => {
+  return size || "-";
+};
+
+const formatDate = (date: string | undefined) => {
+  return date || "-";
+};
+
+const getFormattedListing = (files: any[], detailed: boolean) => {
+  if (detailed) {
+    return files.map(file => {
+      const type = file.type === "folder" ? "d" : "-";
+      const perms = "rwxr-xr-x";
+      const size = formatFileSize(file.size);
+      const date = formatDate(file.modified);
+      return `<div class="mb-1">${type}${perms} harshad harshad ${size.padEnd(8)} ${date.padEnd(12)} <span class="text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.name}</span></div>`;
+    }).join('\n');
+  }
+  
+  return files.map(file => (
+    `<span class="mr-4 text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.type === 'folder' ? '📁' : '📄'} ${file.name}</span>`
+  )).join(' ');
+};
+
 export const getTerminalResponse = (command: string): string => {
-  const commands = command.split(" ");
-  const cmd = commands[0];
+  const commands = command.trim().split(/\s+/);
+  const cmd = commands[0].toLowerCase();
 
   switch (cmd) {
     case "ls":
       if (!currentDirectory.children?.length) {
-        return "No files found in current directory";
+        return "Directory is empty";
       }
       
-      const files = currentDirectory.children.map(item => 
-        item.type === "folder" ? `${item.name}/` : item.name
-      );
-      
-      const hasFlag = commands.includes("-la") || commands.includes("-a") || commands.includes("-l");
-      
-      if (hasFlag) {
-        return files.map(file => (
-          `<div class="mb-1">
-            <span class="text-blue-400">${file.endsWith('/') ? '📁' : '📄'} ${file}</span>
-          </div>`
-        )).join('\n');
-      }
-      
-      return files.map(file => (
-        `<span class="mr-4 text-blue-400">${file.endsWith('/') ? '📁' : '📄'} ${file}</span>`
-      )).join(' ');
+      const hasDetailFlag = commands.includes("-l") || commands.includes("-la") || commands.includes("-al");
+      return getFormattedListing(currentDirectory.children, hasDetailFlag);
 
     case "cd":
       if (!commands[1]) {
-        return "Error: Please specify a directory";
+        currentDirectory = fileSystem;
+        currentPath = ["Home"];
+        return "Changed to home directory";
       }
 
       if (commands[1] === "..") {
@@ -49,34 +61,36 @@ export const getTerminalResponse = (command: string): string => {
         return "Already at root directory";
       }
 
-      const targetDir = commands[1].replace("/", "");
+      const targetDir = commands[1].replace(/^\.?\//, "");
       const newDir = currentDirectory.children?.find(item => 
         item.name.toLowerCase() === targetDir.toLowerCase() && item.type === "folder"
       );
 
       if (newDir) {
-        let temp = {...newDir};
-        currentDirectory = temp;
+        currentDirectory = newDir;
         currentPath.push(newDir.name);
         return `Changed directory to ${currentPath.join("/")}`;
       }
 
-      return `Error: Directory ${commands[1]} not found`;
+      return `bash: cd: ${commands[1]}: No such directory`;
+
+    case "pwd":
+      return currentPath.join("/");
 
     case "cat":
       if (!commands[1]) {
-        return "Error: Please specify a file";
+        return "Usage: cat <filename>";
       }
 
-      const targetFile = currentDirectory.children?.find(item =>
+      const file = currentDirectory.children?.find(item =>
         item.name.toLowerCase() === commands[1].toLowerCase() && item.type === "file"
       );
 
-      if (targetFile) {
-        return targetFile.content || "No content available";
+      if (file) {
+        return file.content || "File is empty";
       }
 
-      return `Error: File ${commands[1]} not found`;
+      return `cat: ${commands[1]}: No such file`;
 
     case "clear":
       return "";
@@ -86,8 +100,9 @@ export const getTerminalResponse = (command: string): string => {
         <div class="mt-2">
           Available commands:
           <ul class="text-gray-300 ml-4">
-            <li>ls - List files</li>
-            <li>ls -la - List files with details</li>
+            <li>pwd - Print working directory</li>
+            <li>ls - List directory contents</li>
+            <li>ls -l - List detailed directory contents</li>
             <li>cd [directory] - Change directory</li>
             <li>cd .. - Go up one directory</li>
             <li>cat [file] - Display file contents</li>
@@ -108,7 +123,7 @@ export const getTerminalResponse = (command: string): string => {
    .ossssssssssssssssss dMMMNysssso.      Host: Developer Machine
   /ssssssssssshdmmNNmmyNMMMMhssssss/      Kernel: 5.15.0-58-generic
  +ssssssssshmydMMMMMMMNddddyssssssss+     Uptime: 3 hours, 42 mins
-/sssssssshNMMMyhhyyyyhmNMMMNhssssssss/    Packages: 1843
+/sssssssshNMMMyhhyyyyhmNMMMNhssssssss/    PWD: ${currentPath.join("/")}
 .ssssssssdMMMNhsssssssssshNMMMdssssssss.   Shell: bash 5.1.16
 +sssshhhyNMMNyssssssssssssyNMMMysssssss+   Resolution: 1920x1080
 ossyNMMMNyMMhsssssssssssssshmmmhssssssso   DE: GNOME 42.0
@@ -129,6 +144,6 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
       return "__CLOSE_TERMINAL__";
 
     default:
-      return `Error: ${cmd}: command not found`;
+      return `bash: ${cmd}: command not found`;
   }
 };
