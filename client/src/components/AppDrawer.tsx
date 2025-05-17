@@ -88,7 +88,7 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
       icon: "fab fa-github",
       color: "text-white",
       bgColor: "bg-gray-800",
-      link: "https://github.com/harshad-dhokane/",
+      link: "https://github.com/harshad-dhokane",
       category: "Links"
     },
     {

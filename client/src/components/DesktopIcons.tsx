@@ -141,7 +141,7 @@ const DesktopIcons = () => {
         icon: "fab fa-github",
         color: "text-white",
         bgColor: "bg-gray-800",
-        externalLink: "https://github.com/harshad-dhokane/",
+        externalLink: "https://github.com/harshad-dhokane",
       },
       {
         id: "linkedin",
