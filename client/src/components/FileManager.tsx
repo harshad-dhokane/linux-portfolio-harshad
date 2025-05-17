@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Window from "./Window";
 import { useDesktop } from "@/context/DesktopContext";
-import { fsState } from "@/lib/terminal-commands";
+import { fsState, fileSystem } from "@/lib/terminal-commands";
 
 // Define file types and their data
 interface FileData {

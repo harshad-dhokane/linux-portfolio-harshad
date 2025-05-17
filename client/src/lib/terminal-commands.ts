@@ -1,162 +1,106 @@
+// File system state
+const currentPath: string[] = ["Home"];
+
+export const fsState = {
+  getCurrentPath: () => currentPath,
+  getCurrentDirectory: () => {
+    let current = fileSystem;
+    for (let i = 1; i < currentPath.length; i++) {
+      const dir = current.children?.find(d => d.name === currentPath[i]);
+      if (dir && dir.type === "folder") {
+        current = dir;
+      }
+    }
+    return current;
+  }
+};
 
 export const fileSystem = {
   name: "Home",
   type: "folder",
+  icon: "fas fa-home",
+  color: "text-blue-500",
   children: [
     {
       name: "Projects",
-      type: "folder",
+      type: "folder", 
+      icon: "fas fa-folder",
+      color: "text-yellow-500",
       children: [
         {
           name: "Internly",
           type: "file",
           icon: "fas fa-file-code",
-          content: "Internship tracking platform..."
+          color: "text-green-500",
+          size: "1.2 MB",
+          modified: "April 2025",
+          content: `Your existing Internly content`
         },
         {
           name: "College Suggestion Bot",
           type: "file",
           icon: "fas fa-file-code",
-          content: "AI-powered chatbot..."
-        },
-        {
-          name: "AI Image Recognition",
-          type: "file",
-          icon: "fas fa-file-code",
-          content: "Image recognition system..."
-        },
-        {
-          name: "NLP-Based Chatbot",
-          type: "file",
-          icon: "fas fa-file-code",
-          content: "Natural language processing chatbot..."
-        }
-      ]
-    },
-    {
-      name: "Education",
-      type: "folder",
-      children: [
-        {
-          name: "MSc Computer Science",
-          type: "file",
-          content: "Master's degree details..."
-        },
-        {
-          name: "BSc Computer Science",
-          type: "file",
-          content: "Bachelor's degree details..."
-        },
-        {
-          name: "HSC Science",
-          type: "file",
-          content: "Higher secondary education..."
-        }
-      ]
-    },
-    {
-      name: "Experience",
-      type: "folder",
-      children: [
-        {
-          name: "Canspirit.ai",
-          type: "file",
-          content: "Software Development Intern..."
-        },
-        {
-          name: "CodeSoft",
-          type: "file",
-          content: "AI & Software Development Intern..."
+          color: "text-green-500",
+          size: "850 KB",
+          modified: "October 2024",
+          content: `Your existing College Bot content`
         }
       ]
     },
     {
       name: "Skills",
       type: "folder",
+      icon: "fas fa-folder",
+      color: "text-yellow-500",
       children: [
         {
           name: "Programming",
           type: "file",
-          content: "Programming skills..."
+          icon: "fas fa-code",
+          color: "text-purple-500",
+          size: "145 KB",
+          modified: "May 2025",
+          content: `Your existing Programming skills content`
         },
         {
           name: "Web Development",
           type: "file",
-          content: "Web development skills..."
-        },
-        {
-          name: "AI & ML",
-          type: "file",
-          content: "AI and ML skills..."
-        },
-        {
-          name: "DevOps & Databases",
-          type: "file",
-          content: "DevOps and Database skills..."
+          icon: "fas fa-globe",
+          color: "text-blue-500",
+          size: "135 KB",
+          modified: "May 2025",
+          content: `Your existing Web Dev content`
         }
       ]
     },
     {
       name: "Certificates",
       type: "folder",
+      icon: "fas fa-folder",
+      color: "text-yellow-500",
       children: [
         {
           name: "AI Fundamentals",
           type: "file",
-          content: "AI certification..."
+          icon: "fas fa-certificate",
+          color: "text-yellow-500",
+          size: "115 KB",
+          modified: "January 2024",
+          content: `Your existing AI cert content`
         },
         {
-          name: "Full Stack Web Development",
+          name: "Full Stack Development",
           type: "file",
-          content: "Web development certification..."
-        },
-        {
-          name: "Database Management & SQL",
-          type: "file",
-          content: "Database certification..."
+          icon: "fas fa-certificate", 
+          color: "text-yellow-500",
+          size: "125 KB",
+          modified: "October 2023",
+          content: `Your existing Full Stack cert content`
         }
       ]
     }
   ]
 };
-
-// Use a singleton for file system state
-class FileSystemState {
-  private static instance: FileSystemState;
-  public currentDirectory = fileSystem;
-  public currentPath = ["Home"];
-
-  private constructor() {}
-
-  public static getInstance(): FileSystemState {
-    if (!FileSystemState.instance) {
-      FileSystemState.instance = new FileSystemState();
-    }
-    return FileSystemState.instance;
-  }
-
-  public setCurrentPath(path: string[]) {
-    this.currentPath = path;
-    let temp = fileSystem;
-    for (const dir of path.slice(1)) {
-      const found = temp.children?.find(item => item.name === dir);
-      if (found) {
-        temp = found;
-      }
-    }
-    this.currentDirectory = temp;
-  }
-
-  public getCurrentPath(): string[] {
-    return this.currentPath;
-  }
-
-  public getCurrentDirectory() {
-    return this.currentDirectory;
-  }
-}
-
-export const fsState = FileSystemState.getInstance();
 
 const formatDate = (date: string | undefined) => {
   return date || new Date().toLocaleString();
@@ -198,16 +142,15 @@ export const getTerminalResponse = (command: string): string => {
 
     case "cd":
       if (!commands[1] || commands[1] === "~") {
-        fsState.setCurrentPath(["Home"]);
+        const currentPath: string[] = ["Home"];
         return "Changed to home directory";
       }
 
       if (commands[1] === "..") {
         const currentPath = fsState.getCurrentPath();
         if (currentPath.length > 1) {
-          const newPath = currentPath.slice(0, -1);
-          fsState.setCurrentPath(newPath);
-          return `Changed directory to ${newPath.join("/")}`;
+          currentPath.pop();
+          return `Changed directory to ${currentPath.join("/")}`;
         }
         return "Already at root directory";
       }
@@ -220,9 +163,8 @@ export const getTerminalResponse = (command: string): string => {
         return `bash: cd: ${commands[1]}: No such directory`;
       }
 
-      const newPath = [...fsState.getCurrentPath(), targetDir.name];
-      fsState.setCurrentPath(newPath);
-      return `Changed directory to ${newPath.join("/")}`;
+      currentPath.push(commands[1]);
+      return `Changed directory to ${currentPath.join("/")}`;
 
     case "pwd":
       return currentPath.join("/");
@@ -232,7 +174,7 @@ export const getTerminalResponse = (command: string): string => {
         return "Usage: cat <filename>";
       }
 
-      const file = currentDirectory.children?.find(
+      const file = fsState.getCurrentDirectory().children?.find(
         item => item.name === commands[1] && item.type === "file"
       );
 
