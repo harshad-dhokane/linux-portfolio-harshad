@@ -133,23 +133,23 @@ export const getTerminalResponse = (command: string): string => {
 
   switch (cmd) {
     case "ls":
-      const currentChildren = currentDirectory.children || [];
+      const children = currentDirectory.children || [];
       const hasDetailFlag = commands.includes("-l") || commands.includes("-la") || commands.includes("-al");
       
-      if (!currentChildren.length) {
+      if (!children.length) {
         return "Directory is empty";
       }
 
       if (hasDetailFlag) {
-        return `<div class="font-mono">${currentChildren.map(file => {
+        return `<div class="font-mono">${children.map(file => {
           const perms = file.type === "folder" ? "drwxr-xr-x" : "-rw-r--r--";
           const size = file.size || "-";
           const date = formatDate(file.modified);
-          return `<div>${perms} harshad harshad ${size.padEnd(8)} ${date} <span class="text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.name}</span></div>`;
+          return `<div>${perms} user user ${size.padEnd(8)} ${date} <span class="text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.name}</span></div>`;
         }).join('\n')}</div>`;
       }
       
-      return `<div class="flex flex-wrap gap-4">${currentChildren.map(file => 
+      return `<div class="flex flex-wrap gap-4">${children.map(file => 
         `<span class="text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.type === 'folder' ? '📁' : '📄'} ${file.name}</span>`
       ).join(' ')}</div>`;
 
