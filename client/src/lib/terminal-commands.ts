@@ -9,7 +9,7 @@ export const getTerminalResponse = (command: string): string => {
 
   switch (cmd) {
     case "ls":
-      return '<div class="text-blue-300">Projects/  Resume/  Certificates/  Skills/  Experience/  Education/  GitHub/  LinkedIn/</div>';
+      return '<div class="text-blue-300">Projects/  Resume/  Certificates/  Skills/  Experience/  Education/  GitHub/  LinkedIn/  file-manager/</div>';
     case "cd":
       if (!commands[1]) {
         return "Error: Please specify a directory";
@@ -26,6 +26,10 @@ export const getTerminalResponse = (command: string): string => {
         "github": "github",
         "linkedin": "linkedin",
         "browser": "browser",
+        "file-manager": "filemanager",
+        "filemanager": "filemanager",
+        "settings": "settings",
+        "about": "about",
       };
       
       const targetDir = commands[1].replace("/", "").toLowerCase();

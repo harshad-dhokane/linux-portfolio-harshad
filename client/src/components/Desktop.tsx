@@ -100,7 +100,12 @@ const Desktop = () => {
 
       {/* Context Menu */}
       {contextMenu.visible && (
-        <ContextMenu x={contextMenu.x} y={contextMenu.y} />
+        <ContextMenu 
+          x={contextMenu.x} 
+          y={contextMenu.y} 
+          selectedIconId={contextMenu.selectedIconId}
+          onClose={() => setContextMenu(prev => ({ ...prev, visible: false }))}
+        />
       )}
 
       {/* Date and Time Display */}

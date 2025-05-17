@@ -55,7 +55,7 @@ const ContextMenu = ({ x, y, onClose, selectedIconId }: ContextMenuProps) => {
     };
   };
 
-  const menuItems = getMenuItems();
+  const items = getMenuItems();
 
   return (
     <div
@@ -67,7 +67,7 @@ const ContextMenu = ({ x, y, onClose, selectedIconId }: ContextMenuProps) => {
       }}
       onClick={(e) => e.stopPropagation()}
     >
-      {menuItems.map((item, index) => (
+      {items.map((item, index) => (
         <div
           key={index}
           className="menu-item px-4 py-2 text-white hover:bg-[hsl(var(--linux-blue))] cursor-pointer flex items-center"

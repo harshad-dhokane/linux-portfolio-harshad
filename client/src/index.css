@@ -159,16 +159,19 @@
 
 /* Terminal styles */
 .terminal {
-  background-color: rgba(20, 20, 20, 0.85);
+  background-color: rgba(20, 20, 20, 0.75);
   backdrop-filter: blur(12px);
-  font-family: monospace;
+  font-family: 'Ubuntu Mono', monospace;
   padding: 10px;
   color: #ddd;
   height: 100%;
+  border-radius: 8px;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .prompt {
   color: hsl(var(--linux-green));
+  font-weight: bold;
 }
 
 /* Dock styles */
