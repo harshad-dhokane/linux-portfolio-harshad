@@ -1,13 +1,11 @@
-import { fileSystem, currentDirectory, currentPath } from '../components/FileManager';
+import { fileSystem } from '../components/FileManager';
+
+export let currentDirectory = fileSystem;
+export let currentPath = ["Home"];
 
 export const getTerminalResponse = (command: string): string => {
   const commands = command.split(" ");
   const cmd = commands[0];
-
-  // Special command for opening windows
-  if (cmd === "open-window") {
-    return `__OPEN_WINDOW__${commands[1] || ""}`;
-  }
 
   switch (cmd) {
     case "ls":
@@ -17,45 +15,36 @@ export const getTerminalResponse = (command: string): string => {
       const hasFlag = commands.includes("-la") || commands.includes("-a") || commands.includes("-l");
 
       if (hasFlag) {
-        // If ls -la or similar flag, format as a detailed list
-        return `<div class="font-mono text-blue-300">
-          ${files.join(" ")}
-        </div>`;
+        // Detailed list format with icons
+        return files.map(file => {
+          const isDir = file.endsWith('/');
+          const icon = isDir ? "📁" : "📄";
+          return `<div class="mb-1"><span class="text-blue-400">${icon} ${file}</span></div>`;
+        }).join('');
       } else {
-        // Standard ls command - column display
-        return `<div class="font-mono text-blue-300 grid grid-cols-3 gap-x-6">
-          ${files.map(file => `<div class="truncate">${file}</div>`).join('')}
+        // Grid format
+        return `<div class="grid grid-cols-4 gap-2">
+          ${files.map(file => {
+            const isDir = file.endsWith('/');
+            const icon = isDir ? "📁" : "📄";
+            return `<div class="truncate"><span class="text-blue-400">${icon} ${file}</span></div>`;
+          }).join('')}
         </div>`;
       }
+
     case "cd":
       if (!commands[1]) {
         return "Error: Please specify a directory";
       }
 
-      // Check if the directory name is one of our windows
-      const windowMappings: Record<string, string> = {
-        "resume": "resume",
-        "projects": "projects",
-        "certificates": "certifications",
-        "skills": "skills",
-        "experience": "experience",
-        "education": "education",
-        "github": "github",
-        "linkedin": "linkedin",
-        "browser": "browser",
-        "file-manager": "filemanager",
-        "filemanager": "filemanager",
-        "settings": "settings",
-        "about": "about",
-      };
-
       if (commands[1] === "..") {
         if (currentPath.length > 1) {
           currentPath.pop();
-          currentDirectory = fileSystem;
+          let temp = fileSystem;
           for (const dir of currentPath.slice(1)) {
-            currentDirectory = currentDirectory.children?.find(item => item.name === dir) || currentDirectory;
+            temp = temp.children?.find(item => item.name === dir && item.type === "folder") || temp;
           }
+          currentDirectory = temp;
           return `Changed directory to ${currentPath.join("/")}`;
         }
         return "Already at root directory";
@@ -67,34 +56,17 @@ export const getTerminalResponse = (command: string): string => {
       );
 
       if (newDir) {
-        currentDirectory = newDir;
+        let temp = {...newDir};
+        currentDirectory = temp;
         currentPath.push(newDir.name);
         return `Changed directory to ${currentPath.join("/")}`;
       }
 
       return `Error: Directory ${commands[1]} not found`;
-    case "clear":
-      return ""; // The terminal component will handle this specially
-    case "help":
-      return `
-        <div class="mt-2">
-          Available commands:
-          <ul class="text-gray-300 ml-4">
-            <li>ls - List files</li>
-            <li>cd - Change directory (cd directory_name opens the corresponding window)</li>
-            <li>cat - Display file contents</li>
-            <li>clear - Clear terminal</li>
-            <li>neofetch - Display system info</li>
-            <li>open - Open a window (e.g., open resume)</li>
-            <li>new-terminal - Open a new terminal instance</li>
-            <li>help - Show this help</li>
-            <li>exit - Close terminal</li>
-          </ul>
-        </div>
-      `;
-    case "open":
+
+    case "cat":
       if (!commands[1]) {
-        return "Error: Please specify what to open";
+        return "Error: Please specify a file";
       }
 
       const targetFile = currentDirectory.children?.find(item =>
@@ -102,63 +74,32 @@ export const getTerminalResponse = (command: string): string => {
       );
 
       if (targetFile) {
-        return `File contents of ${targetFile.name}:\n${targetFile.content || "No content available"}`;
+        return targetFile.content || "No content available";
       }
 
-      return `Error: File ${commands[1]} not found in current directory`;
+      return `Error: File ${commands[1]} not found`;
 
-    case "new-terminal":
-      return "__NEW_TERMINAL__";
-    case "cat":
-      if (commands[1] === "Projects.txt") {
-        return `
-          <div class="mt-2">
-            1. Internly - Internship Tracking Application<br>
-            2. College Suggestion Bot<br>
-            3. AI Image Recognition System<br>
-            4. NLP-Based Chatbot
-          </div>
-        `;
-      } else if (commands[1] === "Resume.txt") {
-        return `
-          <div class="mt-2">
-            Name: Harshad Dhokane<br>
-            Email: work.harshad@gmail.com<br>
-            GitHub: github.com/harshad-dhokane<br>
-            LinkedIn: linkedin.com/in/harshad-dhokane/
-          </div>
-        `;
-      } else if (commands[1] === "Skills.txt") {
-        return `
-          <div class="mt-2">
-            • Programming: Python, Java, C, JavaScript<br>
-            • Web Development: Node.js, React.js, Express.js, HTML5, CSS3, PHP, TypeScript<br>
-            • AI & Machine Learning: TensorFlow, Scikit-Learn, Pandas, NumPy, Django, Node.js, Google Colab<br>
-            • DevOps: Git, GitHub, CI/CD Pipelines, Vercel<br>
-            • Databases: PostgreSQL, MongoDB, Vector DB (Basic)<br>
-            • Soft Skills: Problem-Solving, Adaptability, Leadership, Technical Communication
-          </div>
-        `;
-      } else if (commands[1] === "Experience.txt") {
-        return `
-          <div class="mt-2">
-            1. Software Development Intern – Canspirit.ai (April 2025 – June 2025)<br>
-            2. AI & Software Development Intern – CodeSoft (Aug 2024 - Sept 2024)
-          </div>
-        `;
-      } else if (commands[1] === "Certificates.txt") {
-        return `
-          <div class="mt-2">
-            1. Artificial Intelligence Fundamentals – IBM<br>
-            2. Full Stack Web Development – Udemy<br>
-            3. Database Management & SQL – Coursera
-          </div>
-        `;
-      } else {
-        return `Error: File ${commands[1]} not found.`;
-      }
-    case "exit":
-      return "__CLOSE_TERMINAL__"; // Special command to close the terminal
+    case "clear":
+      return "";
+
+    case "help":
+      return `
+        <div class="mt-2">
+          Available commands:
+          <ul class="text-gray-300 ml-4">
+            <li>ls - List files</li>
+            <li>ls -la - List files with details</li>
+            <li>cd [directory] - Change directory</li>
+            <li>cd .. - Go up one directory</li>
+            <li>cat [file] - Display file contents</li>
+            <li>clear - Clear terminal</li>
+            <li>neofetch - Display system info</li>
+            <li>help - Show this help</li>
+            <li>exit - Close terminal</li>
+          </ul>
+        </div>
+      `;
+
     case "neofetch":
       return `
       <pre class="text-[hsl(var(--linux-green))] mt-2">
@@ -184,6 +125,10 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
           .-/+oossssoo+/-.
       </pre>
       `;
+
+    case "exit":
+      return "__CLOSE_TERMINAL__";
+
     default:
       return `Error: ${cmd}: command not found`;
   }
