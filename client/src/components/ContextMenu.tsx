@@ -10,8 +10,16 @@ interface ContextMenuProps {
 const ContextMenu = ({ x, y, onClose, selectedIconId }: ContextMenuProps) => {
   const { openWindow, changeWallpaper, selectedWallpaper } = useDesktop();
 
+  // Define types for menu items
+  type MenuItem = {
+    icon: string;
+    label: string;
+    action?: () => void;
+    submenu?: boolean;
+  };
+  
   // Different menu items depending on context
-  const getMenuItems = () => {
+  const getMenuItems = (): MenuItem[] => {
     if (selectedIconId) {
       // Icon-specific context menu
       return [
@@ -36,7 +44,6 @@ const ContextMenu = ({ x, y, onClose, selectedIconId }: ContextMenuProps) => {
           changeWallpaper(nextWallpaperIndex);
         } 
       },
-      { icon: "fas fa-th-large", label: "View", submenu: true },
       { icon: "fas fa-cog", label: "Settings", action: () => openWindow("settings") },
     ];
   };
@@ -44,6 +51,7 @@ const ContextMenu = ({ x, y, onClose, selectedIconId }: ContextMenuProps) => {
   // Position the menu ensuring it doesn't go off screen
   const calculatePosition = () => {
     const menuWidth = 200;
+    const items = getMenuItems();
     const menuHeight = items.length * 36 + 60; // rough height calculation with divider and extra item
     
     const right = x + menuWidth > window.innerWidth ? window.innerWidth - menuWidth : x;

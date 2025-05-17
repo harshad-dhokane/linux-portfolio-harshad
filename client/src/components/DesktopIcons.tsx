@@ -121,9 +121,9 @@ const DesktopIcons = () => {
       {
         id: "skills",
         name: "Skills",
-        icon: "fas fa-cogs",
+        icon: "fas fa-chart-bar",
         color: "text-white",
-        bgColor: "bg-yellow-600",
+        bgColor: "bg-indigo-500",
       },
       {
         id: "experience",

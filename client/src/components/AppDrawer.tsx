@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useDesktop } from "@/context/DesktopContext";
 
 interface AppDrawerProps {
@@ -6,6 +7,7 @@ interface AppDrawerProps {
 
 export default function AppDrawer({ onClose }: AppDrawerProps) {
   const { openWindow } = useDesktop();
+  const [activeCategory, setActiveCategory] = useState<string>("Main");
 
   const drawerIcons = [
     {
@@ -14,6 +16,7 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
       icon: "fas fa-terminal",
       color: "text-green-400",
       bgColor: "bg-black",
+      category: "Main"
     },
     {
       id: "browser",
@@ -21,6 +24,7 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
       icon: "fas fa-globe",
       color: "text-white",
       bgColor: "bg-blue-500",
+      category: "Main"
     },
     {
       id: "filemanager",
@@ -28,6 +32,7 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
       icon: "fas fa-folder",
       color: "text-yellow-400",
       bgColor: "bg-gray-800",
+      category: "Main"
     },
     {
       id: "resume",
@@ -35,6 +40,7 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
       icon: "fas fa-file-alt",
       color: "text-blue-600",
       bgColor: "bg-white",
+      category: "Portfolio"
     },
     {
       id: "projects",
@@ -42,6 +48,7 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
       icon: "fas fa-code",
       color: "text-white",
       bgColor: "bg-green-500",
+      category: "Portfolio"
     },
     {
       id: "skills",
@@ -49,6 +56,7 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
       icon: "fas fa-chart-bar",
       color: "text-white",
       bgColor: "bg-indigo-500",
+      category: "Portfolio"
     },
     {
       id: "experience",
@@ -56,6 +64,7 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
       icon: "fas fa-briefcase",
       color: "text-white",
       bgColor: "bg-blue-600",
+      category: "Portfolio"
     },
     {
       id: "education",
@@ -63,6 +72,7 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
       icon: "fas fa-graduation-cap",
       color: "text-white",
       bgColor: "bg-red-500",
+      category: "Portfolio"
     },
     {
       id: "certifications",
@@ -70,6 +80,7 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
       icon: "fas fa-certificate",
       color: "text-white",
       bgColor: "bg-purple-600",
+      category: "Portfolio"
     },
     {
       id: "github",
@@ -78,6 +89,7 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
       color: "text-white",
       bgColor: "bg-gray-800",
       link: "https://github.com/harshad-dhokane/",
+      category: "Links"
     },
     {
       id: "linkedin",
@@ -86,6 +98,7 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
       color: "text-white",
       bgColor: "bg-blue-700",
       link: "https://www.linkedin.com/in/harshad-dhokane/",
+      category: "Links"
     },
     {
       id: "settings",
@@ -93,6 +106,7 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
       icon: "fas fa-cog",
       color: "text-white",
       bgColor: "bg-gray-600",
+      category: "System"
     },
     {
       id: "about",
@@ -100,27 +114,7 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
       icon: "fas fa-info-circle",
       color: "text-white",
       bgColor: "bg-[hsl(var(--ubuntu-orange))]",
-    },
-    {
-      id: "calculator",
-      name: "Calculator",
-      icon: "fas fa-calculator",
-      color: "text-white",
-      bgColor: "bg-yellow-600",
-    },
-    {
-      id: "calendar",
-      name: "Calendar",
-      icon: "fas fa-calendar-alt",
-      color: "text-white",
-      bgColor: "bg-green-600",
-    },
-    {
-      id: "mail",
-      name: "Mail",
-      icon: "fas fa-envelope",
-      color: "text-white",
-      bgColor: "bg-red-600",
+      category: "System"
     }
   ];
 
@@ -157,21 +151,38 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
         </div>
 
         <div className="pb-4">
-          <div className="flex flex-wrap gap-6 justify-center">
-            {drawerIcons.map((icon) => (
-              <div
-                key={icon.id}
-                className="drawer-icon flex flex-col items-center cursor-pointer transition-all hover:scale-110"
-                onClick={() => handleIconClick(icon.id, icon.link)}
+          {/* Category tabs */}
+          <div className="flex border-b border-gray-700 mb-4 px-2">
+            {["Main", "Portfolio", "Links", "System"].map((category) => (
+              <div 
+                key={category}
+                className={`px-4 py-2 text-white font-medium cursor-pointer border-b-2 
+                  ${activeCategory === category ? 'border-green-500' : 'border-transparent hover:border-gray-500'}`}
+                onClick={() => setActiveCategory(category)}
               >
-                <div
-                  className={`w-16 h-16 rounded-lg ${icon.bgColor} flex items-center justify-center mb-2 shadow-lg hover:shadow-xl`}
-                >
-                  <i className={`${icon.icon} text-3xl ${icon.color}`}></i>
-                </div>
-                <span className="text-white text-center font-ubuntu">{icon.name}</span>
+                {category}
               </div>
             ))}
+          </div>
+          
+          <div className="flex flex-wrap gap-6 justify-center">
+            {drawerIcons
+              .filter(icon => icon.category === activeCategory)
+              .map((icon) => (
+                <div
+                  key={icon.id}
+                  className="drawer-icon flex flex-col items-center cursor-pointer transition-all hover:scale-110"
+                  onClick={() => handleIconClick(icon.id, icon.link)}
+                >
+                  <div
+                    className={`w-16 h-16 rounded-lg ${icon.bgColor} flex items-center justify-center mb-2 shadow-lg hover:shadow-xl`}
+                  >
+                    <i className={`${icon.icon} text-3xl ${icon.color}`}></i>
+                  </div>
+                  <span className="text-white text-center font-ubuntu">{icon.name}</span>
+                </div>
+              ))
+            }
           </div>
         </div>
       </div>
