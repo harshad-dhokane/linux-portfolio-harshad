@@ -126,7 +126,17 @@ const Desktop = () => {
         <div className="absolute inset-0 bg-black bg-opacity-90 flex flex-col items-center justify-center z-50">
           <h1 className="text-2xl font-bold text-white mb-4">Loading Harshad Dhokane Portfolio</h1>
           <div className="w-64">
-            <Progress value={progress} className="h-1 bg-opacity-20 [&>div]:bg-green-500" />
+            <div className="h-1 bg-black bg-opacity-20 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-green-500 transition-all duration-300 relative"
+                style={{ 
+                  width: `${progress}%`,
+                  backgroundImage: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%)',
+                  backgroundSize: '200% 100%',
+                  animation: 'loading 1s infinite linear'
+                }}
+              />
+            </div>
           </div>
         </div>
       )}
