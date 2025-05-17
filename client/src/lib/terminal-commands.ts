@@ -9,28 +9,27 @@ export const getTerminalResponse = (command: string): string => {
 
   switch (cmd) {
     case "ls":
-      const files = currentDirectory.children?.map(item => 
-        item.type === "folder" ? `${item.name}/` : item.name
-      ) || [];
-      const hasFlag = commands.includes("-la") || commands.includes("-a") || commands.includes("-l");
-
-      if (hasFlag) {
-        // Detailed list format with icons
-        return files.map(file => {
-          const isDir = file.endsWith('/');
-          const icon = isDir ? "📁" : "📄";
-          return `<div class="mb-1"><span class="text-blue-400">${icon} ${file}</span></div>`;
-        }).join('');
-      } else {
-        // Grid format
-        return `<div class="grid grid-cols-4 gap-2">
-          ${files.map(file => {
-            const isDir = file.endsWith('/');
-            const icon = isDir ? "📁" : "📄";
-            return `<div class="truncate"><span class="text-blue-400">${icon} ${file}</span></div>`;
-          }).join('')}
-        </div>`;
+      if (!currentDirectory.children?.length) {
+        return "No files found in current directory";
       }
+      
+      const files = currentDirectory.children.map(item => 
+        item.type === "folder" ? `${item.name}/` : item.name
+      );
+      
+      const hasFlag = commands.includes("-la") || commands.includes("-a") || commands.includes("-l");
+      
+      if (hasFlag) {
+        return files.map(file => (
+          `<div class="mb-1">
+            <span class="text-blue-400">${file.endsWith('/') ? '📁' : '📄'} ${file}</span>
+          </div>`
+        )).join('\n');
+      }
+      
+      return files.map(file => (
+        `<span class="mr-4 text-blue-400">${file.endsWith('/') ? '📁' : '📄'} ${file}</span>`
+      )).join(' ');
 
     case "cd":
       if (!commands[1]) {

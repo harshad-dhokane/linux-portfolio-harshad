@@ -33,7 +33,7 @@ const FileManager = () => {
   const [viewMode, setViewMode] = useState<"icons" | "list">("icons");
   const [sortBy, setSortBy] = useState<"name" | "type" | "size" | "date">("name");
   const [showFileInfo, setShowFileInfo] = useState(false);
-  
+
   // Use these to update the shared state
   const [localCurrentPath, setLocalCurrentPath] = useState<string[]>(currentPath);
 
@@ -60,7 +60,7 @@ const FileManager = () => {
             content: `
               <h2 class="text-xl font-bold mb-4">Internly - Internship Tracking Application</h2>
               <p class="mb-4">A full-stack internship tracking platform for logging activities, tracking progress and documenting skills.</p>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Technologies Used:</h3>
               <div class="flex flex-wrap gap-2 mb-4">
                 <span class="px-2 py-1 bg-blue-600 text-white rounded text-xs">React</span>
@@ -73,7 +73,7 @@ const FileManager = () => {
                 <span class="px-2 py-1 bg-blue-600 text-white rounded text-xs">Recharts</span>
                 <span class="px-2 py-1 bg-blue-600 text-white rounded text-xs">Supabase</span>
               </div>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Features:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>User authentication and profile management</li>
@@ -83,7 +83,7 @@ const FileManager = () => {
                 <li>Interactive dashboards with progress visualization</li>
                 <li>Reporting and export functionality</li>
               </ul>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Development Highlights:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>Implemented responsive design using Tailwind CSS and shadcn-ui components</li>
@@ -92,7 +92,7 @@ const FileManager = () => {
                 <li>Integrated Supabase for backend services including authentication and database</li>
                 <li>Implemented data visualization using Recharts library</li>
               </ul>
-              
+
               <div class="mt-6 p-4 bg-gray-800 rounded-lg">
                 <div class="flex justify-between">
                   <div>
@@ -117,7 +117,7 @@ const FileManager = () => {
             content: `
               <h2 class="text-xl font-bold mb-4">College Suggestion Bot</h2>
               <p class="mb-4">An AI-powered chatbot that extracts user preferences via NLP to recommend suitable colleges.</p>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Technologies Used:</h3>
               <div class="flex flex-wrap gap-2 mb-4">
                 <span class="px-2 py-1 bg-green-600 text-white rounded text-xs">Node.js</span>
@@ -126,7 +126,7 @@ const FileManager = () => {
                 <span class="px-2 py-1 bg-blue-600 text-white rounded text-xs">NLP</span>
                 <span class="px-2 py-1 bg-purple-600 text-white rounded text-xs">AI Models</span>
               </div>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Features:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>AI-powered chatbot interface</li>
@@ -135,7 +135,7 @@ const FileManager = () => {
                 <li>Smart matching algorithm</li>
                 <li>User preference saving system</li>
               </ul>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Development Highlights:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>Built a full-stack college recommendation system using Node.js and Express</li>
@@ -144,7 +144,7 @@ const FileManager = () => {
                 <li>Created a structured college database covering courses, fees, placements, and accreditations</li>
                 <li>Added authentication and user profile saving functionality</li>
               </ul>
-              
+
               <div class="mt-6 p-4 bg-gray-800 rounded-lg">
                 <div class="flex justify-between">
                   <div>
@@ -169,7 +169,7 @@ const FileManager = () => {
             content: `
               <h2 class="text-xl font-bold mb-4">AI Image Recognition System</h2>
               <p class="mb-4">An image recognition system leveraging deep learning for accurate object detection.</p>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Technologies Used:</h3>
               <div class="flex flex-wrap gap-2 mb-4">
                 <span class="px-2 py-1 bg-blue-600 text-white rounded text-xs">Python</span>
@@ -177,7 +177,7 @@ const FileManager = () => {
                 <span class="px-2 py-1 bg-purple-600 text-white rounded text-xs">Computer Vision</span>
                 <span class="px-2 py-1 bg-red-600 text-white rounded text-xs">CNN</span>
               </div>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Features:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>Real-time object detection</li>
@@ -186,7 +186,7 @@ const FileManager = () => {
                 <li>User-friendly interface</li>
                 <li>Performance optimization</li>
               </ul>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Development Highlights:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>Built a convolutional neural network (CNN) model using TensorFlow</li>
@@ -195,7 +195,7 @@ const FileManager = () => {
                 <li>Created a user-friendly interface for easy interaction</li>
                 <li>Optimized the model for better performance</li>
               </ul>
-              
+
               <div class="mt-6 p-4 bg-gray-800 rounded-lg">
                 <div class="flex justify-between">
                   <div>
@@ -220,7 +220,7 @@ const FileManager = () => {
             content: `
               <h2 class="text-xl font-bold mb-4">NLP-Based Chatbot</h2>
               <p class="mb-4">A natural language processing chatbot with advanced text understanding capabilities.</p>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Technologies Used:</h3>
               <div class="flex flex-wrap gap-2 mb-4">
                 <span class="px-2 py-1 bg-blue-600 text-white rounded text-xs">Python</span>
@@ -228,7 +228,7 @@ const FileManager = () => {
                 <span class="px-2 py-1 bg-orange-600 text-white rounded text-xs">NLTK</span>
                 <span class="px-2 py-1 bg-green-600 text-white rounded text-xs">Flask</span>
               </div>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Features:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>Natural language understanding</li>
@@ -237,7 +237,7 @@ const FileManager = () => {
                 <li>Sentiment analysis</li>
                 <li>Integration with external APIs</li>
               </ul>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Development Highlights:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>Built a chatbot using Python and NLTK for natural language processing</li>
@@ -246,7 +246,7 @@ const FileManager = () => {
                 <li>Added sentiment analysis to understand user emotions</li>
                 <li>Developed a Flask-based API for easy integration</li>
               </ul>
-              
+
               <div class="mt-6 p-4 bg-gray-800 rounded-lg">
                 <div class="flex justify-between">
                   <div>
@@ -292,7 +292,7 @@ const FileManager = () => {
                 <p><span class="font-bold">Period:</span> 2024 - 2026</p>
                 <p><span class="font-bold">CGPA:</span> 8.1</p>
               </div>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Key Subjects:</h3>
               <div class="grid grid-cols-2 gap-2">
                 <div class="bg-gray-700 p-2 rounded text-sm">Advanced Algorithms</div>
@@ -319,7 +319,7 @@ const FileManager = () => {
                 <p><span class="font-bold">Period:</span> 2021 - 2024</p>
                 <p><span class="font-bold">CGPA:</span> 8.84</p>
               </div>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Key Subjects:</h3>
               <div class="grid grid-cols-2 gap-2">
                 <div class="bg-gray-700 p-2 rounded text-sm">Data Structures</div>
@@ -346,7 +346,7 @@ const FileManager = () => {
                 <p><span class="font-bold">Period:</span> 2020 - 2021</p>
                 <p><span class="font-bold">Percentage:</span> 83.50%</p>
               </div>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Key Subjects:</h3>
               <div class="grid grid-cols-2 gap-2">
                 <div class="bg-gray-700 p-2 rounded text-sm">Physics</div>
@@ -375,7 +375,7 @@ const FileManager = () => {
             content: `
               <h2 class="text-xl font-bold mb-4">Software Development Intern – Canspirit.ai</h2>
               <p class="text-gray-400 mb-4">April 2025 – June 2025</p>
-              
+
               <h3 class="text-lg font-bold mt-4 mb-2">Responsibilities & Achievements:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>Worked on a live QR code-based Asset Management System, contributing to both front-end and back-end development.</li>
@@ -383,7 +383,7 @@ const FileManager = () => {
                 <li>Integrated Supabase as the backend-as-a-service, optimizing PostgreSQL database performance with 30% faster query response times.</li>
                 <li>Worked with React and TypeScript to build dynamic front-end components.</li>
               </ul>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Technologies Used:</h3>
               <div class="flex flex-wrap gap-2">
                 <span class="px-2 py-1 bg-blue-800 text-blue-100 rounded-md text-xs">React</span>
@@ -404,7 +404,7 @@ const FileManager = () => {
             content: `
               <h2 class="text-xl font-bold mb-4">AI & Software Development Intern – CodeSoft</h2>
               <p class="text-gray-400 mb-4">Aug 2024 - Sept 2024</p>
-              
+
               <h3 class="text-lg font-bold mt-4 mb-2">Responsibilities & Achievements:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>Developed AI models for machine learning applications like chatbots, recommendation systems, and image recognition systems with user-friendly interfaces.</li>
@@ -412,7 +412,7 @@ const FileManager = () => {
                 <li>Collaborated with a team of 5 developers to implement and optimize machine learning algorithms.</li>
                 <li>Created interactive dashboards to visualize model performance and analytics.</li>
               </ul>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Technologies Used:</h3>
               <div class="flex flex-wrap gap-2">
                 <span class="px-2 py-1 bg-purple-800 text-purple-100 rounded-md text-xs">Python</span>
@@ -440,7 +440,7 @@ const FileManager = () => {
             modified: "May 2025",
             content: `
               <h2 class="text-xl font-bold mb-4">Programming Skills</h2>
-              
+
               <div class="space-y-4">
                 <div>
                   <div class="flex justify-between items-center mb-1">
@@ -490,7 +490,7 @@ const FileManager = () => {
             modified: "May 2025",
             content: `
               <h2 class="text-xl font-bold mb-4">Web Development Skills</h2>
-              
+
               <h3 class="text-lg font-bold mt-2 mb-3">Frontend</h3>
               <div class="grid grid-cols-3 gap-3 mb-6">
                 <div class="bg-gray-700 p-2 rounded text-center">
@@ -518,7 +518,7 @@ const FileManager = () => {
                   <div>Tailwind</div>
                 </div>
               </div>
-              
+
               <h3 class="text-lg font-bold mt-4 mb-3">Backend</h3>
               <div class="grid grid-cols-3 gap-3">
                 <div class="bg-gray-700 p-2 rounded text-center">
@@ -545,7 +545,7 @@ const FileManager = () => {
             modified: "May 2025",
             content: `
               <h2 class="text-xl font-bold mb-4">AI & Machine Learning Skills</h2>
-              
+
               <div class="grid grid-cols-2 gap-4 mb-6">
                 <div class="bg-gray-700 p-3 rounded">
                   <h3 class="font-bold mb-2 text-purple-400">Frameworks & Libraries</h3>
@@ -568,7 +568,7 @@ const FileManager = () => {
                   </ul>
                 </div>
               </div>
-              
+
               <h3 class="text-lg font-bold mb-3">Applications</h3>
               <div class="grid grid-cols-2 gap-3">
                 <div class="bg-gray-700 p-2 rounded text-center">
@@ -599,7 +599,7 @@ const FileManager = () => {
             modified: "May 2025",
             content: `
               <h2 class="text-xl font-bold mb-4">DevOps & Database Skills</h2>
-              
+
               <div class="grid grid-cols-2 gap-4 mb-6">
                 <div class="bg-gray-700 p-3 rounded">
                   <h3 class="font-bold mb-2 text-red-400">DevOps</h3>
@@ -622,7 +622,7 @@ const FileManager = () => {
                   </ul>
                 </div>
               </div>
-              
+
               <h3 class="text-lg font-bold mb-3">Tools & Services</h3>
               <div class="grid grid-cols-3 gap-3">
                 <div class="bg-gray-700 p-2 rounded text-center">
@@ -665,17 +665,16 @@ const FileManager = () => {
             type: "file",
             icon: "fas fa-file-certificate",
             color: "text-purple-500",
-            size: "115 KB",
-            modified: "January 2024",
+            size: "115 KB",modified: "January 2024",
             content: `
               <h2 class="text-xl font-bold mb-4">Artificial Intelligence Fundamentals</h2>
               <p class="mb-2"><span class="font-bold">Issuer:</span> IBM</p>
               <p class="mb-4"><span class="font-bold">Date:</span> January 2024</p>
-              
+
               <p class="mb-4">
                 This certification covers essential AI concepts, machine learning fundamentals, neural networks, and practical applications of AI technologies.
               </p>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Topics Covered:</h3>
               <ul class="list-disc pl-5 space-y-1">
                 <li>Introduction to Artificial Intelligence</li>
@@ -686,7 +685,7 @@ const FileManager = () => {
                 <li>AI Ethics and Governance</li>
                 <li>Practical Applications of AI</li>
               </ul>
-              
+
               <div class="mt-6 p-4 bg-gray-800 rounded-lg text-center">
                 <span class="text-gray-400">Certificate ID: </span>
                 <span>IBM-AI-2024-HD-78391</span>
@@ -704,11 +703,11 @@ const FileManager = () => {
               <h2 class="text-xl font-bold mb-4">Full Stack Web Development</h2>
               <p class="mb-2"><span class="font-bold">Issuer:</span> Udemy</p>
               <p class="mb-4"><span class="font-bold">Date:</span> October 2023</p>
-              
+
               <p class="mb-4">
                 Comprehensive training in modern web development, covering front-end frameworks, back-end technologies, and database integration.
               </p>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Topics Covered:</h3>
               <ul class="list-disc pl-5 space-y-1">
                 <li>HTML5, CSS3, and JavaScript</li>
@@ -720,7 +719,7 @@ const FileManager = () => {
                 <li>Deployment and CI/CD</li>
                 <li>Performance Optimization</li>
               </ul>
-              
+
               <div class="mt-6 p-4 bg-gray-800 rounded-lg text-center">
                 <span class="text-gray-400">Certificate ID: </span>
                 <span>UDEMY-FSWD-2023-HD-45672</span>
@@ -738,11 +737,11 @@ const FileManager = () => {
               <h2 class="text-xl font-bold mb-4">Database Management & SQL</h2>
               <p class="mb-2"><span class="font-bold">Issuer:</span> Coursera</p>
               <p class="mb-4"><span class="font-bold">Date:</span> May 2023</p>
-              
+
               <p class="mb-4">
                 Specialized training in database design, SQL queries, optimization techniques, and modern database systems.
               </p>
-              
+
               <h3 class="text-lg font-bold mt-6 mb-2">Topics Covered:</h3>
               <ul class="list-disc pl-5 space-y-1">
                 <li>Database Design Principles</li>
@@ -753,7 +752,7 @@ const FileManager = () => {
                 <li>Transactions and Concurrency</li>
                 <li>NoSQL and Modern Database Systems</li>
               </ul>
-              
+
               <div class="mt-6 p-4 bg-gray-800 rounded-lg text-center">
                 <span class="text-gray-400">Certificate ID: </span>
                 <span>COURSERA-SQL-2023-HD-34521</span>
@@ -764,6 +763,8 @@ const FileManager = () => {
       }
     ]
   };
+
+  const [currentDir, setCurrentDir] = useState<FileData>(fileSystem);
 
   // Get current directory contents
   const getCurrentDirectory = (): FileData => {
@@ -782,9 +783,9 @@ const FileManager = () => {
   // Navigate to a directory
   const navigateToDirectory = (folder: FileData) => {
     if (folder.type === "folder") {
-      currentPath = [...currentPath, folder.name];
-      setLocalCurrentPath(currentPath);
-      currentDirectory = folder;
+      const newPath = [...currentPath, folder.name];
+      setLocalCurrentPath(newPath);
+      setCurrentDir(folder);
       setSelectedFile(null);
     }
   };
@@ -792,13 +793,10 @@ const FileManager = () => {
   // Navigate up one level
   const navigateUp = () => {
     if (currentPath.length > 1) {
-      currentPath = currentPath.slice(0, -1);
-      setLocalCurrentPath(currentPath);
-      // Update current directory
-      currentDirectory = fileSystem;
-      for (const dir of currentPath.slice(1)) {
-        currentDirectory = currentDirectory.children?.find(item => item.name === dir) || currentDirectory;
-      }
+      const newPath = currentPath.slice(0, -1);
+      setLocalCurrentPath(newPath);
+      const newDir = getCurrentDirectory();
+      setCurrentDir(newDir);
       setSelectedFile(null);
     }
   };
@@ -810,7 +808,7 @@ const FileManager = () => {
     } else {
       setSelectedFile(file);
       setShowFileInfo(true);
-      
+
       // All files including projects will now display in the side panel
       // No need to open specific windows - content will display in the right panel
       // This creates a more consistent experience across the file manager
@@ -980,7 +978,7 @@ const FileManager = () => {
                   </button>
                 </div>
               </div>
-              
+
               <div className="flex-1 p-4">
                 <div className="glass rounded-lg p-4 shadow-inner">
                   {selectedFile.content ? (
