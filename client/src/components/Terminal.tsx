@@ -67,66 +67,72 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
   const terminalOutputRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Enhanced auto-scroll to keep latest commands always visible
+  // Completely overhauled terminal scrolling to guarantee the latest commands and output are visible
   useEffect(() => {
-    const scrollToBottom = () => {
+    // This function forces the scroll to the bottom, no matter what
+    const forceScrollToBottom = () => {
       if (terminalOutputRef.current) {
-        // Force scroll to bottom to ensure latest command is visible
-        terminalOutputRef.current.scrollTo({
-          top: terminalOutputRef.current.scrollHeight,
-          behavior: 'auto'
-        });
-        
-        // Additional scroll after render to ensure complete visibility
-        setTimeout(() => {
-          if (terminalOutputRef.current) {
-            terminalOutputRef.current.scrollTo({
-              top: terminalOutputRef.current.scrollHeight,
-              behavior: 'auto'
-            });
-          }
-        }, 0);
-        
-        // One more check after all animations and renders complete
-        setTimeout(() => {
-          if (terminalOutputRef.current) {
-            terminalOutputRef.current.scrollTo({
-              top: terminalOutputRef.current.scrollHeight,
-              behavior: 'auto'
-            });
-          }
-        }, 100);
+        // Get the parent container (terminal content container)
+        const container = terminalOutputRef.current.parentElement;
+        if (container) {
+          // Force scroll to absolute bottom
+          container.scrollTop = container.scrollHeight;
+          
+          // Double-check immediate scroll
+          setTimeout(() => {
+            if (container) {
+              container.scrollTop = container.scrollHeight;
+            }
+          }, 10);
+          
+          // Final check after all rendering is complete
+          setTimeout(() => {
+            if (container) {
+              container.scrollTop = container.scrollHeight;
+            }
+          }, 100);
+        }
       }
     };
     
-    // Run scroll to bottom whenever command history changes
-    scrollToBottom();
+    // Run scroll whenever command history changes
+    forceScrollToBottom();
     
-    // Add a mutation observer to watch for content changes in the terminal output
-    const observer = new MutationObserver(scrollToBottom);
+    // Track any changes to the DOM inside the terminal
+    const observer = new MutationObserver((mutations) => {
+      // If there are changes to the DOM, force scroll
+      if (mutations.length > 0) {
+        forceScrollToBottom();
+      }
+    });
     
+    // Observe the terminal output for any changes
     if (terminalOutputRef.current) {
       observer.observe(terminalOutputRef.current, {
-        childList: true,
-        subtree: true,
-        characterData: true
+        childList: true,      // Watch for added/removed elements
+        subtree: true,        // Watch the entire subtree
+        characterData: true,  // Watch for changes to text content
+        attributes: true      // Watch attributes too
       });
     }
     
-    // Also handle when terminal window is resized
-    const resizeObserver = new ResizeObserver(scrollToBottom);
+    // Also track any resizing of the terminal window
+    const resizeObserver = new ResizeObserver(() => {
+      forceScrollToBottom();
+    });
     
-    if (terminalOutputRef.current) {
-      resizeObserver.observe(terminalOutputRef.current);
+    // Find the parent window element and observe it
+    const terminalWindow = document.getElementById(id)?.parentElement;
+    if (terminalWindow) {
+      resizeObserver.observe(terminalWindow);
     }
     
+    // Cleanup all observers on unmount
     return () => {
-      if (terminalOutputRef.current) {
-        observer.disconnect();
-        resizeObserver.unobserve(terminalOutputRef.current);
-      }
+      observer.disconnect();
+      resizeObserver.disconnect();
     };
-  }, [commandHistory]);
+  }, [commandHistory, id]);
 
   // Focus input when terminal is clicked
   useEffect(() => {

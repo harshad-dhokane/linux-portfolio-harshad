@@ -9,7 +9,21 @@ export const getTerminalResponse = (command: string): string => {
 
   switch (cmd) {
     case "ls":
-      return '<div class="text-blue-300">Projects/  Resume/  Certificates/  Skills/  Experience/  Education/  GitHub/  LinkedIn/  file-manager/</div>';
+      // Simulate Linux-style terminal output with fixed width, monospace formatting
+      const files = ["Projects/", "Resume/", "Certificates/", "Skills.txt", "Experience.txt", "Education/", "GitHub/", "LinkedIn/", "file-manager/"];
+      const hasFlag = commands.includes("-la") || commands.includes("-a") || commands.includes("-l");
+      
+      if (hasFlag) {
+        // If ls -la or similar flag, format as a detailed list
+        return `<div class="font-mono text-blue-300">
+          ${files.join(" ")}
+        </div>`;
+      } else {
+        // Standard ls command - column display
+        return `<div class="font-mono text-blue-300 grid grid-cols-3 gap-x-6">
+          ${files.map(file => `<div class="truncate">${file}</div>`).join('')}
+        </div>`;
+      }
     case "cd":
       if (!commands[1]) {
         return "Error: Please specify a directory";
