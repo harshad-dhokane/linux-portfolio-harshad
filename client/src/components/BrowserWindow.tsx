@@ -380,16 +380,17 @@ const BrowserWindow = () => {
           )}
 
           {content === "linkedin" && (
-            <iframe 
-              src="https://www.linkedin.com/in/harshad-dhokane/"
-              className="w-full h-full"
-              title="LinkedIn Profile"
-              sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-              onLoad={() => setIsLoading(false)}
-              onError={() => setIsLoading(false)}
-            />
-                  
-                  <div className="bg-white rounded-lg shadow overflow-hidden mb-4">
+            <>
+              <iframe 
+                src="https://www.linkedin.com/in/harshad-dhokane/"
+                className="w-full h-full"
+                title="LinkedIn Profile"
+                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                onLoad={() => setIsLoading(false)}
+                onError={() => setIsLoading(false)}
+              />
+                    
+              <div className="bg-white rounded-lg shadow overflow-hidden mb-4">
                     <div className="p-6">
                       <h2 className="text-xl font-bold mb-4">About</h2>
                       <p className="text-gray-700">
