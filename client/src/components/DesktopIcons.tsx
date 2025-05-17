@@ -195,10 +195,10 @@ const DesktopIcons = () => {
       
       // Double click behavior
       if (e.detail === 2) {
-        if (icon.id === "linkedin" || icon.id === "github") {
+        if (icon.id === "linkedin") {
           openWindow("browser");
-          sessionStorage.setItem("browserContent", icon.id);
-          sessionStorage.setItem("browserUrl", icon.externalLink || "");
+          sessionStorage.setItem("browserContent", "linkedin");
+          sessionStorage.setItem("browserUrl", "https://www.linkedin.com/in/harshad-dhokane/");
         } else if (icon.externalLink) {
           handleExternalLink(icon.id, icon.externalLink);
         } else {

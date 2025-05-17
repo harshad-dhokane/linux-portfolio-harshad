@@ -119,13 +119,10 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
   ];
 
   const handleIconClick = (id: string, link?: string) => {
-    if (id === "linkedin" || id === "github") {
+    if (link) {
+      // Use internal browser for external links with correct profile view
       openWindow("browser");
       sessionStorage.setItem("browserContent", id);
-      sessionStorage.setItem("browserUrl", link || "");
-    } else if (link) {
-      openWindow("browser");
-      sessionStorage.setItem("browserContent", "external");
       sessionStorage.setItem("browserUrl", link);
     } else {
       // Open application window
