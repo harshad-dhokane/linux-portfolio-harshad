@@ -1,215 +1,168 @@
-// File system state
-const currentPath: string[] = ["Home"];
-
-export const fsState = {
-  getCurrentPath: () => currentPath,
-  getCurrentDirectory: () => {
-    let current = fileSystem;
-    for (let i = 1; i < currentPath.length; i++) {
-      const dir = current.children?.find(d => d.name === currentPath[i]);
-      if (dir && dir.type === "folder") {
-        current = dir;
-      }
-    }
-    return current;
-  }
-};
-
-export const fileSystem = {
-  name: "Home",
-  type: "folder",
-  icon: "fas fa-home",
-  color: "text-blue-500",
-  children: [
-    {
-      name: "Projects",
-      type: "folder", 
-      icon: "fas fa-folder",
-      color: "text-yellow-500",
-      children: [
-        {
-          name: "Internly",
-          type: "file",
-          icon: "fas fa-file-code",
-          color: "text-green-500",
-          size: "1.2 MB",
-          modified: "April 2025",
-          content: `Your existing Internly content`
-        },
-        {
-          name: "College Suggestion Bot",
-          type: "file",
-          icon: "fas fa-file-code",
-          color: "text-green-500",
-          size: "850 KB",
-          modified: "October 2024",
-          content: `Your existing College Bot content`
-        }
-      ]
-    },
-    {
-      name: "Skills",
-      type: "folder",
-      icon: "fas fa-folder",
-      color: "text-yellow-500",
-      children: [
-        {
-          name: "Programming",
-          type: "file",
-          icon: "fas fa-code",
-          color: "text-purple-500",
-          size: "145 KB",
-          modified: "May 2025",
-          content: `Your existing Programming skills content`
-        },
-        {
-          name: "Web Development",
-          type: "file",
-          icon: "fas fa-globe",
-          color: "text-blue-500",
-          size: "135 KB",
-          modified: "May 2025",
-          content: `Your existing Web Dev content`
-        }
-      ]
-    },
-    {
-      name: "Certificates",
-      type: "folder",
-      icon: "fas fa-folder",
-      color: "text-yellow-500",
-      children: [
-        {
-          name: "AI Fundamentals",
-          type: "file",
-          icon: "fas fa-certificate",
-          color: "text-yellow-500",
-          size: "115 KB",
-          modified: "January 2024",
-          content: `Your existing AI cert content`
-        },
-        {
-          name: "Full Stack Development",
-          type: "file",
-          icon: "fas fa-certificate", 
-          color: "text-yellow-500",
-          size: "125 KB",
-          modified: "October 2023",
-          content: `Your existing Full Stack cert content`
-        }
-      ]
-    }
-  ]
-};
-
-const formatDate = (date: string | undefined) => {
-  return date || new Date().toLocaleString();
-};
-
 export const getTerminalResponse = (command: string): string => {
-  const commands = command.trim().split(/\s+/);
-  const cmd = commands[0].toLowerCase();
+  const commands = command.split(" ");
+  const cmd = commands[0];
+
+  // Special command for opening windows
+  if (cmd === "open-window") {
+    return `__OPEN_WINDOW__${commands[1] || ""}`;
+  }
 
   switch (cmd) {
-    case "open":
-      if (!commands[1]) {
-        return "Usage: open <window_name>";
-      }
-      const windowName = commands[1].toLowerCase();
-      window.dispatchEvent(new CustomEvent('openWindow', { detail: windowName }));
-      return `Opening ${windowName}...`;
-
     case "ls":
-      const children = fsState.getCurrentDirectory().children || [];
-      const hasDetailFlag = commands.includes("-l") || commands.includes("-la") || commands.includes("-al");
-      
-      if (!children.length) {
-        return "Directory is empty";
-      }
+      // Simulate Linux-style terminal output with fixed width, monospace formatting
+      const files = ["Projects/", "Resume/", "Certificates/", "Skills.txt", "Experience.txt", "Education/", "GitHub/", "LinkedIn/", "file-manager/"];
+      const hasFlag = commands.includes("-la") || commands.includes("-a") || commands.includes("-l");
 
-      if (hasDetailFlag) {
-        return `<div class="font-mono">${children.map(file => {
-          const perms = file.type === "folder" ? "drwxr-xr-x" : "-rw-r--r--";
-          const size = file.size || "-";
-          const date = formatDate(file.modified);
-          return `<div>${perms} user user ${size.padEnd(8)} ${date} <span class="text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.name}</span></div>`;
-        }).join('\n')}</div>`;
+      if (hasFlag) {
+        // If ls -la or similar flag, format as a detailed list
+        return `<div class="font-mono text-blue-300">
+          ${files.join(" ")}
+        </div>`;
+      } else {
+        // Standard ls command - column display
+        return `<div class="font-mono text-blue-300 grid grid-cols-3 gap-x-6">
+          ${files.map(file => `<div class="truncate">${file}</div>`).join('')}
+        </div>`;
       }
-      
-      return `<div class="flex flex-wrap gap-4">${children.map(file => 
-        `<span class="text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.type === 'folder' ? '📁' : '📄'} ${file.name}</span>`
-      ).join(' ')}</div>`;
-
     case "cd":
-      if (!commands[1] || commands[1] === "~") {
-        const currentPath: string[] = ["Home"];
-        return "Changed to home directory";
-      }
-
-      if (commands[1] === "..") {
-        const currentPath = fsState.getCurrentPath();
-        if (currentPath.length > 1) {
-          currentPath.pop();
-          return `Changed directory to ${currentPath.join("/")}`;
-        }
-        return "Already at root directory";
-      }
-
-      const targetDir = fsState.getCurrentDirectory().children?.find(
-        item => item.name === commands[1] && item.type === "folder"
-      );
-
-      if (!targetDir) {
-        return `bash: cd: ${commands[1]}: No such directory`;
-      }
-
-      currentPath.push(commands[1]);
-      return `Changed directory to ${currentPath.join("/")}`;
-
-    case "pwd":
-      return currentPath.join("/");
-
-    case "cat":
       if (!commands[1]) {
-        return "Usage: cat <filename>";
+        return "Error: Please specify a directory";
       }
 
-      const file = fsState.getCurrentDirectory().children?.find(
-        item => item.name === commands[1] && item.type === "file"
-      );
+      // Check if the directory name is one of our windows
+      const windowMappings: Record<string, string> = {
+        "resume": "resume",
+        "projects": "projects",
+        "certificates": "certifications",
+        "skills": "skills",
+        "experience": "experience",
+        "education": "education",
+        "github": "github",
+        "linkedin": "linkedin",
+        "browser": "browser",
+        "file-manager": "filemanager",
+        "filemanager": "filemanager",
+        "settings": "settings",
+        "about": "about",
+      };
 
-      if (!file) {
-        return `cat: ${commands[1]}: No such file`;
+      const targetDir = commands[1].replace("/", "").toLowerCase();
+      if (windowMappings[targetDir]) {
+        return `__OPEN_WINDOW__${windowMappings[targetDir]}`;
       }
 
-      return file.content || "File is empty";
-
+      return `Changed directory to ${commands[1]}`;
     case "clear":
-      return "";
-
+      return ""; // The terminal component will handle this specially
     case "help":
       return `
         <div class="mt-2">
           Available commands:
           <ul class="text-gray-300 ml-4">
-            <li>pwd - Print working directory</li>
-            <li>ls - List directory contents</li>
-            <li>ls -l - List detailed directory contents</li>
-            <li>cd [directory] - Change directory</li>
-            <li>cd .. - Go up one directory</li>
-            <li>cat [file] - Display file contents</li>
+            <li>ls - List files</li>
+            <li>cd - Change directory (cd directory_name opens the corresponding window)</li>
+            <li>cat - Display file contents</li>
             <li>clear - Clear terminal</li>
             <li>neofetch - Display system info</li>
+            <li>open - Open a window (e.g., open resume)</li>
+            <li>new-terminal - Open a new terminal instance</li>
             <li>help - Show this help</li>
             <li>exit - Close terminal</li>
           </ul>
         </div>
       `;
+    case "open":
+      if (!commands[1]) {
+        return "Error: Please specify what to open";
+      }
 
+      const validWindows = ["resume", "projects", "certifications", "terminal", "browser", "github", "linkedin", "skills", "experience", "education", "about", "settings", "filemanager"];
+      const windowToOpen = commands[1].toLowerCase();
+
+      if (validWindows.includes(windowToOpen)) {
+        return `__OPEN_WINDOW__${windowToOpen}`;
+      } else {
+        return `Error: Cannot open ${commands[1]}, not a valid application.`;
+      }
+
+    case "new-terminal":
+      return "__NEW_TERMINAL__";
+    case "cat":
+      if (commands[1] === "Projects.txt") {
+        return `
+          <div class="mt-2">
+            1. Internly - Internship Tracking Application<br>
+            2. College Suggestion Bot<br>
+            3. AI Image Recognition System<br>
+            4. NLP-Based Chatbot
+          </div>
+        `;
+      } else if (commands[1] === "Resume.txt") {
+        return `
+          <div class="mt-2">
+            Name: Harshad Dhokane<br>
+            Email: work.harshad@gmail.com<br>
+            GitHub: github.com/harshad-dhokane<br>
+            LinkedIn: linkedin.com/in/harshad-dhokane/
+          </div>
+        `;
+      } else if (commands[1] === "Skills.txt") {
+        return `
+          <div class="mt-2">
+            • Programming: Python, Java, C, JavaScript<br>
+            • Web Development: Node.js, React.js, Express.js, HTML5, CSS3, PHP, TypeScript<br>
+            • AI & Machine Learning: TensorFlow, Scikit-Learn, Pandas, NumPy, Django, Node.js, Google Colab<br>
+            • DevOps: Git, GitHub, CI/CD Pipelines, Vercel<br>
+            • Databases: PostgreSQL, MongoDB, Vector DB (Basic)<br>
+            • Soft Skills: Problem-Solving, Adaptability, Leadership, Technical Communication
+          </div>
+        `;
+      } else if (commands[1] === "Experience.txt") {
+        return `
+          <div class="mt-2">
+            1. Software Development Intern – Canspirit.ai (April 2025 – June 2025)<br>
+            2. AI & Software Development Intern – CodeSoft (Aug 2024 - Sept 2024)
+          </div>
+        `;
+      } else if (commands[1] === "Certificates.txt") {
+        return `
+          <div class="mt-2">
+            1. Artificial Intelligence Fundamentals – IBM<br>
+            2. Full Stack Web Development – Udemy<br>
+            3. Database Management & SQL – Coursera
+          </div>
+        `;
+      } else {
+        return `Error: File ${commands[1]} not found.`;
+      }
     case "exit":
-      return "__CLOSE_TERMINAL__";
-
+      return "__CLOSE_TERMINAL__"; // Special command to close the terminal
+    case "neofetch":
+      return `
+      <pre class="text-[hsl(var(--linux-green))] mt-2">
+          .-/+oossssoo+/-.               harshad@ubuntu
+       \`:+ssssssssssssssssss+:\`           ----------------
+     -+ssssssssssssssssssyyssss+-         OS: Ubuntu 22.04 LTS
+   .ossssssssssssssssss dMMMNysssso.      Host: Developer Machine
+  /ssssssssssshdmmNNmmyNMMMMhssssss/      Kernel: 5.15.0-58-generic
+ +ssssssssshmydMMMMMMMNddddyssssssss+     Uptime: 3 hours, 42 mins
+/sssssssshNMMMyhhyyyyhmNMMMNhssssssss/    Packages: 1843
+.ssssssssdMMMNhsssssssssshNMMMdssssssss.   Shell: bash 5.1.16
++sssshhhyNMMNyssssssssssssyNMMMysssssss+   Resolution: 1920x1080
+ossyNMMMNyMMhsssssssssssssshmmmhssssssso   DE: GNOME 42.0
+ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
++sssshhhyNMMNyssssssssssssyNMMMysssssss+   WM Theme: Adwaita
+.ssssssssdMMMNhsssssssssshNMMMdssssssss.   Theme: Yaru [GTK2/3]
+/sssssssshNMMMyhhyyyyhdNMMMNhssssssss/    Icons: Yaru [GTK2/3]
+ +sssssssssdmydMMMMMMMMddddyssssssss+     Terminal: gnome-terminal
+  /ssssssssssshdmNNNNmyNMMMMhssssss/      CPU: Intel i7-10700K @ 3.80GHz
+   .ossssssssssssssssss dMMMNysssso.      GPU: NVIDIA GeForce RTX 3070
+     -+sssssssssssssssssyyyssss+-         Memory: 5012MiB / 16000MiB
+       \`:+ssssssssssssssssss+:\`
+          .-/+oossssoo+/-.
+      </pre>
+      `;
     default:
-      return `bash: ${cmd}: command not found`;
+      return `Error: ${cmd}: command not found`;
   }
 };

@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Window from "./Window";
 import { useDesktop } from "@/context/DesktopContext";
-import { fsState, fileSystem } from "@/lib/terminal-commands";
 
 // Define file types and their data
 interface FileData {
@@ -15,29 +14,38 @@ interface FileData {
   modified?: string;
 }
 
-export const typedFileSystem: FileData = {
-  name: "Home",
-  type: "folder",
-  icon: "fas fa-home",
-  color: "text-blue-500",
-  children: [
-    {
-      name: "Projects",
-      type: "folder",
-      icon: "fas fa-folder",
-      color: "text-yellow-500",
-      children: [
-        {
-          name: "Internly",
-          type: "file",
-          icon: "fas fa-file-code",
-          color: "text-green-500",
-          size: "1.2 MB",
-          modified: "April 2025",
-          content: `
+const FileManager = () => {
+  const { openWindow } = useDesktop();
+  const [currentPath, setCurrentPath] = useState<string[]>(["Home"]);
+  const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
+  const [viewMode, setViewMode] = useState<"icons" | "list">("icons");
+  const [sortBy, setSortBy] = useState<"name" | "type" | "size" | "date">("name");
+  const [showFileInfo, setShowFileInfo] = useState(false);
+
+  // File system structure
+  const fileSystem: FileData = {
+    name: "Home",
+    type: "folder",
+    icon: "fas fa-home",
+    color: "text-blue-500",
+    children: [
+      {
+        name: "Projects",
+        type: "folder",
+        icon: "fas fa-folder",
+        color: "text-yellow-500",
+        children: [
+          {
+            name: "Internly",
+            type: "file",
+            icon: "fas fa-file-code",
+            color: "text-green-500",
+            size: "1.2 MB",
+            modified: "April 2025",
+            content: `
               <h2 class="text-xl font-bold mb-4">Internly - Internship Tracking Application</h2>
               <p class="mb-4">A full-stack internship tracking platform for logging activities, tracking progress and documenting skills.</p>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Technologies Used:</h3>
               <div class="flex flex-wrap gap-2 mb-4">
                 <span class="px-2 py-1 bg-blue-600 text-white rounded text-xs">React</span>
@@ -50,7 +58,7 @@ export const typedFileSystem: FileData = {
                 <span class="px-2 py-1 bg-blue-600 text-white rounded text-xs">Recharts</span>
                 <span class="px-2 py-1 bg-blue-600 text-white rounded text-xs">Supabase</span>
               </div>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Features:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>User authentication and profile management</li>
@@ -60,7 +68,7 @@ export const typedFileSystem: FileData = {
                 <li>Interactive dashboards with progress visualization</li>
                 <li>Reporting and export functionality</li>
               </ul>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Development Highlights:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>Implemented responsive design using Tailwind CSS and shadcn-ui components</li>
@@ -69,7 +77,7 @@ export const typedFileSystem: FileData = {
                 <li>Integrated Supabase for backend services including authentication and database</li>
                 <li>Implemented data visualization using Recharts library</li>
               </ul>
-
+              
               <div class="mt-6 p-4 bg-gray-800 rounded-lg">
                 <div class="flex justify-between">
                   <div>
@@ -83,18 +91,18 @@ export const typedFileSystem: FileData = {
                 </div>
               </div>
             `
-        },
-        {
-          name: "College Suggestion Bot",
-          type: "file",
-          icon: "fas fa-file-code",
-          color: "text-green-500",
-          size: "850 KB",
-          modified: "October 2024",
-          content: `
+          },
+          {
+            name: "College Suggestion Bot",
+            type: "file",
+            icon: "fas fa-file-code",
+            color: "text-green-500",
+            size: "850 KB",
+            modified: "October 2024",
+            content: `
               <h2 class="text-xl font-bold mb-4">College Suggestion Bot</h2>
               <p class="mb-4">An AI-powered chatbot that extracts user preferences via NLP to recommend suitable colleges.</p>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Technologies Used:</h3>
               <div class="flex flex-wrap gap-2 mb-4">
                 <span class="px-2 py-1 bg-green-600 text-white rounded text-xs">Node.js</span>
@@ -103,7 +111,7 @@ export const typedFileSystem: FileData = {
                 <span class="px-2 py-1 bg-blue-600 text-white rounded text-xs">NLP</span>
                 <span class="px-2 py-1 bg-purple-600 text-white rounded text-xs">AI Models</span>
               </div>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Features:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>AI-powered chatbot interface</li>
@@ -112,7 +120,7 @@ export const typedFileSystem: FileData = {
                 <li>Smart matching algorithm</li>
                 <li>User preference saving system</li>
               </ul>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Development Highlights:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>Built a full-stack college recommendation system using Node.js and Express</li>
@@ -121,7 +129,7 @@ export const typedFileSystem: FileData = {
                 <li>Created a structured college database covering courses, fees, placements, and accreditations</li>
                 <li>Added authentication and user profile saving functionality</li>
               </ul>
-
+              
               <div class="mt-6 p-4 bg-gray-800 rounded-lg">
                 <div class="flex justify-between">
                   <div>
@@ -135,18 +143,18 @@ export const typedFileSystem: FileData = {
                 </div>
               </div>
             `
-        },
-        {
-          name: "AI Image Recognition",
-          type: "file",
-          icon: "fas fa-file-code",
-          color: "text-green-500",
-          size: "1.5 MB",
-          modified: "September 2024",
-          content: `
+          },
+          {
+            name: "AI Image Recognition",
+            type: "file",
+            icon: "fas fa-file-code",
+            color: "text-green-500",
+            size: "1.5 MB",
+            modified: "September 2024",
+            content: `
               <h2 class="text-xl font-bold mb-4">AI Image Recognition System</h2>
               <p class="mb-4">An image recognition system leveraging deep learning for accurate object detection.</p>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Technologies Used:</h3>
               <div class="flex flex-wrap gap-2 mb-4">
                 <span class="px-2 py-1 bg-blue-600 text-white rounded text-xs">Python</span>
@@ -154,7 +162,7 @@ export const typedFileSystem: FileData = {
                 <span class="px-2 py-1 bg-purple-600 text-white rounded text-xs">Computer Vision</span>
                 <span class="px-2 py-1 bg-red-600 text-white rounded text-xs">CNN</span>
               </div>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Features:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>Real-time object detection</li>
@@ -163,7 +171,7 @@ export const typedFileSystem: FileData = {
                 <li>User-friendly interface</li>
                 <li>Performance optimization</li>
               </ul>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Development Highlights:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>Built a convolutional neural network (CNN) model using TensorFlow</li>
@@ -172,7 +180,7 @@ export const typedFileSystem: FileData = {
                 <li>Created a user-friendly interface for easy interaction</li>
                 <li>Optimized the model for better performance</li>
               </ul>
-
+              
               <div class="mt-6 p-4 bg-gray-800 rounded-lg">
                 <div class="flex justify-between">
                   <div>
@@ -186,18 +194,18 @@ export const typedFileSystem: FileData = {
                 </div>
               </div>
             `
-        },
-        {
-          name: "NLP-Based Chatbot",
-          type: "file",
-          icon: "fas fa-file-code",
-          color: "text-green-500",
-          size: "980 KB",
-          modified: "August 2024",
-          content: `
+          },
+          {
+            name: "NLP-Based Chatbot",
+            type: "file",
+            icon: "fas fa-file-code",
+            color: "text-green-500",
+            size: "980 KB",
+            modified: "August 2024",
+            content: `
               <h2 class="text-xl font-bold mb-4">NLP-Based Chatbot</h2>
               <p class="mb-4">A natural language processing chatbot with advanced text understanding capabilities.</p>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Technologies Used:</h3>
               <div class="flex flex-wrap gap-2 mb-4">
                 <span class="px-2 py-1 bg-blue-600 text-white rounded text-xs">Python</span>
@@ -205,7 +213,7 @@ export const typedFileSystem: FileData = {
                 <span class="px-2 py-1 bg-orange-600 text-white rounded text-xs">NLTK</span>
                 <span class="px-2 py-1 bg-green-600 text-white rounded text-xs">Flask</span>
               </div>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Features:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>Natural language understanding</li>
@@ -214,7 +222,7 @@ export const typedFileSystem: FileData = {
                 <li>Sentiment analysis</li>
                 <li>Integration with external APIs</li>
               </ul>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Development Highlights:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>Built a chatbot using Python and NLTK for natural language processing</li>
@@ -223,7 +231,7 @@ export const typedFileSystem: FileData = {
                 <li>Added sentiment analysis to understand user emotions</li>
                 <li>Developed a Flask-based API for easy integration</li>
               </ul>
-
+              
               <div class="mt-6 p-4 bg-gray-800 rounded-lg">
                 <div class="flex justify-between">
                   <div>
@@ -237,39 +245,39 @@ export const typedFileSystem: FileData = {
                 </div>
               </div>
             `
-        }
-      ]
-    },
-    {
-      name: "Resume",
-      type: "file",
-      icon: "fas fa-file-alt",
-      color: "text-blue-500",
-      size: "254 KB",
-      modified: "May 2025",
-      content: ""  // This will open the Resume window
-    },
-    {
-      name: "Education",
-      type: "folder",
-      icon: "fas fa-folder",
-      color: "text-yellow-500",
-      children: [
-        {
-          name: "MSc Computer Science",
-          type: "file",
-          icon: "fas fa-file-alt",
-          color: "text-blue-500",
-          size: "128 KB",
-          modified: "2024",
-          content: `
+          }
+        ]
+      },
+      {
+        name: "Resume",
+        type: "file",
+        icon: "fas fa-file-alt",
+        color: "text-blue-500",
+        size: "254 KB",
+        modified: "May 2025",
+        content: ""  // This will open the Resume window
+      },
+      {
+        name: "Education",
+        type: "folder",
+        icon: "fas fa-folder",
+        color: "text-yellow-500",
+        children: [
+          {
+            name: "MSc Computer Science",
+            type: "file",
+            icon: "fas fa-file-alt",
+            color: "text-blue-500",
+            size: "128 KB",
+            modified: "2024",
+            content: `
               <h2 class="text-xl font-bold mb-4">Master of Science in Computer Science</h2>
               <div class="mb-4">
                 <p><span class="font-bold">Institution:</span> Nowrosjee Wadia College, Pune</p>
                 <p><span class="font-bold">Period:</span> 2024 - 2026</p>
                 <p><span class="font-bold">CGPA:</span> 8.1</p>
               </div>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Key Subjects:</h3>
               <div class="grid grid-cols-2 gap-2">
                 <div class="bg-gray-700 p-2 rounded text-sm">Advanced Algorithms</div>
@@ -280,15 +288,15 @@ export const typedFileSystem: FileData = {
                 <div class="bg-gray-700 p-2 rounded text-sm">Cloud Computing</div>
               </div>
             `
-        },
-        {
-          name: "BSc Computer Science",
-          type: "file",
-          icon: "fas fa-file-alt",
-          color: "text-blue-500",
-          size: "145 KB",
-          modified: "2024",
-          content: `
+          },
+          {
+            name: "BSc Computer Science",
+            type: "file",
+            icon: "fas fa-file-alt",
+            color: "text-blue-500",
+            size: "145 KB",
+            modified: "2024",
+            content: `
               <h2 class="text-xl font-bold mb-4">Bachelor of Computer Science</h2>
               <div class="mb-4">
                 <p><span class="font-bold">Institution:</span> Nowrosjee Wadia College, Pune</p>
@@ -296,7 +304,7 @@ export const typedFileSystem: FileData = {
                 <p><span class="font-bold">Period:</span> 2021 - 2024</p>
                 <p><span class="font-bold">CGPA:</span> 8.84</p>
               </div>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Key Subjects:</h3>
               <div class="grid grid-cols-2 gap-2">
                 <div class="bg-gray-700 p-2 rounded text-sm">Data Structures</div>
@@ -307,15 +315,15 @@ export const typedFileSystem: FileData = {
                 <div class="bg-gray-700 p-2 rounded text-sm">Computer Networks</div>
               </div>
             `
-        },
-        {
-          name: "HSC Science",
-          type: "file",
-          icon: "fas fa-file-alt",
-          color: "text-blue-500",
-          size: "98 KB",
-          modified: "2021",
-          content: `
+          },
+          {
+            name: "HSC Science",
+            type: "file",
+            icon: "fas fa-file-alt",
+            color: "text-blue-500",
+            size: "98 KB",
+            modified: "2021",
+            content: `
               <h2 class="text-xl font-bold mb-4">H.S.C (Science)</h2>
               <div class="mb-4">
                 <p><span class="font-bold">Institution:</span> Fergusson College, Pune</p>
@@ -323,7 +331,7 @@ export const typedFileSystem: FileData = {
                 <p><span class="font-bold">Period:</span> 2020 - 2021</p>
                 <p><span class="font-bold">Percentage:</span> 83.50%</p>
               </div>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Key Subjects:</h3>
               <div class="grid grid-cols-2 gap-2">
                 <div class="bg-gray-700 p-2 rounded text-sm">Physics</div>
@@ -333,26 +341,26 @@ export const typedFileSystem: FileData = {
                 <div class="bg-gray-700 p-2 rounded text-sm">Computer Science</div>
               </div>
             `
-        }
-      ]
-    },
-    {
-      name: "Experience",
-      type: "folder",
-      icon: "fas fa-folder",
-      color: "text-yellow-500",
-      children: [
-        {
-          name: "Canspirit.ai",
-          type: "file",
-          icon: "fas fa-file-alt",
-          color: "text-blue-500",
-          size: "210 KB",
-          modified: "June 2025",
-          content: `
+          }
+        ]
+      },
+      {
+        name: "Experience",
+        type: "folder",
+        icon: "fas fa-folder",
+        color: "text-yellow-500",
+        children: [
+          {
+            name: "Canspirit.ai",
+            type: "file",
+            icon: "fas fa-file-alt",
+            color: "text-blue-500",
+            size: "210 KB",
+            modified: "June 2025",
+            content: `
               <h2 class="text-xl font-bold mb-4">Software Development Intern – Canspirit.ai</h2>
               <p class="text-gray-400 mb-4">April 2025 – June 2025</p>
-
+              
               <h3 class="text-lg font-bold mt-4 mb-2">Responsibilities & Achievements:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>Worked on a live QR code-based Asset Management System, contributing to both front-end and back-end development.</li>
@@ -360,7 +368,7 @@ export const typedFileSystem: FileData = {
                 <li>Integrated Supabase as the backend-as-a-service, optimizing PostgreSQL database performance with 30% faster query response times.</li>
                 <li>Worked with React and TypeScript to build dynamic front-end components.</li>
               </ul>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Technologies Used:</h3>
               <div class="flex flex-wrap gap-2">
                 <span class="px-2 py-1 bg-blue-800 text-blue-100 rounded-md text-xs">React</span>
@@ -370,18 +378,18 @@ export const typedFileSystem: FileData = {
                 <span class="px-2 py-1 bg-blue-800 text-blue-100 rounded-md text-xs">PostgreSQL</span>
               </div>
             `
-        },
-        {
-          name: "CodeSoft",
-          type: "file",
-          icon: "fas fa-file-alt",
-          color: "text-blue-500",
-          size: "185 KB",
-          modified: "September 2024",
-          content: `
+          },
+          {
+            name: "CodeSoft",
+            type: "file",
+            icon: "fas fa-file-alt",
+            color: "text-blue-500",
+            size: "185 KB",
+            modified: "September 2024",
+            content: `
               <h2 class="text-xl font-bold mb-4">AI & Software Development Intern – CodeSoft</h2>
               <p class="text-gray-400 mb-4">Aug 2024 - Sept 2024</p>
-
+              
               <h3 class="text-lg font-bold mt-4 mb-2">Responsibilities & Achievements:</h3>
               <ul class="list-disc pl-5 space-y-2">
                 <li>Developed AI models for machine learning applications like chatbots, recommendation systems, and image recognition systems with user-friendly interfaces.</li>
@@ -389,7 +397,7 @@ export const typedFileSystem: FileData = {
                 <li>Collaborated with a team of 5 developers to implement and optimize machine learning algorithms.</li>
                 <li>Created interactive dashboards to visualize model performance and analytics.</li>
               </ul>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Technologies Used:</h3>
               <div class="flex flex-wrap gap-2">
                 <span class="px-2 py-1 bg-purple-800 text-purple-100 rounded-md text-xs">Python</span>
@@ -399,25 +407,25 @@ export const typedFileSystem: FileData = {
                 <span class="px-2 py-1 bg-purple-800 text-purple-100 rounded-md text-xs">Deep Learning</span>
               </div>
             `
-        }
-      ]
-    },
-    {
-      name: "Skills",
-      type: "folder",
-      icon: "fas fa-folder",
-      color: "text-yellow-500",
-      children: [
-        {
-          name: "Programming",
-          type: "file",
-          icon: "fas fa-file-code",
-          color: "text-green-500",
-          size: "145 KB",
-          modified: "May 2025",
-          content: `
+          }
+        ]
+      },
+      {
+        name: "Skills",
+        type: "folder",
+        icon: "fas fa-folder",
+        color: "text-yellow-500",
+        children: [
+          {
+            name: "Programming",
+            type: "file",
+            icon: "fas fa-file-code",
+            color: "text-green-500",
+            size: "145 KB",
+            modified: "May 2025",
+            content: `
               <h2 class="text-xl font-bold mb-4">Programming Skills</h2>
-
+              
               <div class="space-y-4">
                 <div>
                   <div class="flex justify-between items-center mb-1">
@@ -457,17 +465,17 @@ export const typedFileSystem: FileData = {
                 </div>
               </div>
             `
-        },
-        {
-          name: "Web Development",
-          type: "file",
-          icon: "fas fa-file-code",
-          color: "text-green-500",
-          size: "135 KB",
-          modified: "May 2025",
-          content: `
+          },
+          {
+            name: "Web Development",
+            type: "file",
+            icon: "fas fa-file-code",
+            color: "text-green-500",
+            size: "135 KB",
+            modified: "May 2025",
+            content: `
               <h2 class="text-xl font-bold mb-4">Web Development Skills</h2>
-
+              
               <h3 class="text-lg font-bold mt-2 mb-3">Frontend</h3>
               <div class="grid grid-cols-3 gap-3 mb-6">
                 <div class="bg-gray-700 p-2 rounded text-center">
@@ -495,7 +503,7 @@ export const typedFileSystem: FileData = {
                   <div>Tailwind</div>
                 </div>
               </div>
-
+              
               <h3 class="text-lg font-bold mt-4 mb-3">Backend</h3>
               <div class="grid grid-cols-3 gap-3">
                 <div class="bg-gray-700 p-2 rounded text-center">
@@ -512,17 +520,17 @@ export const typedFileSystem: FileData = {
                 </div>
               </div>
             `
-        },
-        {
-          name: "AI & ML",
-          type: "file",
-          icon: "fas fa-file-code",
-          color: "text-green-500",
-          size: "168 KB",
-          modified: "May 2025",
-          content: `
+          },
+          {
+            name: "AI & ML",
+            type: "file",
+            icon: "fas fa-file-code",
+            color: "text-green-500",
+            size: "168 KB",
+            modified: "May 2025",
+            content: `
               <h2 class="text-xl font-bold mb-4">AI & Machine Learning Skills</h2>
-
+              
               <div class="grid grid-cols-2 gap-4 mb-6">
                 <div class="bg-gray-700 p-3 rounded">
                   <h3 class="font-bold mb-2 text-purple-400">Frameworks & Libraries</h3>
@@ -545,7 +553,7 @@ export const typedFileSystem: FileData = {
                   </ul>
                 </div>
               </div>
-
+              
               <h3 class="text-lg font-bold mb-3">Applications</h3>
               <div class="grid grid-cols-2 gap-3">
                 <div class="bg-gray-700 p-2 rounded text-center">
@@ -566,17 +574,17 @@ export const typedFileSystem: FileData = {
                 </div>
               </div>
             `
-        },
-        {
-          name: "DevOps & Databases",
-          type: "file",
-          icon: "fas fa-file-code",
-          color: "text-green-500",
-          size: "120 KB",
-          modified: "May 2025",
-          content: `
+          },
+          {
+            name: "DevOps & Databases",
+            type: "file",
+            icon: "fas fa-file-code",
+            color: "text-green-500",
+            size: "120 KB",
+            modified: "May 2025",
+            content: `
               <h2 class="text-xl font-bold mb-4">DevOps & Database Skills</h2>
-
+              
               <div class="grid grid-cols-2 gap-4 mb-6">
                 <div class="bg-gray-700 p-3 rounded">
                   <h3 class="font-bold mb-2 text-red-400">DevOps</h3>
@@ -599,7 +607,7 @@ export const typedFileSystem: FileData = {
                   </ul>
                 </div>
               </div>
-
+              
               <h3 class="text-lg font-bold mb-3">Tools & Services</h3>
               <div class="grid grid-cols-3 gap-3">
                 <div class="bg-gray-700 p-2 rounded text-center">
@@ -628,30 +636,31 @@ export const typedFileSystem: FileData = {
                 </div>
               </div>
             `
-        }
-      ]
-    },
-    {
-      name: "Certificates",
-      type: "folder",
-      icon: "fas fa-folder",
-      color: "text-yellow-500",
-      children: [
-        {
-          name: "AI Fundamentals",
-          type: "file",
-          icon: "fas fa-file-certificate",
-          color: "text-purple-500",
-          size: "115 KB",modified: "January 2024",
-          content: `
+          }
+        ]
+      },
+      {
+        name: "Certificates",
+        type: "folder",
+        icon: "fas fa-folder",
+        color: "text-yellow-500",
+        children: [
+          {
+            name: "AI Fundamentals",
+            type: "file",
+            icon: "fas fa-file-certificate",
+            color: "text-purple-500",
+            size: "115 KB",
+            modified: "January 2024",
+            content: `
               <h2 class="text-xl font-bold mb-4">Artificial Intelligence Fundamentals</h2>
               <p class="mb-2"><span class="font-bold">Issuer:</span> IBM</p>
               <p class="mb-4"><span class="font-bold">Date:</span> January 2024</p>
-
+              
               <p class="mb-4">
                 This certification covers essential AI concepts, machine learning fundamentals, neural networks, and practical applications of AI technologies.
               </p>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Topics Covered:</h3>
               <ul class="list-disc pl-5 space-y-1">
                 <li>Introduction to Artificial Intelligence</li>
@@ -662,29 +671,29 @@ export const typedFileSystem: FileData = {
                 <li>AI Ethics and Governance</li>
                 <li>Practical Applications of AI</li>
               </ul>
-
+              
               <div class="mt-6 p-4 bg-gray-800 rounded-lg text-center">
                 <span class="text-gray-400">Certificate ID: </span>
                 <span>IBM-AI-2024-HD-78391</span>
               </div>
             `
-        },
-        {
-          name: "Full Stack Web Development",
-          type: "file",
-          icon: "fas fa-file-certificate",
-          color: "text-purple-500",
-          size: "125 KB",
-          modified: "October 2023",
-          content: `
+          },
+          {
+            name: "Full Stack Web Development",
+            type: "file",
+            icon: "fas fa-file-certificate",
+            color: "text-purple-500",
+            size: "125 KB",
+            modified: "October 2023",
+            content: `
               <h2 class="text-xl font-bold mb-4">Full Stack Web Development</h2>
               <p class="mb-2"><span class="font-bold">Issuer:</span> Udemy</p>
               <p class="mb-4"><span class="font-bold">Date:</span> October 2023</p>
-
+              
               <p class="mb-4">
                 Comprehensive training in modern web development, covering front-end frameworks, back-end technologies, and database integration.
               </p>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Topics Covered:</h3>
               <ul class="list-disc pl-5 space-y-1">
                 <li>HTML5, CSS3, and JavaScript</li>
@@ -696,29 +705,29 @@ export const typedFileSystem: FileData = {
                 <li>Deployment and CI/CD</li>
                 <li>Performance Optimization</li>
               </ul>
-
+              
               <div class="mt-6 p-4 bg-gray-800 rounded-lg text-center">
                 <span class="text-gray-400">Certificate ID: </span>
                 <span>UDEMY-FSWD-2023-HD-45672</span>
               </div>
             `
-        },
-        {
-          name: "Database Management & SQL",
-          type: "file",
-          icon: "fas fa-file-certificate",
-          color: "text-purple-500",
-          size: "108 KB",
-          modified: "May 2023",
-          content: `
+          },
+          {
+            name: "Database Management & SQL",
+            type: "file",
+            icon: "fas fa-file-certificate",
+            color: "text-purple-500",
+            size: "108 KB",
+            modified: "May 2023",
+            content: `
               <h2 class="text-xl font-bold mb-4">Database Management & SQL</h2>
               <p class="mb-2"><span class="font-bold">Issuer:</span> Coursera</p>
               <p class="mb-4"><span class="font-bold">Date:</span> May 2023</p>
-
+              
               <p class="mb-4">
                 Specialized training in database design, SQL queries, optimization techniques, and modern database systems.
               </p>
-
+              
               <h3 class="text-lg font-bold mt-6 mb-2">Topics Covered:</h3>
               <ul class="list-disc pl-5 space-y-1">
                 <li>Database Design Principles</li>
@@ -729,48 +738,44 @@ export const typedFileSystem: FileData = {
                 <li>Transactions and Concurrency</li>
                 <li>NoSQL and Modern Database Systems</li>
               </ul>
-
+              
               <div class="mt-6 p-4 bg-gray-800 rounded-lg text-center">
                 <span class="text-gray-400">Certificate ID: </span>
                 <span>COURSERA-SQL-2023-HD-34521</span>
               </div>
             `
-        }
-      ]
+          }
+        ]
+      }
+    ]
+  };
+
+  // Get current directory contents
+  const getCurrentDirectory = (): FileData => {
+    let current: FileData = fileSystem;
+    for (const pathPart of currentPath.slice(1)) {
+      const nextDir = current.children?.find(c => c.name === pathPart);
+      if (nextDir && nextDir.type === "folder") {
+        current = nextDir;
+      } else {
+        break;
+      }
     }
-  ]
-};
-
-const FileManager = () => {
-  const { openWindow } = useDesktop();
-  const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
-  const [viewMode, setViewMode] = useState<"icons" | "list">("icons");
-  const [sortBy, setSortBy] = useState<"name" | "type" | "size" | "date">("name");
-  const [showFileInfo, setShowFileInfo] = useState(false);
-  const [localCurrentPath, setLocalCurrentPath] = useState<string[]>(fsState.getCurrentPath());
-  const [currentDir, setCurrentDir] = useState<FileData>(typedFileSystem);
-
-  useEffect(() => {
-    setLocalCurrentPath(fsState.getCurrentPath());
-  }, [fsState.getCurrentPath()]);
+    return current;
+  };
 
   // Navigate to a directory
   const navigateToDirectory = (folder: FileData) => {
     if (folder.type === "folder") {
-      fsState.getCurrentPath().push(folder.name);
-      setLocalCurrentPath([...fsState.getCurrentPath()]);
-      setCurrentDir(folder);
+      setCurrentPath([...currentPath, folder.name]);
       setSelectedFile(null);
     }
   };
 
   // Navigate up one level
   const navigateUp = () => {
-    if (fsState.getCurrentPath().length > 1) {
-      fsState.getCurrentPath().pop();
-      setLocalCurrentPath([...fsState.getCurrentPath()]);
-      const newDir = fsState.getCurrentDirectory();
-      setCurrentDir(newDir);
+    if (currentPath.length > 1) {
+      setCurrentPath(currentPath.slice(0, -1));
       setSelectedFile(null);
     }
   };
@@ -782,11 +787,16 @@ const FileManager = () => {
     } else {
       setSelectedFile(file);
       setShowFileInfo(true);
+      
+      // All files including projects will now display in the side panel
+      // No need to open specific windows - content will display in the right panel
+      // This creates a more consistent experience across the file manager
     }
   };
 
   // Get current directory files
-  const currentFiles = currentDir.children || [];
+  const currentDirectory = getCurrentDirectory();
+  const currentFiles = currentDirectory.children || [];
 
   // Sort files based on the selected criteria
   const sortedFiles = [...currentFiles].sort((a, b) => {
@@ -820,15 +830,18 @@ const FileManager = () => {
             <button 
               onClick={navigateUp}
               className="p-2 rounded hover:bg-gray-700 transition-colors"
-              disabled={localCurrentPath.length <= 1}
+              disabled={currentPath.length <= 1}
             >
               <i className="fas fa-arrow-up"></i>
             </button>
             <div className="flex items-center bg-gray-700 rounded px-3 py-1 space-x-1">
-              {localCurrentPath.map((part, index) => (
+              {currentPath.map((part, index) => (
                 <div key={part} className="flex items-center">
                   {index > 0 && <span className="mx-1 text-gray-500">/</span>}
-                  <span className="text-gray-300 hover:text-white cursor-pointer">
+                  <span 
+                    className="text-gray-300 hover:text-white cursor-pointer"
+                    onClick={() => setCurrentPath(currentPath.slice(0, index + 1))}
+                  >
                     {part}
                   </span>
                 </div>
@@ -933,15 +946,18 @@ const FileManager = () => {
                     </p>
                   </div>
                 </div>
-                <button
-                  className="w-7 h-7 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center text-white text-sm"
-                  title="Close preview"
-                  onClick={() => setSelectedFile(null)}
-                >
-                  <i className="fas fa-times"></i>
-                </button>
+                <div className="flex space-x-2">
+                  {/* External links button removed as per request to keep all content in the side panel */}
+                  <button
+                    className="w-7 h-7 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center text-white text-sm"
+                    title="Close preview"
+                    onClick={() => setSelectedFile(null)}
+                  >
+                    <i className="fas fa-times"></i>
+                  </button>
+                </div>
               </div>
-
+              
               <div className="flex-1 p-4">
                 <div className="glass rounded-lg p-4 shadow-inner">
                   {selectedFile.content ? (
