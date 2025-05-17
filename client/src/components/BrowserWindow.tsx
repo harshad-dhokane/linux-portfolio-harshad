@@ -209,7 +209,7 @@ const BrowserWindow = () => {
       history: ["about:blank"],
       historyIndex: 0,
       isLoading: false,
-      iframeRef: useRef<HTMLIFrameElement>(null),
+      iframeRef: { current: null }
     };
     setTabs((prevTabs) => [...prevTabs, newTab]);
     setActiveTabId(newTabId);
