@@ -45,11 +45,10 @@ const BrowserWindow = () => {
       };
       setTabs(prevTabs => [...prevTabs, newTab]);
       setActiveTabId(newTab.id);
-        navigateTo(storedUrl);
-      }
-      sessionStorage.removeItem("browserUrl");
-      sessionStorage.removeItem("browserContent");
+      navigateTo(storedUrl);
     }
+    sessionStorage.removeItem("browserUrl");
+    sessionStorage.removeItem("browserContent");
   }, []);
 
   // Update tab title based on content
