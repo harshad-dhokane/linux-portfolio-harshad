@@ -248,7 +248,7 @@ const BrowserWindow = () => {
               ref={iframeRef}
               src={activeTab.url}
               className="w-full h-full border-none"
-              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation allow-top-navigation-by-user-activation"
               onLoad={() => setIsLoading(false)}
             />
           )}
