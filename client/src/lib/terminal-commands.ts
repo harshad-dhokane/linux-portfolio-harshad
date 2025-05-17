@@ -16,10 +16,6 @@ const formatDate = (date: string | undefined) => {
   return date || new Date().toLocaleString();
 };
 
-const formatDate = (date: string | undefined) => {
-  return date || "-";
-};
-
 const getFormattedListing = (files: any[], detailed: boolean) => {
   if (detailed) {
     return files.map(file => {
@@ -84,49 +80,36 @@ export const getTerminalResponse = (command: string): string => {
       }
 
       const targetPath = commands[1].split("/").filter(Boolean);
-      let newDir = currentDirectory;
+      let newDirectory = currentDirectory;
       let newPath = [...currentPath];
       
       for (const part of targetPath) {
         if (part === "..") {
           if (newPath.length > 1) {
             newPath.pop();
-            newDir = fileSystem;
+            newDirectory = fileSystem;
             for (const dir of newPath.slice(1)) {
-              const found = newDir.children?.find(item => item.name === dir && item.type === "folder");
+              const found = newDirectory.children?.find(item => item.name === dir && item.type === "folder");
               if (found) {
-                newDir = found;
+                newDirectory = found;
               }
             }
           }
         } else {
-          const found = newDir.children?.find(item => 
+          const found = newDirectory.children?.find(item => 
             item.name === part && item.type === "folder"
           );
           if (!found) {
             return `bash: cd: ${commands[1]}: No such directory`;
           }
-          newDir = found;
+          newDirectory = found;
           newPath.push(part);
         }
       }
       
-      currentDirectory = newDir;
+      currentDirectory = newDirectory;
       currentPath = newPath;
       return `Changed directory to ${currentPath.join("/")}`;
-
-      const targetDir = commands[1].replace(/^\.?\//, "");
-      const newDir = currentDirectory.children?.find(item => 
-        item.name.toLowerCase() === targetDir.toLowerCase() && item.type === "folder"
-      );
-
-      if (newDir) {
-        currentDirectory = newDir;
-        currentPath.push(newDir.name);
-        return `Changed directory to ${currentPath.join("/")}`;
-      }
-
-      return `bash: cd: ${commands[1]}: No such directory`;
 
     case "pwd":
       return currentPath.join("/");
