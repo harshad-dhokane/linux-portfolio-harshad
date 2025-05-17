@@ -783,8 +783,8 @@ const FileManager = () => {
   // Navigate to a directory
   const navigateToDirectory = (folder: FileData) => {
     if (folder.type === "folder") {
-      const newPath = [...currentPath, folder.name];
-      setLocalCurrentPath(newPath);
+      currentPath.push(folder.name);
+      setLocalCurrentPath([...currentPath]);
       setCurrentDir(folder);
       setSelectedFile(null);
     }
@@ -793,8 +793,8 @@ const FileManager = () => {
   // Navigate up one level
   const navigateUp = () => {
     if (currentPath.length > 1) {
-      const newPath = currentPath.slice(0, -1);
-      setLocalCurrentPath(newPath);
+      currentPath.pop();
+      setLocalCurrentPath([...currentPath]);
       const newDir = getCurrentDirectory();
       setCurrentDir(newDir);
       setSelectedFile(null);
@@ -808,10 +808,6 @@ const FileManager = () => {
     } else {
       setSelectedFile(file);
       setShowFileInfo(true);
-
-      // All files including projects will now display in the side panel
-      // No need to open specific windows - content will display in the right panel
-      // This creates a more consistent experience across the file manager
     }
   };
 
