@@ -32,12 +32,13 @@ const Desktop = () => {
   });
 
   // Handle context menu
-  const handleContextMenu = (e: React.MouseEvent) => {
+  const handleContextMenu = (e: React.MouseEvent, selectedIconId?: string | null) => {
     e.preventDefault();
     setContextMenu({
       visible: true,
       x: e.clientX,
       y: e.clientY,
+      selectedIconId: selectedIconId || null,
     });
   };
 
