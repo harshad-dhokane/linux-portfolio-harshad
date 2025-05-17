@@ -131,7 +131,7 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
   };
 
   return (
-    <div className="app-drawer fixed inset-0 bg-black/75 backdrop-blur-md z-30 flex flex-col animate-in fade-in duration-300">
+    <div className="app-drawer fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex flex-col animate-in fade-in duration-300">
       {/* Search bar at top like Ubuntu */}
       <div className="w-full flex justify-center mt-2">
         <div className="relative w-72 mb-6">
