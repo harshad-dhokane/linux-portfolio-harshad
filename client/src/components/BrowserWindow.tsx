@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import Window from "./Window";
 import { useDesktop } from "@/context/DesktopContext";
@@ -44,10 +43,10 @@ const BrowserWindow = () => {
   const closeTab = (tabId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (tabs.length === 1) return;
-    
+
     const newTabs = tabs.filter(tab => tab.id !== tabId);
     setTabs(newTabs);
-    
+
     if (tabId === activeTabId) {
       const idx = tabs.findIndex(tab => tab.id === tabId);
       const newActiveId = tabs[idx - 1]?.id || tabs[idx + 1]?.id;
@@ -69,17 +68,18 @@ const BrowserWindow = () => {
 
   const processUrl = (inputUrl: string) => {
     if (!inputUrl) return '';
-    
+
     // Check if it's a search query (contains spaces or no dots)
     if (!inputUrl.includes('.') || inputUrl.includes(' ')) {
-      return `https://www.google.com/search?igu=1&q=${encodeURIComponent(inputUrl)}`;
+      const searchQuery = encodeURIComponent(inputUrl);
+      return `https://www.google.com/search?q=${searchQuery}&igu=1`;
     }
-    
+
     // Handle URLs without protocol
     if (!inputUrl.startsWith('http://') && !inputUrl.startsWith('https://')) {
       return `https://${inputUrl}`;
     }
-    
+
     return inputUrl;
   };
 
