@@ -162,6 +162,123 @@ export const getTerminalResponse = (command: string): string => {
       return "__NEW_TERMINAL__";
     case "exit":
       return "__CLOSE_TERMINAL__"; // Special command to close the terminal
+    case "cat":
+      const fileMap: { [key: string]: string } = {
+        "internly": `
+# Internly - Internship Tracking Application
+
+## Overview
+A comprehensive platform built using the MERN stack (MongoDB, Express.js, React.js, Node.js) to help students track and manage their internship applications.
+
+## Key Features
+- Application tracking with status updates
+- Company information management
+- Interview scheduling and reminders
+- Document storage for resumes and cover letters
+- Analytics dashboard for application insights
+- Email notifications for status changes
+
+## Technical Stack
+- Frontend: React.js, TypeScript, TailwindCSS
+- Backend: Node.js, Express.js
+- Database: MongoDB
+- Authentication: JWT
+- Cloud Storage: AWS S3
+- Deployment: Docker, AWS
+
+## Development Status
+- Currently in production
+- Active user base of 500+ students
+- Processing 1000+ applications daily
+`,
+        "nlp-based-chatbot": `
+# AI-Powered Customer Service Chatbot
+
+## Overview
+An intelligent chatbot utilizing Natural Language Processing (NLP) to provide automated customer service support.
+
+## Features
+- Natural language understanding
+- Intent classification
+- Entity recognition
+- Multi-language support
+- Conversational context management
+- Integration with CRM systems
+
+## Technology Stack
+- Python, TensorFlow, NLTK
+- FastAPI backend
+- Redis for caching
+- PostgreSQL database
+- Docker containerization
+
+## Performance
+- 95% accuracy in intent classification
+- Handles 10,000+ conversations daily
+- Support for 5 languages
+`,
+        "college-suggestion-bot": `
+# College Recommendation System
+
+## Overview
+An AI-powered system that helps students find the best-matching colleges based on their academic profile and preferences.
+
+## Features
+- Personalized college recommendations
+- Academic profile analysis
+- Admission chance prediction
+- Scholarship matching
+- Career pathway suggestions
+- Cost analysis and comparison
+
+## Technology Stack
+- Python, scikit-learn
+- React.js frontend
+- Flask backend
+- MySQL database
+- AWS deployment
+
+## Impact
+- Helped 10,000+ students
+- 90% accuracy in predictions
+- Coverage of 2000+ colleges
+`,
+        "ai-image-recognition": `
+# AI Image Recognition System
+
+## Overview
+A deep learning-based system for accurate image classification and object detection.
+
+## Features
+- Real-time object detection
+- Multiple object classification
+- Facial recognition
+- Image segmentation
+- Custom model training
+- API integration
+
+## Technology Stack
+- Python, PyTorch
+- TensorFlow
+- OpenCV
+- FastAPI
+- React Native mobile app
+- Cloud deployment on GCP
+
+## Performance
+- 98% accuracy in classification
+- Processing 1M+ images daily
+- Support for 100+ object classes
+`
+      };
+
+      const fileName = commands[1]?.toLowerCase();
+      if (!fileName) {
+        return "Please specify a file to read";
+      }
+      
+      return fileMap[fileName] || `File '${fileName}' not found`;
+
     case "neofetch":
       return `
       <pre class="text-[hsl(var(--linux-green))] mt-2">
