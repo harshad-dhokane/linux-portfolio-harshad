@@ -46,9 +46,13 @@ const Desktop = () => {
   });
 
   useEffect(() => {
+    const duration = 5000; // 5 seconds
+    const interval = 50; // Update every 50ms for smooth animation
+    const step = (100 * interval) / duration;
+
     const timer = setInterval(() => {
       setProgress((oldProgress) => {
-        const newProgress = oldProgress + 2;
+        const newProgress = oldProgress + step;
         if (newProgress >= 100) {
           clearInterval(timer);
           setTimeout(() => setLoading(false), 200);
@@ -56,7 +60,7 @@ const Desktop = () => {
         }
         return newProgress;
       });
-    }, 20);
+    }, interval);
 
     return () => clearInterval(timer);
   }, []);
