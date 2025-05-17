@@ -115,9 +115,9 @@ const Desktop = () => {
     >
       {loading && (
         <div className="absolute inset-0 bg-black bg-opacity-90 flex flex-col items-center justify-center z-50">
-          <h1 className="text-3xl font-bold text-white mb-8">Harshad Dhokane OS Loading</h1>
-          <div className="w-1/3">
-            <Progress value={progress} className="h-2" />
+          <h1 className="text-2xl font-bold text-white mb-4">Loading Harshad Dhokane Portfolio</h1>
+          <div className="w-64">
+            <Progress value={progress} className="h-1 bg-opacity-20 [&>div]:bg-green-500" />
           </div>
         </div>
       )}
