@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Window from "./Window";
 import { useDesktop } from "@/context/DesktopContext";
 
@@ -35,7 +35,17 @@ const FileManager = () => {
   const [showFileInfo, setShowFileInfo] = useState(false);
 
   // Use these to update the shared state
-  const [localCurrentPath, setLocalCurrentPath] = useState<string[]>(currentPath);
+  const [localCurrentPath, setLocalCurrentPath] = useState<string[]>(fsState.getCurrentPath());
+
+  useEffect(() => {
+    // Update path when file system state changes
+    setLocalCurrentPath(fsState.getCurrentPath());
+  }, [fsState.getCurrentPath()]);
+
+  // Get current directory contents
+  const getCurrentDirectory = (): FileData => {
+    return fsState.getCurrentDirectory();
+  };
 
   // File system structure
   const fileSystem: FileData = {

@@ -120,8 +120,43 @@ export const fileSystem = {
   ]
 };
 
-export let currentDirectory = fileSystem;
-export let currentPath = ["Home"];
+// Use a singleton for file system state
+class FileSystemState {
+  private static instance: FileSystemState;
+  public currentDirectory = fileSystem;
+  public currentPath = ["Home"];
+
+  private constructor() {}
+
+  public static getInstance(): FileSystemState {
+    if (!FileSystemState.instance) {
+      FileSystemState.instance = new FileSystemState();
+    }
+    return FileSystemState.instance;
+  }
+
+  public setCurrentPath(path: string[]) {
+    this.currentPath = path;
+    let temp = fileSystem;
+    for (const dir of path.slice(1)) {
+      const found = temp.children?.find(item => item.name === dir);
+      if (found) {
+        temp = found;
+      }
+    }
+    this.currentDirectory = temp;
+  }
+
+  public getCurrentPath(): string[] {
+    return this.currentPath;
+  }
+
+  public getCurrentDirectory() {
+    return this.currentDirectory;
+  }
+}
+
+export const fsState = FileSystemState.getInstance();
 
 const formatDate = (date: string | undefined) => {
   return date || new Date().toLocaleString();
@@ -141,7 +176,7 @@ export const getTerminalResponse = (command: string): string => {
       return `Opening ${windowName}...`;
 
     case "ls":
-      const children = currentDirectory.children || [];
+      const children = fsState.getCurrentDirectory().children || [];
       const hasDetailFlag = commands.includes("-l") || commands.includes("-la") || commands.includes("-al");
       
       if (!children.length) {
@@ -163,28 +198,21 @@ export const getTerminalResponse = (command: string): string => {
 
     case "cd":
       if (!commands[1] || commands[1] === "~") {
-        currentDirectory = fileSystem;
-        currentPath = ["Home"];
+        fsState.setCurrentPath(["Home"]);
         return "Changed to home directory";
       }
 
       if (commands[1] === "..") {
+        const currentPath = fsState.getCurrentPath();
         if (currentPath.length > 1) {
-          currentPath.pop();
-          let temp = fileSystem;
-          for (const dir of currentPath.slice(1)) {
-            const found = temp.children?.find(item => item.name === dir && item.type === "folder");
-            if (found) {
-              temp = found;
-            }
-          }
-          currentDirectory = temp;
-          return `Changed directory to ${currentPath.join("/")}`;
+          const newPath = currentPath.slice(0, -1);
+          fsState.setCurrentPath(newPath);
+          return `Changed directory to ${newPath.join("/")}`;
         }
         return "Already at root directory";
       }
 
-      const targetDir = currentDirectory.children?.find(
+      const targetDir = fsState.getCurrentDirectory().children?.find(
         item => item.name === commands[1] && item.type === "folder"
       );
 
@@ -192,9 +220,9 @@ export const getTerminalResponse = (command: string): string => {
         return `bash: cd: ${commands[1]}: No such directory`;
       }
 
-      currentDirectory = targetDir;
-      currentPath.push(targetDir.name);
-      return `Changed directory to ${currentPath.join("/")}`;
+      const newPath = [...fsState.getCurrentPath(), targetDir.name];
+      fsState.setCurrentPath(newPath);
+      return `Changed directory to ${newPath.join("/")}`;
 
     case "pwd":
       return currentPath.join("/");
