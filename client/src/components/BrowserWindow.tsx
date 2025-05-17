@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import Window from "./Window";
 import { useDesktop } from "@/context/DesktopContext";
@@ -43,10 +44,10 @@ const BrowserWindow = () => {
   const closeTab = (tabId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (tabs.length === 1) return;
-
+    
     const newTabs = tabs.filter(tab => tab.id !== tabId);
     setTabs(newTabs);
-
+    
     if (tabId === activeTabId) {
       const idx = tabs.findIndex(tab => tab.id === tabId);
       const newActiveId = tabs[idx - 1]?.id || tabs[idx + 1]?.id;
@@ -68,21 +69,13 @@ const BrowserWindow = () => {
 
   const processUrl = (inputUrl: string) => {
     if (!inputUrl) return '';
-
-    // Check if it's already a valid URL
-    try {
-      new URL(inputUrl);
-      return inputUrl;
-    } catch (e) {
-      // Not a valid URL, treat as search or domain
-      if (inputUrl.includes('.') && !inputUrl.includes(' ') && !inputUrl.startsWith('http')) {
-        return `https://${inputUrl}`;
-      } else {
-        // Handle as search query
-        const searchQuery = encodeURIComponent(inputUrl);
-        return `https://www.google.com/search?q=${searchQuery}`;
-      }
+    if (!inputUrl.includes('.') || inputUrl.includes(' ')) {
+      return `https://www.google.com/search?igu=1&q=${encodeURIComponent(inputUrl)}`;
     }
+    if (!inputUrl.startsWith('http://') && !inputUrl.startsWith('https://')) {
+      return `https://${inputUrl}`;
+    }
+    return inputUrl;
   };
 
   const navigateTo = (targetUrl: string) => {
@@ -268,15 +261,8 @@ const BrowserWindow = () => {
               ref={iframeRef}
               src={activeTab.url}
               className="w-full h-full border-none"
-              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation allow-top-navigation-by-user-activation allow-presentation"
-              allow="fullscreen"
-              onLoad={() => {
-                setIsLoading(false);
-                const iframe = iframeRef.current;
-                if (iframe) {
-                  iframe.setAttribute('name', 'portfolio');
-                }
-              }}
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+              onLoad={() => setIsLoading(false)}
             />
           )}
         </div>
