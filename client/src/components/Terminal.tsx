@@ -4,7 +4,7 @@ import Window from "./Window";
 import { getTerminalResponse } from "@/lib/terminal-commands";
 
 const Terminal = () => {
-  const { isWindowOpen } = useDesktop();
+  const { isWindowOpen, openWindow, closeWindow } = useDesktop();
   const [commandHistory, setCommandHistory] = useState<{ command: string; response: string }[]>([
     {
       command: "neofetch",
@@ -33,7 +33,25 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
     },
     {
       command: "ls -la",
-      response: `<div class="text-blue-300">Projects  Resume  Certificates  Skills  Experience</div>`,
+      response: `<div class="text-blue-300">Projects/  Resume/  Certificates/  Skills.txt  Experience.txt  GitHub/  LinkedIn/</div>`,
+    },
+    {
+      command: "help",
+      response: `
+        <div class="mt-2">
+          Available commands:
+          <ul class="text-gray-300 ml-4">
+            <li>ls - List files</li>
+            <li>cd - Change directory (cd directory_name opens the corresponding window)</li>
+            <li>cat - Display file contents</li>
+            <li>clear - Clear terminal</li>
+            <li>neofetch - Display system info</li>
+            <li>open - Open a window (e.g., open resume)</li>
+            <li>help - Show this help</li>
+            <li>exit - Close terminal</li>
+          </ul>
+        </div>
+      `,
     },
   ]);
   
@@ -65,6 +83,40 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
     }
   }, [isWindowOpen]);
 
+  // Helper function to handle special commands
+  const handleSpecialCommands = (response: string): string => {
+    // Check for window opening command
+    if (response.startsWith("__OPEN_WINDOW__")) {
+      const windowId = response.replace("__OPEN_WINDOW__", "").trim();
+      
+      // External links
+      if (windowId === "github") {
+        window.open("https://github.com/harshad-dhokane/", "_blank");
+        return "Opening GitHub in browser...";
+      }
+      if (windowId === "linkedin") {
+        window.open("https://www.linkedin.com/in/harshad-dhokane/", "_blank");
+        return "Opening LinkedIn in browser...";
+      }
+      
+      // Internal windows
+      if (windowId) {
+        setTimeout(() => openWindow(windowId), 100);
+        return `Opening ${windowId}...`;
+      }
+      return "No window specified";
+    }
+    
+    // Check for terminal close command
+    if (response === "__CLOSE_TERMINAL__") {
+      setTimeout(() => closeWindow("terminal"), 100);
+      return "Closing terminal...";
+    }
+    
+    // If no special command, return the original response
+    return response;
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -72,8 +124,18 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
       const command = currentInput.trim();
       if (!command) return;
       
+      // Special handling for 'clear' command
+      if (command.toLowerCase() === "clear") {
+        setCommandHistory([]);
+        setCurrentInput("");
+        return;
+      }
+      
       // Get response to command
-      const response = getTerminalResponse(command);
+      let response = getTerminalResponse(command);
+      
+      // Process special commands
+      response = handleSpecialCommands(response);
       
       // Add command to history
       setCommandHistory((prev) => [

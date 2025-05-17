@@ -1,7 +1,14 @@
+import { useState } from "react";
 import { useDesktop } from "@/context/DesktopContext";
+import AppDrawer from "./AppDrawer";
 
 const AppDock = () => {
   const { openWindow } = useDesktop();
+  const [showAppDrawer, setShowAppDrawer] = useState(false);
+
+  const toggleAppDrawer = () => {
+    setShowAppDrawer(!showAppDrawer);
+  };
 
   const dockIcons = [
     {
@@ -42,17 +49,30 @@ const AppDock = () => {
   ];
 
   return (
-    <div className="dock fixed bottom-4 left-1/2 transform -translate-x-1/2 flex items-center space-x-2 px-3 py-2 z-20">
-      {dockIcons.map((icon) => (
+    <>
+      <div className="dock fixed bottom-4 left-1/2 transform -translate-x-1/2 flex items-center space-x-2 px-3 py-2 z-20">
+        {dockIcons.map((icon) => (
+          <div
+            key={icon.id}
+            className={`dock-icon w-12 h-12 rounded-lg ${icon.bgColor} flex items-center justify-center cursor-pointer`}
+            onClick={() => openWindow(icon.id)}
+          >
+            <i className={`${icon.icon} ${icon.color} text-2xl`}></i>
+          </div>
+        ))}
+        
+        {/* App Drawer Button in Dock */}
         <div
-          key={icon.id}
-          className={`dock-icon w-12 h-12 rounded-lg ${icon.bgColor} flex items-center justify-center cursor-pointer`}
-          onClick={() => openWindow(icon.id)}
+          className="app-drawer-btn dock-icon w-12 h-12 rounded-lg bg-gray-800 flex items-center justify-center cursor-pointer"
+          onClick={toggleAppDrawer}
         >
-          <i className={`${icon.icon} ${icon.color} text-2xl`}></i>
+          <i className="fas fa-th text-white text-2xl"></i>
         </div>
-      ))}
-    </div>
+      </div>
+
+      {/* App Drawer */}
+      {showAppDrawer && <AppDrawer onClose={toggleAppDrawer} />}
+    </>
   );
 };
 

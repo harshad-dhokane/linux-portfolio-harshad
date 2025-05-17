@@ -9,13 +9,10 @@ import BrowserWindow from "./BrowserWindow";
 import ResumeWindow from "./ResumeWindow";
 import ProjectsWindow from "./ProjectsWindow";
 import CertificationsWindow from "./CertificationsWindow";
-import AppDrawer from "./AppDrawer";
-import ThemeSwitcher from "./ThemeSwitcher";
 import { wallpapers } from "@/lib/wallpapers";
 
 const Desktop = () => {
   const { selectedWallpaper } = useDesktop();
-  const [showAppDrawer, setShowAppDrawer] = useState(false);
   const [contextMenu, setContextMenu] = useState<{
     visible: boolean;
     x: number;
@@ -42,28 +39,6 @@ const Desktop = () => {
       setContextMenu({ ...contextMenu, visible: false });
     }
   };
-
-  // Toggle app drawer
-  const toggleAppDrawer = () => {
-    setShowAppDrawer(!showAppDrawer);
-  };
-
-  // Close app drawer when clicking on desktop
-  useEffect(() => {
-    const handleGlobalClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (
-        showAppDrawer &&
-        !target.closest(".app-drawer") &&
-        !target.closest(".app-drawer-btn")
-      ) {
-        setShowAppDrawer(false);
-      }
-    };
-
-    window.addEventListener("click", handleGlobalClick);
-    return () => window.removeEventListener("click", handleGlobalClick);
-  }, [showAppDrawer]);
 
   return (
     <div
@@ -94,22 +69,8 @@ const Desktop = () => {
       {/* Certifications Window */}
       <CertificationsWindow />
 
-      {/* Ubuntu Dock */}
+      {/* Ubuntu Dock with App Drawer */}
       <AppDock />
-
-      {/* App Drawer Button */}
-      <div
-        className="app-drawer-btn fixed top-4 left-4 w-10 h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center cursor-pointer z-20 hover:bg-opacity-30"
-        onClick={toggleAppDrawer}
-      >
-        <i className="fas fa-th text-white"></i>
-      </div>
-
-      {/* Theme Switcher */}
-      <ThemeSwitcher />
-
-      {/* App Drawer */}
-      {showAppDrawer && <AppDrawer onClose={toggleAppDrawer} />}
 
       {/* Context Menu */}
       {contextMenu.visible && (

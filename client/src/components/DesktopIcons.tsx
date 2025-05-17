@@ -3,6 +3,10 @@ import { useDesktop } from "@/context/DesktopContext";
 const DesktopIcons = () => {
   const { openWindow } = useDesktop();
 
+  const handleExternalLink = (url: string) => {
+    window.open(url, "_blank");
+  };
+
   const icons = [
     {
       id: "resume",
@@ -39,6 +43,22 @@ const DesktopIcons = () => {
       color: "text-white",
       bgColor: "bg-purple-600",
     },
+    {
+      id: "github",
+      name: "GitHub",
+      icon: "fab fa-github",
+      color: "text-white",
+      bgColor: "bg-gray-800",
+      externalLink: "https://github.com/harshad-dhokane/",
+    },
+    {
+      id: "linkedin",
+      name: "LinkedIn",
+      icon: "fab fa-linkedin-in",
+      color: "text-white",
+      bgColor: "bg-blue-700",
+      externalLink: "https://www.linkedin.com/in/harshad-dhokane/",
+    },
   ];
 
   return (
@@ -47,7 +67,13 @@ const DesktopIcons = () => {
         <div
           key={icon.id}
           className="desktop-icon flex flex-col items-center rounded-md p-2 cursor-pointer"
-          onClick={() => openWindow(icon.id)}
+          onClick={() => {
+            if ('externalLink' in icon && icon.externalLink) {
+              handleExternalLink(icon.externalLink);
+            } else {
+              openWindow(icon.id);
+            }
+          }}
         >
           <div
             className={`w-12 h-12 flex items-center justify-center ${icon.bgColor} rounded-md`}
