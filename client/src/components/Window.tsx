@@ -102,9 +102,14 @@ const Window = ({
       style={{ 
         zIndex: windowZIndexes[id] || 10,
         backdropFilter: title.includes('terminal') ? 'blur(8px)' : 'none',
+        maxWidth: '90vw',
+        maxHeight: '85vh',
       }}
       size={isMaximized ? { width: "100%", height: "calc(100% - 40px)" } : size}
-      position={isMaximized ? { x: 0, y: 0 } : position}
+      position={isMaximized ? { x: 0, y: 0 } : {
+        x: Math.max(0, Math.min(window.innerWidth - size.width, position.x)),
+        y: Math.max(0, Math.min(window.innerHeight - size.height - 60, position.y))
+      }}
       onDragStop={(e, d) => {
         if (!isMaximized) {
           setPosition({ x: d.x, y: d.y });
@@ -128,7 +133,7 @@ const Window = ({
       onMouseDown={handleWindowClick}
     >
       <div className="flex flex-col h-full">
-        <div className="window-header flex items-center p-2 draggable">
+        <div className="window-header flex items-center p-2 draggable bg-gray-800 rounded-t-lg">
           <div className="flex space-x-2">
             <div
               className="window-btn bg-red-500 cursor-pointer"
@@ -143,9 +148,9 @@ const Window = ({
               onClick={handleMaximize}
             ></div>
           </div>
-          <div className="ml-4 text-white text-sm">{title}</div>
+          <div className="ml-4 text-white text-sm select-none">{title}</div>
         </div>
-        <div className="flex-1 overflow-hidden">{children}</div>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden min-h-0 bg-opacity-90">{children}</div>
       </div>
     </Rnd>
   );

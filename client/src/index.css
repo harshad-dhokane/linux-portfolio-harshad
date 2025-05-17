@@ -138,17 +138,16 @@
 
 /* Window styles */
 .window {
-  background-color: rgba(45, 45, 45, 0.85);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  @apply bg-gray-800 rounded-lg flex flex-col;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   overflow: hidden;
 }
 
 .window-header {
-  background: linear-gradient(to right, #333333, #222222);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  @apply bg-gray-800 border-b border-gray-700;
+  min-height: 2.5rem;
 }
 
 .window-btn {
@@ -246,4 +245,12 @@
 
 .font-monospace {
   font-family: monospace;
+}
+
+.react-draggable {
+  transition: box-shadow 0.2s ease;
+}
+
+.react-draggable:active {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
