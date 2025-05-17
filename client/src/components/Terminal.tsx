@@ -67,18 +67,46 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
   const terminalOutputRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-scroll to bottom when new commands are added
+  // Improved auto-scroll to bottom when new commands are added
   useEffect(() => {
+    const scrollToBottom = () => {
+      if (terminalOutputRef.current) {
+        // Immediately scroll to bottom first
+        terminalOutputRef.current.scrollTop = terminalOutputRef.current.scrollHeight;
+        
+        // Then do it again after a small delay to handle any rendering delays
+        setTimeout(() => {
+          if (terminalOutputRef.current) {
+            terminalOutputRef.current.scrollTop = terminalOutputRef.current.scrollHeight;
+          }
+        }, 50);
+        
+        // And once more after content has definitely rendered
+        setTimeout(() => {
+          if (terminalOutputRef.current) {
+            terminalOutputRef.current.scrollTop = terminalOutputRef.current.scrollHeight;
+          }
+        }, 150);
+      }
+    };
+    
+    // Run scroll to bottom whenever command history changes
+    scrollToBottom();
+    
+    // Also handle when terminal window is resized
+    const observer = new ResizeObserver(() => {
+      scrollToBottom();
+    });
+    
     if (terminalOutputRef.current) {
-      terminalOutputRef.current.scrollTop = terminalOutputRef.current.scrollHeight;
-      
-      // Ensure the user sees the latest command by adding a small delay
-      setTimeout(() => {
-        if (terminalOutputRef.current) {
-          terminalOutputRef.current.scrollTop = terminalOutputRef.current.scrollHeight;
-        }
-      }, 100);
+      observer.observe(terminalOutputRef.current);
     }
+    
+    return () => {
+      if (terminalOutputRef.current) {
+        observer.unobserve(terminalOutputRef.current);
+      }
+    };
   }, [commandHistory]);
 
   // Focus input when terminal is clicked

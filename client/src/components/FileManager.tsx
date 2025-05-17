@@ -786,17 +786,11 @@ const FileManager = () => {
       navigateToDirectory(file);
     } else {
       setSelectedFile(file);
+      setShowFileInfo(true);
       
-      // For projects, open in a new terminal-style window
-      if (file.name === "Internly" || file.name === "College Suggestion Bot" || 
-          file.name === "AI Image Recognition" || file.name === "NLP-Based Chatbot") {
-        // Create a custom terminal window with project content
-        openWindow("projects");
-        // We'll display specific project content in the file preview panel
-      } else {
-        // For all other files, just show them in the file manager preview panel
-        // No need to open specific windows - content will display in the right panel
-      }
+      // All files including projects will now display in the side panel
+      // No need to open specific windows - content will display in the right panel
+      // This creates a more consistent experience across the file manager
     }
   };
 
@@ -953,19 +947,7 @@ const FileManager = () => {
                   </div>
                 </div>
                 <div className="flex space-x-2">
-                  <button
-                    className="w-7 h-7 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center text-white text-sm"
-                    title="Open in new window"
-                    onClick={() => {
-                      if (selectedFile.name === "Internly" || selectedFile.name === "College Suggestion Bot" || 
-                          selectedFile.name === "AI Image Recognition" || selectedFile.name === "NLP-Based Chatbot") {
-                        // Only project files open in a separate window
-                        openWindow("projects");
-                      }
-                    }}
-                  >
-                    <i className="fas fa-external-link-alt"></i>
-                  </button>
+                  {/* External links button removed as per request to keep all content in the side panel */}
                   <button
                     className="w-7 h-7 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center text-white text-sm"
                     title="Close preview"

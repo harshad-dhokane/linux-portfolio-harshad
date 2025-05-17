@@ -133,11 +133,12 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
   return (
     <div className="app-drawer fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-30 flex items-center justify-center animate-in fade-in duration-300">
       <div 
-        className="terminal border border-gray-600 rounded-lg w-auto max-w-3xl max-h-[80vh] p-6 shadow-2xl animate-in zoom-in duration-300"
+        className="terminal border border-gray-600 rounded-lg w-[700px] h-[400px] p-4 shadow-2xl animate-in zoom-in duration-300 overflow-y-auto"
         style={{
-          background: 'rgba(20, 20, 20, 0.8)',
-          backdropFilter: 'blur(12px)',
-          boxShadow: '0 0 20px rgba(0, 0, 0, 0.3)'
+          background: 'rgba(15, 15, 15, 0.6)',
+          backdropFilter: 'blur(15px)',
+          boxShadow: '0 0 20px rgba(0, 0, 0, 0.3)',
+          backgroundImage: 'linear-gradient(45deg, rgba(30, 30, 30, 0.6), rgba(15, 15, 15, 0.7))'
         }}
       >
         <div className="flex justify-between items-center mb-6">
