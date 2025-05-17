@@ -1,5 +1,7 @@
 
 export const wallpapers = [
+  // Modern abstract tech wallpaper
+  "https://images.unsplash.com/photo-1635776062127-d379bfcba9f8?auto=format&fit=crop&w=1920&h=1080",
   // Custom developer portfolio welcome image with code and modern tech
   "https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=1920&h=1080",
   // Computer science themed with code elements  
