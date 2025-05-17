@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDesktop } from "@/context/DesktopContext";
-import { useDrag } from "react-draggable";
+import Draggable from "react-draggable";
 
 interface IconProps {
   id: string;
@@ -15,12 +15,17 @@ interface IconProps {
 const DesktopIcons = () => {
   const { openWindow } = useDesktop();
   const [iconPositions, setIconPositions] = useState<Record<string, { x: number; y: number }>>({});
+  const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   
   // Load saved positions from localStorage on component mount
   useEffect(() => {
     const savedPositions = localStorage.getItem('desktopIconPositions');
     if (savedPositions) {
-      setIconPositions(JSON.parse(savedPositions));
+      try {
+        setIconPositions(JSON.parse(savedPositions));
+      } catch (e) {
+        console.error("Failed to parse saved icon positions", e);
+      }
     }
   }, []);
 
@@ -110,34 +115,87 @@ const DesktopIcons = () => {
     ]
   ];
 
+  // Handle drag stop event to save position
+  const handleDragStop = (id: string, e: any, data: { x: number; y: number }) => {
+    const newPositions = {
+      ...iconPositions,
+      [id]: { x: data.x, y: data.y }
+    };
+    setIconPositions(newPositions);
+    localStorage.setItem('desktopIconPositions', JSON.stringify(newPositions));
+  };
+
+  // Handle icon selection
+  const handleIconClick = (icon: IconProps, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    // Only process as a click if not dragging
+    if (!isDragging) {
+      setSelectedIcon(icon.id);
+      
+      // Double click behavior
+      if (e.detail === 2) {
+        if (icon.externalLink) {
+          handleExternalLink(icon.externalLink);
+        } else {
+          openWindow(icon.id);
+        }
+      }
+    }
+  };
+  
+  // Track if currently dragging
+  const [isDragging, setIsDragging] = useState(false);
+  
+  // Handle click on desktop to clear selection
+  const handleDesktopClick = () => {
+    setSelectedIcon(null);
+  };
+  
+  // Create a flattened array of icons from all columns for easier management
+  const allIcons = iconsColumns.flat();
+
   return (
-    <div className="desktop-icons flex">
-      {iconsColumns.map((column, colIndex) => (
-        <div key={colIndex} className="desktop-icons-column grid grid-cols-1 gap-6 p-4 ml-4">
-          {column.map((icon: IconProps) => (
+    <div className="desktop-icons absolute inset-0" onClick={handleDesktopClick}>
+      {allIcons.map((icon: IconProps) => {
+        const position = iconPositions[icon.id] || { x: 0, y: 0 };
+        const isSelected = selectedIcon === icon.id;
+        
+        return (
+          <Draggable
+            key={icon.id}
+            position={position}
+            onStart={() => setIsDragging(true)}
+            onStop={(e, data) => {
+              setIsDragging(false);
+              handleDragStop(icon.id, e, data);
+            }}
+            bounds="parent"
+          >
             <div
-              key={icon.id}
-              className="desktop-icon flex flex-col items-center rounded-md p-2 cursor-pointer"
-              onClick={() => {
-                if ('externalLink' in icon && icon.externalLink) {
-                  handleExternalLink(icon.externalLink);
-                } else {
-                  openWindow(icon.id);
-                }
+              className={`desktop-icon absolute flex flex-col items-center p-2 cursor-pointer select-none ${
+                isSelected ? 'bg-blue-500/30 rounded-md' : ''
+              }`}
+              onClick={(e) => handleIconClick(icon, e)}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                setSelectedIcon(icon.id);
               }}
             >
               <div
-                className={`w-12 h-12 flex items-center justify-center ${icon.bgColor} rounded-md shadow-md hover:shadow-lg transition-transform transform hover:scale-105`}
+                className={`w-14 h-14 flex items-center justify-center ${icon.bgColor} rounded-md shadow-md hover:shadow-lg transition-transform ${
+                  !isDragging ? 'hover:scale-105' : ''
+                }`}
               >
                 <i className={`${icon.icon} text-2xl ${icon.color}`}></i>
               </div>
-              <span className="text-white text-xs mt-1 text-center font-medium shadow-sm">
+              <span className="text-white text-sm mt-1 text-center font-medium bg-black/40 px-2 py-0.5 rounded backdrop-blur-sm">
                 {icon.name}
               </span>
             </div>
-          ))}
-        </div>
-      ))}
+          </Draggable>
+        );
+      })}
     </div>
   );
 };

@@ -23,10 +23,12 @@ const Desktop = () => {
     visible: boolean;
     x: number;
     y: number;
+    selectedIconId?: string | null;
   }>({
     visible: false,
     x: 0,
     y: 0,
+    selectedIconId: null,
   });
 
   // Handle context menu
