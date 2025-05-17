@@ -165,9 +165,8 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
               onClick={() => handleIconClick(icon.id, icon.link)}
             >
               <div
-                className={`w-16 h-16 rounded-md shadow-md flex items-center justify-center mb-2`}
+                className={`w-16 h-16 rounded-md shadow-md flex items-center justify-center mb-2 ${icon.bgColor}`}
                 style={{ 
-                  background: icon.bgColor, 
                   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
                 }}
               >
