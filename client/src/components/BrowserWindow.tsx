@@ -558,9 +558,11 @@ const BrowserWindow = () => {
                             <span className="text-blue-600">Contact info</span>
                           </p>
                           <div className="flex mt-3">
-                            <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-1 rounded-full transition-colors mr-2">
-                              Connect
-                            </button>
+                            <a href="https://www.linkedin.com/in/harshad-dhokane" target="_blank" rel="noopener noreferrer" className="mt-4 block">
+                              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-1 px-4 rounded-md transition-colors">
+                                Connect
+                              </button>
+                            </a>
                             <button className="bg-white hover:bg-gray-100 text-blue-600 border border-blue-600 font-medium px-4 py-1 rounded-full transition-colors">
                               Message
                             </button>
