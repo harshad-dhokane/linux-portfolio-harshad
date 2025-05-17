@@ -44,7 +44,7 @@ const BrowserWindow = () => {
           isLoading: false,
           iframeRef: { current: null }
         };
-        setTabs(prevTabs => [...prevTabs, newTab]);
+        setTabs([newTab]);
         setActiveTabId(newTab.id);
       } else {
         navigateTo(storedUrl);
