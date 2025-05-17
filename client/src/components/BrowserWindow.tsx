@@ -414,22 +414,13 @@ const BrowserWindow = () => {
                 <i className="fab fa-github text-white text-2xl mr-2"></i>
                 <div className="text-white">GitHub</div>
               </div>
-              <div className="flex-1 p-4 bg-white overflow-y-auto">
-                <div className="max-w-4xl mx-auto">
-                  <div className="flex flex-col md:flex-row gap-6">
-                    <div className="w-full md:w-1/3">
-                      <div className="bg-gray-100 rounded-lg p-6 text-center">
-                        <div className="w-32 h-32 mx-auto bg-gray-300 rounded-full overflow-hidden mb-4">
-                          <img
-                            src="https://avatars.githubusercontent.com/u/harshad-dhokane"
-                            alt="Harshad Dhokane"
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              e.currentTarget.src =
-                                "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png";
-                            }}
-                          />
-                        </div>
+              <div className="flex-1 bg-white overflow-y-auto">
+                <iframe 
+                  src="https://github.com/harshad-dhokane"
+                  className="w-full h-full border-none"
+                  title="GitHub Profile"
+                />
+              </div>
                         <h2 className="text-2xl font-bold">Harshad Dhokane</h2>
                         <p className="text-gray-600 mt-1">@harshad-dhokane</p>
                         <a 
