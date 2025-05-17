@@ -474,8 +474,9 @@ const BrowserWindow = () => {
           )}
         </div>
       </div>
+    </div>
 
-          {content === "external" && (
+    {content === "external" && (
             <div className="h-full w-full">
               <iframe 
                 ref={iframeRef}
