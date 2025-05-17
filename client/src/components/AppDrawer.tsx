@@ -120,8 +120,9 @@ export default function AppDrawer({ onClose }: AppDrawerProps) {
 
   const handleIconClick = (id: string, link?: string) => {
     if (link) {
-      // Use internal browser for external links
+      // Use internal browser for external links with correct profile view
       openWindow("browser");
+      sessionStorage.setItem("browserContent", id);
       sessionStorage.setItem("browserUrl", link);
     } else {
       // Open application window

@@ -31,9 +31,26 @@ const BrowserWindow = () => {
   // Check if a URL was passed via sessionStorage from another component
   useEffect(() => {
     const storedUrl = sessionStorage.getItem("browserUrl");
+    const storedContent = sessionStorage.getItem("browserContent");
     if (storedUrl) {
-      navigateTo(storedUrl);
-      sessionStorage.removeItem("browserUrl"); // Clear it after use
+      if (storedContent === "github" || storedContent === "linkedin") {
+        const newTab = {
+          id: tabs.length,
+          title: storedContent === "github" ? "GitHub" : "LinkedIn",
+          url: storedUrl,
+          content: storedContent,
+          history: [storedUrl],
+          historyIndex: 0,
+          isLoading: false,
+          iframeRef: { current: null }
+        };
+        setTabs([newTab]);
+        setActiveTabId(newTab.id);
+      } else {
+        navigateTo(storedUrl);
+      }
+      sessionStorage.removeItem("browserUrl");
+      sessionStorage.removeItem("browserContent");
     }
   }, []);
 

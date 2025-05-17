@@ -82,10 +82,10 @@ const DesktopIcons = () => {
     }
   }, []);
 
-  const handleExternalLink = (url: string) => {
-    // Open the browser window and update it to show the specified URL
+  const handleExternalLink = (id: string, url: string) => {
     openWindow("browser");
-    // We'll use sessionStorage to pass the URL to the browser component
+    // Store both the id and URL to show the correct profile view
+    sessionStorage.setItem("browserContent", id);
     sessionStorage.setItem("browserUrl", url);
   };
 
@@ -196,7 +196,7 @@ const DesktopIcons = () => {
       // Double click behavior
       if (e.detail === 2) {
         if (icon.externalLink) {
-          handleExternalLink(icon.externalLink);
+          handleExternalLink(icon.id, icon.externalLink);
         } else {
           openWindow(icon.id);
         }
