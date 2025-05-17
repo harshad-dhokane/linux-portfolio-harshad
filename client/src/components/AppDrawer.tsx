@@ -4,7 +4,7 @@ interface AppDrawerProps {
   onClose: () => void;
 }
 
-const AppDrawer = ({ onClose }: AppDrawerProps) => {
+export default function AppDrawer({ onClose }: AppDrawerProps) {
   const { openWindow } = useDesktop();
 
   const drawerIcons = [
@@ -23,6 +23,13 @@ const AppDrawer = ({ onClose }: AppDrawerProps) => {
       bgColor: "bg-blue-500",
     },
     {
+      id: "filemanager",
+      name: "File Manager",
+      icon: "fas fa-folder",
+      color: "text-yellow-400",
+      bgColor: "bg-gray-800",
+    },
+    {
       id: "resume",
       name: "Resume",
       icon: "fas fa-file-alt",
@@ -35,6 +42,27 @@ const AppDrawer = ({ onClose }: AppDrawerProps) => {
       icon: "fas fa-code",
       color: "text-white",
       bgColor: "bg-green-500",
+    },
+    {
+      id: "skills",
+      name: "Skills",
+      icon: "fas fa-chart-bar",
+      color: "text-white",
+      bgColor: "bg-indigo-500",
+    },
+    {
+      id: "experience",
+      name: "Experience",
+      icon: "fas fa-briefcase",
+      color: "text-white",
+      bgColor: "bg-blue-600",
+    },
+    {
+      id: "education",
+      name: "Education",
+      icon: "fas fa-graduation-cap",
+      color: "text-white",
+      bgColor: "bg-red-500",
     },
     {
       id: "certifications",
@@ -73,6 +101,27 @@ const AppDrawer = ({ onClose }: AppDrawerProps) => {
       color: "text-white",
       bgColor: "bg-[hsl(var(--ubuntu-orange))]",
     },
+    {
+      id: "calculator",
+      name: "Calculator",
+      icon: "fas fa-calculator",
+      color: "text-white",
+      bgColor: "bg-yellow-600",
+    },
+    {
+      id: "calendar",
+      name: "Calendar",
+      icon: "fas fa-calendar-alt",
+      color: "text-white",
+      bgColor: "bg-green-600",
+    },
+    {
+      id: "mail",
+      name: "Mail",
+      icon: "fas fa-envelope",
+      color: "text-white",
+      bgColor: "bg-red-600",
+    }
   ];
 
   const handleIconClick = (id: string, link?: string) => {
@@ -109,24 +158,23 @@ const AppDrawer = ({ onClose }: AppDrawerProps) => {
 
         <div className="overflow-x-auto pb-4">
           <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-6 min-w-[800px]">
-          {drawerIcons.map((icon) => (
-            <div
-              key={icon.id}
-              className="drawer-icon flex flex-col items-center cursor-pointer transition-all hover:scale-110"
-              onClick={() => handleIconClick(icon.id, icon.link)}
-            >
+            {drawerIcons.map((icon) => (
               <div
-                className={`w-16 h-16 rounded-lg ${icon.bgColor} flex items-center justify-center mb-2 shadow-lg hover:shadow-xl`}
+                key={icon.id}
+                className="drawer-icon flex flex-col items-center cursor-pointer transition-all hover:scale-110"
+                onClick={() => handleIconClick(icon.id, icon.link)}
               >
-                <i className={`${icon.icon} text-3xl ${icon.color}`}></i>
+                <div
+                  className={`w-16 h-16 rounded-lg ${icon.bgColor} flex items-center justify-center mb-2 shadow-lg hover:shadow-xl`}
+                >
+                  <i className={`${icon.icon} text-3xl ${icon.color}`}></i>
+                </div>
+                <span className="text-white text-center font-ubuntu">{icon.name}</span>
               </div>
-              <span className="text-white text-center font-ubuntu">{icon.name}</span>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default AppDrawer;
+}

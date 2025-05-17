@@ -1,4 +1,6 @@
+import { useState, useEffect } from "react";
 import { useDesktop } from "@/context/DesktopContext";
+import { useDrag } from "react-draggable";
 
 interface IconProps {
   id: string;
@@ -7,10 +9,20 @@ interface IconProps {
   color: string;
   bgColor: string;
   externalLink?: string;
+  position?: { x: number; y: number };
 }
 
 const DesktopIcons = () => {
   const { openWindow } = useDesktop();
+  const [iconPositions, setIconPositions] = useState<Record<string, { x: number; y: number }>>({});
+  
+  // Load saved positions from localStorage on component mount
+  useEffect(() => {
+    const savedPositions = localStorage.getItem('desktopIconPositions');
+    if (savedPositions) {
+      setIconPositions(JSON.parse(savedPositions));
+    }
+  }, []);
 
   const handleExternalLink = (url: string) => {
     // Open the browser window and update it to show the specified URL

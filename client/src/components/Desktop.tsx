@@ -12,6 +12,9 @@ import CertificationsWindow from "./CertificationsWindow";
 import SkillsWindow from "./SkillsWindow";
 import ExperienceWindow from "./ExperienceWindow";
 import EducationWindow from "./EducationWindow";
+import FileManager from "./FileManager";
+import SettingsWindow from "./SettingsWindow";
+import AboutWindow from "./AboutWindow";
 import { wallpapers } from "@/lib/wallpapers";
 
 const Desktop = () => {
@@ -80,6 +83,15 @@ const Desktop = () => {
       
       {/* Education Window */}
       <EducationWindow />
+      
+      {/* File Manager Window */}
+      <FileManager />
+      
+      {/* Settings Window */}
+      <SettingsWindow />
+      
+      {/* About Window */}
+      <AboutWindow />
 
       {/* Ubuntu Dock with App Drawer */}
       <AppDock />
