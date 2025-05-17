@@ -197,8 +197,8 @@
 }
 
 .desktop-icon:hover {
-  transform: scale(1.05);
-  background-color: rgba(255, 255, 255, 0.1);
+  transform: scale(1.10);
+  transition-duration: 300ms;
 }
 
 /* Context menu styles */
