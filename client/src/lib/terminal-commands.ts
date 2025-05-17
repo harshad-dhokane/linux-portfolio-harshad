@@ -162,7 +162,7 @@ export const getTerminalResponse = (command: string): string => {
       return "__NEW_TERMINAL__";
     case "exit":
       return "__CLOSE_TERMINAL__"; // Special command to close the terminal
-    case "cat":
+    case "cat": {
       const fileMap: { [key: string]: string } = {
         "internly": `
 # Internly - Internship Tracking Application
