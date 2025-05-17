@@ -70,7 +70,6 @@ const findDirectory = (path: string[]): FileData | null => {
 export const getTerminalResponse = (command: string): string => {
   const commands = command.split(" ");
   const cmd = commands[0];
-  const currentPathStr = currentPath.join('/');
 
   switch (cmd) {
     case "ls":
@@ -117,20 +116,7 @@ export const getTerminalResponse = (command: string): string => {
       );
 
       if (file?.content) {
-        const terminalId = `file-viewer-${Date.now()}`;
-        const content = typeof file.content === 'string' ? file.content : JSON.stringify(file.content, null, 2);
-        
-        setTimeout(() => {
-          window.dispatchEvent(new CustomEvent('new-terminal-created', {
-            detail: { 
-              id: terminalId,
-              initialContent: content,
-              title: `File: ${file.name}`
-            }
-          }));
-        }, 100);
-        
-        return `Opening ${file.name} in new terminal...`;
+        return file.content;
       }
       return `File ${commands[1]} not found`;
 
