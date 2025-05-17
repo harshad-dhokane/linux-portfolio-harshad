@@ -67,44 +67,63 @@ ossyNMMMNyMMhsssssssssssssshmmmhssssssso   WM: Mutter
   const terminalOutputRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Improved auto-scroll to bottom when new commands are added
+  // Enhanced auto-scroll to keep latest commands always visible
   useEffect(() => {
     const scrollToBottom = () => {
       if (terminalOutputRef.current) {
-        // Immediately scroll to bottom first
-        terminalOutputRef.current.scrollTop = terminalOutputRef.current.scrollHeight;
+        // Force scroll to bottom to ensure latest command is visible
+        terminalOutputRef.current.scrollTo({
+          top: terminalOutputRef.current.scrollHeight,
+          behavior: 'auto'
+        });
         
-        // Then do it again after a small delay to handle any rendering delays
+        // Additional scroll after render to ensure complete visibility
         setTimeout(() => {
           if (terminalOutputRef.current) {
-            terminalOutputRef.current.scrollTop = terminalOutputRef.current.scrollHeight;
+            terminalOutputRef.current.scrollTo({
+              top: terminalOutputRef.current.scrollHeight,
+              behavior: 'auto'
+            });
           }
-        }, 50);
+        }, 0);
         
-        // And once more after content has definitely rendered
+        // One more check after all animations and renders complete
         setTimeout(() => {
           if (terminalOutputRef.current) {
-            terminalOutputRef.current.scrollTop = terminalOutputRef.current.scrollHeight;
+            terminalOutputRef.current.scrollTo({
+              top: terminalOutputRef.current.scrollHeight,
+              behavior: 'auto'
+            });
           }
-        }, 150);
+        }, 100);
       }
     };
     
     // Run scroll to bottom whenever command history changes
     scrollToBottom();
     
-    // Also handle when terminal window is resized
-    const observer = new ResizeObserver(() => {
-      scrollToBottom();
-    });
+    // Add a mutation observer to watch for content changes in the terminal output
+    const observer = new MutationObserver(scrollToBottom);
     
     if (terminalOutputRef.current) {
-      observer.observe(terminalOutputRef.current);
+      observer.observe(terminalOutputRef.current, {
+        childList: true,
+        subtree: true,
+        characterData: true
+      });
+    }
+    
+    // Also handle when terminal window is resized
+    const resizeObserver = new ResizeObserver(scrollToBottom);
+    
+    if (terminalOutputRef.current) {
+      resizeObserver.observe(terminalOutputRef.current);
     }
     
     return () => {
       if (terminalOutputRef.current) {
-        observer.unobserve(terminalOutputRef.current);
+        observer.disconnect();
+        resizeObserver.unobserve(terminalOutputRef.current);
       }
     };
   }, [commandHistory]);

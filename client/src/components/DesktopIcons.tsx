@@ -12,6 +12,32 @@ interface IconProps {
   position?: { x: number; y: number };
 }
 
+// Helper function to convert Tailwind bgColor classes to actual CSS color values
+const getBackgroundColor = (bgClass: string): string => {
+  const colorMap: Record<string, string> = {
+    'bg-black': '#000000',
+    'bg-white': '#FFFFFF',
+    'bg-gray-800': '#1F2937',
+    'bg-gray-700': '#374151',
+    'bg-gray-600': '#4B5563',
+    'bg-blue-500': '#3B82F6',
+    'bg-blue-600': '#2563EB',
+    'bg-blue-700': '#1D4ED8',
+    'bg-green-500': '#10B981',
+    'bg-green-600': '#059669',
+    'bg-red-500': '#EF4444',
+    'bg-red-600': '#DC2626',
+    'bg-yellow-500': '#F59E0B',
+    'bg-yellow-400': '#FBBF24',
+    'bg-purple-600': '#9333EA',
+    'bg-indigo-500': '#6366F1',
+    'bg-indigo-600': '#4F46E5',
+    'bg-orange-500': '#F97316',
+  };
+
+  return colorMap[bgClass] || '#333333'; // Default dark gray if color not found
+};
+
 const DesktopIcons = () => {
   const { openWindow } = useDesktop();
   const [iconPositions, setIconPositions] = useState<Record<string, { x: number; y: number }>>({});
@@ -217,13 +243,16 @@ const DesktopIcons = () => {
               }}
             >
               <div
-                className={`w-14 h-14 flex items-center justify-center ${icon.bgColor} rounded-md shadow-md hover:shadow-lg transition-transform ${
+                className={`w-16 h-16 flex items-center justify-center rounded-md shadow-md hover:shadow-lg transition-transform ${icon.bgColor} ${
                   !isDragging ? 'hover:scale-105' : ''
                 }`}
+                style={{ 
+                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
+                }}
               >
                 <i className={`${icon.icon} text-2xl ${icon.color}`}></i>
               </div>
-              <span className="text-white text-sm mt-1 text-center font-medium bg-black/40 px-2 py-0.5 rounded backdrop-blur-sm">
+              <span className="text-white text-xs mt-1 text-center font-medium bg-black/40 px-2 py-0.5 rounded backdrop-blur-sm">
                 {icon.name}
               </span>
             </div>
