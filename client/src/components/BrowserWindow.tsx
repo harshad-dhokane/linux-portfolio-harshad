@@ -380,17 +380,38 @@ const BrowserWindow = () => {
           )}
 
           {content === "linkedin" && (
-            <>
-              <iframe 
-                src="https://www.linkedin.com/in/harshad-dhokane/"
-                className="w-full h-full"
-                title="LinkedIn Profile"
-                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-                onLoad={() => setIsLoading(false)}
-                onError={() => setIsLoading(false)}
-              />
-                    
-              <div className="bg-white rounded-lg shadow overflow-hidden mb-4">
+            <div className="h-full flex flex-col">
+              <div className="h-12 bg-[#0077B5] flex items-center px-4">
+                <i className="fab fa-linkedin-in text-white text-2xl mr-2"></i>
+                <div className="text-white">LinkedIn</div>
+              </div>
+              <div className="flex-1 overflow-y-auto bg-[#F3F2EF]">
+                <div className="max-w-4xl mx-auto pt-6 px-4">
+                  <div className="bg-white rounded-lg shadow overflow-hidden mb-4">
+                    <div className="h-32 bg-gradient-to-r from-blue-700 to-blue-500"></div>
+                    <div className="px-6 pb-6">
+                      <div className="relative">
+                        <div className="w-32 h-32 absolute -top-16 left-0 border-4 border-white rounded-full overflow-hidden bg-white">
+                          <img src="https://media.licdn.com/dms/image/D5603AQHaRvI9yUJeXg/" alt="Harshad Dhokane" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = 'https://media.licdn.com/dms/image/C560BAQHaVYd13rRz3A/company-logo_100_100/0/1638831589865?e=1708560000&v=beta&t=PJQG1k1NGJs2KcEP-EYg3Jh7B--NuiE-85FmSHkK2_w' }} />
+                        </div>
+                        <div className="ml-36 pt-2">
+                          <h1 className="text-2xl font-bold">Harshad Dhokane</h1>
+                          <p className="text-gray-600">Computer Science Professional | AI/ML | Full-Stack Development</p>
+                          <p className="text-gray-500 text-sm">Pune, Maharashtra, India · <span className="text-blue-600">Contact info</span></p>
+                          <div className="flex mt-3">
+                            <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-1 rounded-full transition-colors mr-2">
+                              Connect
+                            </button>
+                            <button className="bg-white hover:bg-gray-100 text-blue-600 border border-blue-600 font-medium px-4 py-1 rounded-full transition-colors">
+                              Message
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white rounded-lg shadow overflow-hidden mb-4">
                     <div className="p-6">
                       <h2 className="text-xl font-bold mb-4">About</h2>
                       <p className="text-gray-700">
@@ -472,11 +493,8 @@ const BrowserWindow = () => {
               </div>
             </div>
           )}
-        </div>
-      </div>
-    </div>
 
-    {content === "external" && (
+          {content === "external" && (
             <div className="h-full w-full">
               <iframe 
                 ref={iframeRef}
