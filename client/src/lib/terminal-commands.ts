@@ -64,13 +64,42 @@ export const getTerminalResponse = (command: string): string => {
 
   switch (cmd) {
     case "ls":
-      if (!currentDirectory.children || currentDirectory.children.length === 0) {
+      // Get the current directory path
+      const dirPath = currentPath.join("/");
+      
+      // Filter files based on current directory
+      let filteredFiles = [];
+      if (dirPath.includes("Projects")) {
+        filteredFiles = currentDirectory.children?.filter(file => 
+          ["Internly", "College Suggestion Bot", "AI Image Recognition", "NLP-Based Chatbot"].includes(file.name)
+        ) || [];
+      } else if (dirPath.includes("Education")) {
+        filteredFiles = currentDirectory.children?.filter(file => 
+          ["MSc Computer Science", "BSc Computer Science", "HSC Science"].includes(file.name)
+        ) || [];
+      } else if (dirPath.includes("Experience")) {
+        filteredFiles = currentDirectory.children?.filter(file => 
+          ["Canspirit.ai", "CodeSoft"].includes(file.name)
+        ) || [];
+      } else if (dirPath.includes("Skills")) {
+        filteredFiles = currentDirectory.children?.filter(file => 
+          ["Programming", "Web Development", "AI & ML", "DevOps & Databases"].includes(file.name)
+        ) || [];
+      } else if (dirPath.includes("Certificates")) {
+        filteredFiles = currentDirectory.children?.filter(file => 
+          ["AI Fundamentals", "Full Stack Web Development", "Database Management & SQL"].includes(file.name)
+        ) || [];
+      } else {
+        filteredFiles = currentDirectory.children || [];
+      }
+
+      if (!filteredFiles.length) {
         return "Directory is empty";
       }
       
       const hasDetailFlag = commands.includes("-l") || commands.includes("-la") || commands.includes("-al");
       if (hasDetailFlag) {
-        return `<div class="font-mono">${currentDirectory.children.map(file => {
+        return `<div class="font-mono">${filteredFiles.map(file => {
           const perms = formatPermissions(file.type);
           const size = formatFileSize(file.size);
           const date = formatDate(file.modified);
@@ -78,7 +107,7 @@ export const getTerminalResponse = (command: string): string => {
         }).join('\n')}</div>`;
       }
       
-      return `<div class="flex flex-wrap gap-4">${currentDirectory.children.map(file => 
+      return `<div class="flex flex-wrap gap-4">${filteredFiles.map(file => 
         `<span class="text-${file.type === 'folder' ? 'blue' : 'green'}-400">${file.type === 'folder' ? '📁' : '📄'} ${file.name}</span>`
       ).join(' ')}</div>`;
 
