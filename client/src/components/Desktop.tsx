@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { useDesktop } from "@/context/DesktopContext";
 import DesktopIcons from "./DesktopIcons";
 import AppDock from "./AppDock";
 import ContextMenu from "./ContextMenu";
 import DateTimeDisplay from "./DateTimeDisplay";
 import Terminal from "./Terminal";
-import BrowserWindow from "./BrowserWindow";
-import ResumeWindow from "./ResumeWindow";
-import ProjectsWindow from "./ProjectsWindow";
-import CertificationsWindow from "./CertificationsWindow";
-import SkillsWindow from "./SkillsWindow";
-import ExperienceWindow from "./ExperienceWindow";
-import EducationWindow from "./EducationWindow";
-import FileManager from "./FileManager";
-import SettingsWindow from "./SettingsWindow";
-import AboutWindow from "./AboutWindow";
+const AboutWindow = lazy(() => import("./AboutWindow"));
+const BrowserWindow = lazy(() => import("./BrowserWindow"));
+const ResumeWindow = lazy(() => import("./ResumeWindow"));
+const ProjectsWindow = lazy(() => import("./ProjectsWindow"));
+const CertificationsWindow = lazy(() => import("./CertificationsWindow"));
+const SkillsWindow = lazy(() => import("./SkillsWindow"));
+const ExperienceWindow = lazy(() => import("./ExperienceWindow"));
+const EducationWindow = lazy(() => import("./EducationWindow"));
+const FileManager = lazy(() => import("./FileManager"));
+const SettingsWindow = lazy(() => import("./SettingsWindow"));
 import { wallpapers } from "@/lib/wallpapers";
 
 const Progress = ({ value, className }: { value: number; className?: string }) => {
@@ -134,34 +134,54 @@ const Desktop = () => {
       ))}
 
       {/* Browser Window */}
-      <BrowserWindow />
+      <Suspense fallback={<p>Loading...</p>}>
+        <BrowserWindow />
+      </Suspense>
 
       {/* Resume Window */}
-      <ResumeWindow />
+      <Suspense fallback={<p>Loading...</p>}>
+        <ResumeWindow />
+      </Suspense>
 
       {/* Projects Window */}
-      <ProjectsWindow />
+      <Suspense fallback={<p>Loading...</p>}>
+        <ProjectsWindow />
+      </Suspense>
 
       {/* Certifications Window */}
-      <CertificationsWindow />
+      <Suspense fallback={<p>Loading...</p>}>
+        <CertificationsWindow />
+      </Suspense>
 
       {/* Skills Window */}
-      <SkillsWindow />
+      <Suspense fallback={<p>Loading...</p>}>
+        <SkillsWindow />
+      </Suspense>
 
       {/* Experience Window */}
-      <ExperienceWindow />
+      <Suspense fallback={<p>Loading...</p>}>
+        <ExperienceWindow />
+      </Suspense>
 
       {/* Education Window */}
-      <EducationWindow />
+      <Suspense fallback={<p>Loading...</p>}>
+        <EducationWindow />
+      </Suspense>
 
       {/* File Manager Window */}
-      <FileManager />
+      <Suspense fallback={<p>Loading...</p>}>
+        <FileManager />
+      </Suspense>
 
       {/* Settings Window */}
-      <SettingsWindow />
+      <Suspense fallback={<p>Loading...</p>}>
+        <SettingsWindow />
+      </Suspense>
 
       {/* About Window */}
-      <AboutWindow />
+      <Suspense fallback={<p>Loading...</p>}>
+        <AboutWindow />
+      </Suspense>
 
       {/* Ubuntu Dock with App Drawer */}
       <AppDock />
