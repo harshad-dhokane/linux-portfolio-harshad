@@ -70,6 +70,7 @@ const findDirectory = (path: string[]): FileData | null => {
 export const getTerminalResponse = (command: string): string => {
   const commands = command.split(" ");
   const cmd = commands[0];
+  const currentPathStr = currentPath.join('/');
 
   switch (cmd) {
     case "ls":
