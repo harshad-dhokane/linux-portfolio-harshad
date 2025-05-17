@@ -69,18 +69,20 @@ const BrowserWindow = () => {
   const processUrl = (inputUrl: string) => {
     if (!inputUrl) return '';
 
-    // Check if it's a search query (contains spaces or no dots)
-    if (!inputUrl.includes('.') || inputUrl.includes(' ')) {
-      const searchQuery = encodeURIComponent(inputUrl);
-      return `https://www.google.com/search?q=${searchQuery}&igu=1`;
+    // Check if it's already a valid URL
+    try {
+      new URL(inputUrl);
+      return inputUrl;
+    } catch (e) {
+      // Not a valid URL, treat as search or domain
+      if (inputUrl.includes('.') && !inputUrl.includes(' ') && !inputUrl.startsWith('http')) {
+        return `https://${inputUrl}`;
+      } else {
+        // Handle as search query
+        const searchQuery = encodeURIComponent(inputUrl);
+        return `https://www.google.com/search?q=${searchQuery}`;
+      }
     }
-
-    // Handle URLs without protocol
-    if (!inputUrl.startsWith('http://') && !inputUrl.startsWith('https://')) {
-      return `https://${inputUrl}`;
-    }
-
-    return inputUrl;
   };
 
   const navigateTo = (targetUrl: string) => {
@@ -266,7 +268,8 @@ const BrowserWindow = () => {
               ref={iframeRef}
               src={activeTab.url}
               className="w-full h-full border-none"
-              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation allow-top-navigation-by-user-activation"
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation allow-top-navigation-by-user-activation allow-presentation"
+              allow="fullscreen"
               onLoad={() => {
                 setIsLoading(false);
                 const iframe = iframeRef.current;
