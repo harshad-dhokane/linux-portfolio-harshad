@@ -1,4 +1,4 @@
-# 🐧 Linux Portfolio Design
+# 🐧 Linux Portfolio Design- Harshad Dhokane
 
 A modern, interactive portfolio website designed with a Linux desktop environment theme. This project offers a unique and engaging way to showcase your skills, projects, and experience through a familiar desktop interface.
 
