@@ -52,8 +52,8 @@ A modern, interactive portfolio website designed with a Linux desktop environmen
 Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/LinuxPortfolioDesign.git
-cd LinuxPortfolioDesign
+git clone https://github.com/harshad-dhokane/linux-portfolio-harshad.git
+cd linux-portfolio-harshad
 ```
 
 Install dependencies:
@@ -76,7 +76,7 @@ Open your browser and navigate to:
 ## 📦 Building for Production
 
 ```bash
-cd LinuxPortfolioDesign
+cd linux-portfolio-harshad
 npm run build
 ```
 
@@ -87,7 +87,7 @@ The build files will be located in the `dist/` directory.
 ## 📁 Project Structure
 
 ```plaintext
-LinuxPortfolioDesign/
+linux-portfolio-harshad/
 ├── client/                # Frontend React application
 │   ├── src/
 │   │   ├── components/    # UI components
@@ -157,7 +157,7 @@ Update `vite.config.ts`:
 
 ```ts
 export default defineConfig({
-  base: '/LinuxPortfolioDesign/', // Replace with your repo name
+  base: '/linux-portfolio-harshad/', // Replace with your repo name
 })
 ```
 
