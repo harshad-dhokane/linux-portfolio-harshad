@@ -41,27 +41,36 @@ export async function setupVite(app: Express, server: Server) {
   });
 
   app.use(vite.middlewares);
-  app.use("*", async (req, res, next) => {
+  
+  // Serve static files in production
+  if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.resolve(import.meta.dirname, '../dist/public')));
+  }
+  
+  app.use('*', async (req, res, next) => {
     const url = req.originalUrl;
 
     try {
-      const clientTemplate = path.resolve(
-        import.meta.dirname,
-        "..",
-        "client",
-        "index.html",
-      );
+      // Skip API routes
+      if (url.startsWith('/api')) {
+        return next();
+      }
 
-      // always reload the index.html file from disk incase it changes
-      let template = await fs.promises.readFile(clientTemplate, "utf-8");
-      template = template.replace(
-        `src="/src/main.tsx"`,
-        `src="/src/main.tsx?v=${nanoid()}"`,
-      );
-      const page = await vite.transformIndexHtml(url, template);
-      res.status(200).set({ "Content-Type": "text/html" }).end(page);
+      if (process.env.NODE_ENV === 'production') {
+        // Serve index.html for all non-API routes in production
+        res.sendFile(path.resolve(import.meta.dirname, '../dist/public/index.html'));
+      } else {
+        const clientTemplate = path.resolve(
+          import.meta.dirname,
+          '..',
+          'client',
+          'index.html'
+        );
+        let template = fs.readFileSync(clientTemplate, 'utf-8');
+        template = await vite.transformIndexHtml(url, template);
+        res.status(200).set({ 'Content-Type': 'text/html' }).end(template);
+      }
     } catch (e) {
-      vite.ssrFixStacktrace(e as Error);
       next(e);
     }
   });
