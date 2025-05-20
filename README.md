@@ -19,7 +19,7 @@ A modern, interactive portfolio website designed with a Linux desktop environmen
 
 ## 🚀 Demo
 
-🔗 [View Live Demo](#) <!-- Replace with your live URL -->
+🔗 [View Live Demo](https://harshaddhokane.vercel.app/) <!-- Replace with your live URL -->
 
 ---
 
