@@ -17,5 +17,5 @@ export default defineConfig({
     emptyOutDir: true,
   },
   // Add base path if needed
-  // base: '/'
+  base: '/'
 });
