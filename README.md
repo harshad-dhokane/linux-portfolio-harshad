@@ -46,39 +46,47 @@ A modern, interactive portfolio website designed with a Linux desktop environmen
 - Node.js (v16 or higher)
 - npm or yarn
 
-### 📦 Installation
+
+## 🚀 Installation
 
 Clone the repository:
 
 ```bash
 git clone https://github.com/yourusername/LinuxPortfolioDesign.git
 cd LinuxPortfolioDesign
+```
+
 Install dependencies:
 
-bash
-Copy
-Edit
+```bash
 npm install
+```
+
 Start the development server:
 
-bash
-Copy
-Edit
+```bash
 npm run dev
-Open your browser and navigate to http://localhost:5173
+```
 
-📦 Building for Production
-bash
-Copy
-Edit
+Open your browser and navigate to:  
+[http://localhost:5173](http://localhost:5173)
+
+---
+
+## 📦 Building for Production
+
+```bash
 cd LinuxPortfolioDesign
 npm run build
-The build files will be located in the dist/ directory.
+```
 
-📁 Project Structure
-graphql
-Copy
-Edit
+The build files will be located in the `dist/` directory.
+
+---
+
+## 📁 Project Structure
+
+```plaintext
 LinuxPortfolioDesign/
 ├── client/                # Frontend React application
 │   ├── src/
@@ -97,116 +105,143 @@ LinuxPortfolioDesign/
 ├── shared/                # Shared code between client and server
 │   └── schema.ts          # Database schema
 └── package.json           # Project dependencies and scripts
-🧩 UI Components
-Desktop: Main container for desktop elements
+```
 
-Window: Draggable and resizable window component
+---
 
-AppDock: Taskbar with application shortcuts
+## 🧩 UI Components
 
-DesktopIcons: Interactive desktop icons
+- **Desktop**: Main container for desktop elements  
+- **Window**: Draggable and resizable window component  
+- **AppDock**: Taskbar with application shortcuts  
+- **DesktopIcons**: Interactive desktop icons  
+- **ContextMenu**: Right-click actions  
+- **Terminal**: Interactive CLI emulator  
+- **FileManager**: Visual file browser  
+- **SettingsWindow**: Customize themes and appearance  
 
-ContextMenu: Right-click actions
+---
 
-Terminal: Interactive CLI emulator
+## 🎨 Customization
 
-FileManager: Visual file browser
+### Personal Info
 
-SettingsWindow: Customize themes and appearance
+Update your personal details in the `client/src/data/` directory:
 
-🎨 Customization
-Personal Info
-Update your personal details in the client/src/data/ directory:
+- `about.ts` – Bio and personal information  
+- `projects.ts` – Portfolio projects  
+- `skills.ts` – Technical skills  
+- `experience.ts` – Work experience  
 
-about.ts – Bio and personal information
+### Wallpapers
 
-projects.ts – Portfolio projects
-
-skills.ts – Technical skills
-
-experience.ts – Work experience
-
-Wallpapers
 Add custom images to:
+
+```
 client/src/assets/wallpapers/
-Then update the wallpapers.ts file.
+```
 
-Theme Colors
-Modify tailwind.config.ts to change the theme colors.
+Then update the `wallpapers.ts` file.
 
-🚢 Deployment
-📄 GitHub Pages
-Update vite.config.ts:
+### Theme Colors
 
-ts
-Copy
-Edit
+Modify `tailwind.config.ts` to change the theme colors.
+
+---
+
+## 🚢 Deployment
+
+### 📄 GitHub Pages
+
+Update `vite.config.ts`:
+
+```ts
 export default defineConfig({
   base: '/LinuxPortfolioDesign/', // Replace with your repo name
 })
-Add a deploy script to package.json:
+```
 
-json
-Copy
-Edit
+Add a deploy script to `package.json`:
+
+```json
 "scripts": {
   "deploy": "npm run build && gh-pages -d dist"
 }
-Install gh-pages:
+```
 
-bash
-Copy
-Edit
+Install `gh-pages`:
+
+```bash
 npm install --save-dev gh-pages
+```
+
 Deploy:
 
-bash
-Copy
-Edit
+```bash
 npm run deploy
-▲ Vercel
+```
+
+---
+
+### ▲ Vercel
+
 Install CLI:
 
-bash
-Copy
-Edit
+```bash
 npm install -g vercel
+```
+
 Deploy:
 
-bash
-Copy
-Edit
+```bash
 vercel
-🌍 Netlify
+```
+
+---
+
+### 🌍 Netlify
+
 Install CLI:
 
-bash
-Copy
-Edit
+```bash
 npm install -g netlify-cli
+```
+
 Deploy:
 
-bash
-Copy
-Edit
+```bash
 netlify deploy
-🤝 Contributing
-Fork the repo
+```
 
-Create your feature branch: git checkout -b feature/amazing-feature
+---
 
-Commit your changes: git commit -m 'Add some amazing feature'
+## 🤝 Contributing
 
-Push to the branch: git push origin feature/amazing-feature
+1. Fork the repository  
+2. Create your feature branch:  
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```  
+3. Commit your changes:  
+   ```bash
+   git commit -m 'Add some amazing feature'
+   ```  
+4. Push to the branch:  
+   ```bash
+   git push origin feature/amazing-feature
+   ```  
+5. Open a Pull Request
 
-Open a Pull Request
+---
 
-📄 License
-This project is licensed under the MIT License.
+## 📄 License
 
-🙏 Acknowledgments
-Inspired by real Linux desktop environments
+This project is licensed under the **MIT License**.
 
-Built with ❤️ using React and modern web technologies
+---
 
-Special thanks to all contributors!
+## 🙏 Acknowledgments
+
+- Inspired by real Linux desktop environments  
+- Built with ❤️ using React and modern web technologies  
+- Special thanks to all contributors!
